@@ -12,6 +12,10 @@ También se quiere llevar un registro temporal del uso de tales ítems para pode
 
 Cada ítem pertenece a un único usuario y se localiza en una ubicación. Del mismo se conocen un id, una descripción y una o más imágenes (opcionales). También se registran opcionalmente varias categorías (etiquetas, sin jerarquía) para el mismo.
 
+Algunos ítems pueden además ser no-atómicos, es decir, están formados por muchos ítems pequeños e idénticos que se manejan como si fueran uno solo (ej.: agujas, alfileres, clavos, etc.). En este caso, se registra la cantidad actual del mismo.
+
+Para gestionar el uso de un ítem, se registran las fechas de inicio y fin de cada utilización del mismo. Las estadísticas se realizarán contando días, sin detallar por horario (ej.: si una fecha de fin coincide con la de inicio, simplemente se toma que el ítem fue utilizado ese día).
+
 * Item:
   * Id
   * Description
@@ -20,9 +24,17 @@ Cada ítem pertenece a un único usuario y se localiza en una ubicación. Del mi
   * Location
   * User
 
+* NonAtomicItem: Item
+  * Quantity
+
+* Usage:
+  * Item
+  * StartDate
+  * EndDate
+
 De cada usuario se registra un id, un nombre y un e-mail.
 
-* User
+* User:
   * Id
   * Name
   * Email
@@ -46,4 +58,4 @@ En cuanto a las categorías de ítems, éstas son codificadas, teniendo opcional
 
 ### Modelo de dominio
 
-![modelo de dominio](http://www.plantuml.com/plantuml/svg/ZP7FIWCn4CRlUOfXZqBBBdYG8bBm97Zr0ORammxT_24pFOZuxYPTsQudlSnkPdvVyYCvgd6rIvpTIGB8I_Kpbly8E-MWpZazIofSELBA0Of23-EcMJcTU_D-TCxFh4flYagVZaX2AuaZsWUHPNPVFyYB8TwG0FLLYabERLN4swL2L_WrU-wpVmUUsV2UwySVWSPVLOTfe1qDTyEYTQ2I5Q2dpNGPho87uX0bYLhbnlLO0nPk-iKzai_910bkxNQoWUD-Fz6kS4MoMyQjyXjiMEwqRuSWnfiJhtNDD7TKGuBl_aUaq1xt6m00)
+![modelo de dominio](http://www.plantuml.com/plantuml/svg/ZP51Q_im3CNl_XGYnp-ajF0_Z596ntOPZDrw7GXRjAAnxDdAeOnzzpdES1iOR9V4UVezwSdPPyMaen_CYHs1vMG7ci-Uz1HSDiRaCql4X1uaECeKuMvz8oQKyoJ-NnjZ1ymP3faIV1W0TkKXwAcyo2CFvlCRULRoLwHqjOcZSf3o5Tdgc2Wt-3N8WmRFjhdUHnHblJJaaF58jLGtUaAjCyLDfqQz18lJa3zFVYpkOqYNNmo5hpjtcmxw7hf_tRpW5cB8H71_BTTg2r88T9w5ioOiMDCBDA7hrMe3VSH4ebUNQR5ki6w-zYtiW1mhjbu_fB91b4bAi6Mh9RM3I4aBPibKgUMVhxiYcI3HiUQNcNhh--KVCtiID_hX2m00)
