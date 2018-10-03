@@ -42,3 +42,7 @@ En cuanto a las categorías de ítems, éstas son codificadas, teniendo opcional
   * Description
   * Picture
   * Creator
+
+### Modelo de dominio
+
+![modelo de dominio](http://www.plantuml.com/plantuml/svg/XO_DIaCn48NtUOhXBeLRT5j42gu4jpv0I0vs83zXPheGyTrDRckZkEWccMI-S-RCGSsBdN9oHuwWm18IpdM67MjKvqBoglIc4FfqH1pxKNn6lv0z9_TrGLuCUI8H6eIRSItzrJZOIQ2z3DxmNeMXL-Lh3Nw0DzHJy7ps-BWXwBpRKYrt2wqhBG_BdBMdHmgr6AF0ZVMszhgnGzI1LXMWfr_TqVxZuMFcmchYE_VpF-VHshoWsDHSpEvtkwlVN6TFY6p3QiR-XpI8eI2CP0UKUChf6m00)
