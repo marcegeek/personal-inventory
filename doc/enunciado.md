@@ -45,4 +45,4 @@ En cuanto a las categorías de ítems, éstas son codificadas, teniendo opcional
 
 ### Modelo de dominio
 
-![modelo de dominio](http://www.plantuml.com/plantuml/svg/XO_DIaCn48NtUOhXBeLRT5j42gu4jpv0I0vs83zXPheGyTrDRckZkEWccMI-S-RCGSsBdN9oHuwWm18IpdM67MjKvqBoglIc4FfqH1pxKNn6lv0z9_TrGLuCUI8H6eIRSItzrJZOIQ2z3DxmNeMXL-Lh3Nw0DzHJy7ps-BWXwBpRKYrt2wqhBG_BdBMdHmgr6AF0ZVMszhgnGzI1LXMWfr_TqVxZuMFcmchYE_VpF-VHshoWsDHSpEvtkwlVN6TFY6p3QiR-XpI8eI2CP0UKUChf6m00)
+![modelo de dominio](http://www.plantuml.com/plantuml/svg/XO-zQWGn38HxFuNOCh17hZr2E4WLI9i7CFQG4wn_aBH527dts7i_JaXnZIrxlXb9HpKljgR5dJY20ajOSAuJx5IYEXSMhqhl2g4lHyIn7Tadj0l9y-A-ByYh8GqaGeDmDIwvlIe7MmNQok0D7qKOUdE-bU0xUCSz32_dZCyxXiQxRQhfOQ9vfca_ZLu7Ug9GiZ4oN5zla-UDxQO6rA80FVzIk_mdmyV4cTN4D-xsV-ttkDljQQvUa6tOBdbTl4QEZGw4oDRJnkJ_a0enP0Gqx8WSrxJy0000)
