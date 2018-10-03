@@ -27,13 +27,14 @@ De cada usuario se registra un id, un nombre y un e-mail.
   * Name
   * Email
 
-De las ubicaciones se registra un id, una descripción, una ubicación padre opcional (nula en caso de una ubicación raíz) y una o más imágenes (opcionales).
+Cada ubicación pertenece a un único usuario. De la misma se registra un id, una descripción, una ubicación padre opcional (nula en caso de una ubicación raíz) y una o más imágenes (opcionales).
 
 * Location:
   * Id
   * Parent
   * Description
   * Pictures
+  * User
 
 En cuanto a las categorías de ítems, éstas son codificadas, teniendo opcionalmente una imagen/ícono descriptiva de la misma, y permitiendo además la generación de categorías creadas por el usuario. Por lo tanto, de las mismas se registra un id, una descripción, una imagen/ícono (opcional) y un usuario creador (opcional).
 
