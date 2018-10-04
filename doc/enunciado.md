@@ -32,12 +32,14 @@ Para gestionar el uso de un ítem, se registran las fechas de inicio y fin de ca
   * StartDate
   * EndDate
 
-De cada usuario se registra un id, un nombre y un e-mail.
+De cada usuario se registra un id, el nombre y apellido, un e-mail y el nombre de usuario.
 
 * User:
   * Id
-  * Name
+  * FirstName
+  * LastName
   * Email
+  * Username
 
 Cada ubicación pertenece a un único usuario. De la misma se registra un id, una descripción, una ubicación padre opcional (nula en caso de una ubicación raíz) y una o más imágenes (opcionales).
 
@@ -58,4 +60,4 @@ En cuanto a las categorías de ítems, éstas son codificadas, teniendo opcional
 
 ### Modelo de dominio
 
-![modelo de dominio](http://www.plantuml.com/plantuml/svg/ZP51Q_im3CNl_XGYnp-ajF0_Z596ntOPZDrw7GXRjAAnxDdAeOnzzpdES1iOR9V4UVezwSdPPyMaen_CYHs1vMG7ci-Uz1HSDiRaCql4X1uaECeKuMvz8oQKyoJ-NnjZ1ymP3faIV1W0TkKXwAcyo2CFvlCRULRoLwHqjOcZSf3o5Tdgc2Wt-3N8WmRFjhdUHnHblJJaaF58jLGtUaAjCyLDfqQz18lJa3zFVYpkOqYNNmo5hpjtcmxw7hf_tRpW5cB8H71_BTTg2r88T9w5ioOiMDCBDA7hrMe3VSH4ebUNQR5ki6w-zYtiW1mhjbu_fB91b4bAi6Mh9RM3I4aBPibKgUMVhxiYcI3HiUQNcNhh--KVCtiID_hX2m00)
+![modelo de dominio](http://www.plantuml.com/plantuml/svg/ZP51ImCn48Nl-HN37eKjBNYGKgIY5q6yzIeCoTWEtKnYCdieudytcvMq1K4lkvCttyky9Dkic7JqWpcm8x2Sx41pxKaFmMLZJ3woH4peGOAZJ17kbXTYGZbEuktI63jWph3BbE3J0B0hdtTEMGKzbNh0Lf977if_B72LldxSpqh-x2u3RUAe7AIi8biT4-K6lmPvqE3PDjV7YAAifuRiCkwfjkfXdr3hU75JrQYNO74Qyk_9ZyMz3-dqXw7mzJgwLGTz3zrDDnzm3J5a8hW_jskt1Ia4Ei_2MHCMhEa5cj3bOh62Fc8YqRFBj5WNM3U_o1esG8uLsrw_fB91b4bAiEkjhgaDH4fQC4kcIYt_VDqLoGI9zZM_pDHRtr-_cDcIkD4Ftm00)
