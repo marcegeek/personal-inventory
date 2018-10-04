@@ -61,3 +61,7 @@ En cuanto a las categorías de ítems, éstas son codificadas, teniendo opcional
 ### Modelo de dominio
 
 ![modelo de dominio](http://www.plantuml.com/plantuml/svg/ZP51ImCn48Nl-HN37eKjBNYGKgIY5q6yzIeCoTWEtKnYCdieudytcvMq1K4lkvCttyky9Dkic7JqWpcm8x2Sx41pxKaFmMLZJ3woH4peGOAZJ17kbXTYGZbEuktI63jWph3BbE3J0B0hdtTEMGKzbNh0Lf977if_B72LldxSpqh-x2u3RUAe7AIi8biT4-K6lmPvqE3PDjV7YAAifuRiCkwfjkfXdr3hU75JrQYNO74Qyk_9ZyMz3-dqXw7mzJgwLGTz3zrDDnzm3J5a8hW_jskt1Ia4Ei_2MHCMhEa5cj3bOh62Fc8YqRFBj5WNM3U_o1esG8uLsrw_fB91b4bAiEkjhgaDH4fQC4kcIYt_VDqLoGI9zZM_pDHRtr-_cDcIkD4Ftm00)
+
+### Diagrama Entidad-Relación
+
+![diagrama entidad relación](er.svg)
