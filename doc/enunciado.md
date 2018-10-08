@@ -28,6 +28,7 @@ Para gestionar el uso de un ítem, se registran las fechas de inicio y fin de ca
   * Quantity
 
 * Usage:
+  * Id
   * Item
   * StartDate
   * EndDate
