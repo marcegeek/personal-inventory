@@ -35,7 +35,7 @@ class UserData(ObjectData):
     def update(self, user):
         pass
 
-    def delete(self, user):
+    def delete(self, user_id):
         pass
 
 
@@ -56,7 +56,7 @@ class LocationData(ObjectData):
     def update(self, location):
         pass
 
-    def delete(self, location):
+    def delete(self, location_id):
         pass
 
 
@@ -68,13 +68,16 @@ class CategoryData(ObjectData):
     def get_all_by_user(self, user):
         pass
 
+    def get_all(self):
+        pass
+
     def insert(self, category):
         pass
 
     def update(self, category):
         pass
 
-    def delete(self, category):
+    def delete(self, category_id):
         pass
 
 
@@ -89,13 +92,16 @@ class ItemData(ObjectData):
     def get_all_by_location(self, location):
         pass
 
+    def get_all(self):
+        pass
+
     def insert(self, item):
         pass
 
     def update(self, item):
         pass
 
-    def delete(self, item):
+    def delete(self, item_id):
         pass
 
 
@@ -107,11 +113,14 @@ class UsageData(ObjectData):
     def get_all_by_item(self):
         pass
 
-    def insert(self):
+    def get_all(self):
         pass
 
-    def update(self):
+    def insert(self, usage):
         pass
 
-    def delete(self):
+    def update(self, usage):
+        pass
+
+    def delete(self, usage_id):
         pass
