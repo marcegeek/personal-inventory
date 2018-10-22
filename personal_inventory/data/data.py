@@ -1,33 +1,83 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, engine_from_config
 from sqlalchemy.orm import sessionmaker
 
-from personal_inventory.data.models import Base
+from personal_inventory.data.models import Base, User
 
-engine = create_engine('sqlite:///db.sqlite')
-Base.metadata.bind = engine
-db_session = sessionmaker()
-Base.metadata.create_all(engine)
+import config
+
+engine = None
+db_session = None
+configured = False
+
+
+def configure():
+    """
+    Configurar la capa de datos.
+
+    Toma la información del módulo config. A la primera instanciación de
+    un objeto de acceso a datos esta función es llamada automáticamente.
+    """
+    global engine
+    engine = engine_from_config(config.getdbconf(), prefix='db.')
+    Base.metadata.bind = engine
+    global db_session
+    db_session = sessionmaker()
+    db_session.bind = engine
+    Base.metadata.create_all(engine)
+    global configured
+    configured = True
 
 
 class ObjectData:
 
     def __init__(self):
+        if not configured:
+            configure()
         self.session = db_session(autoflush=False)
 
 
 class UserData(ObjectData):
 
     def get_by_id(self, user_id):
-        pass
+        """
+        Recuperar un usuario dado su id.
+
+        :type user_id: int
+        :param user_id: id del usuario a recuperar
+        :return: usuario con ese id o None si no existe
+        :rtype: User | None
+        """
+        return self.session.query(User).filter(User.id == user_id).first()
 
     def get_by_email(self, email):
+        """
+        Recuperar un usuario dado su email.
+
+        :type email: str
+        :param email: email del usuario a recuperar
+        :return: usuario con ese email o None si no existe
+        :rtype: User | None
+        """
         pass
 
     def get_by_username(self, username):
-        pass
+        """
+        Recuperar un usuario dado su nombre de usuario.
+
+        :type username: str
+        :param username: nombre de usuario del usuario a recuperar
+        :return: usuario con ese email o None si no existe
+        :rtype: User | None
+        """
 
     def get_all(self):
-        pass
+        """
+        Recuperar todos los usuarios.
+
+        :return: listado de todos los usuarios.
+        :rtype: list of User
+        """
+        return self.session.query(User).all()
 
     def insert(self, user):
         pass
