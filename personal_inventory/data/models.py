@@ -23,9 +23,9 @@ class Location(Base):
 
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
     owner_id = Column(Integer, ForeignKey('users.id'))
-    parent_loc_id = Column(Integer, ForeignKey('locations.id'))
+    #parent_loc_id = Column(Integer, ForeignKey('locations.id'))
     description = Column(String(50))
-    sublocations = relationship('Location', backref='parent_location')
+    #sublocations = relationship('Location', backref='parent_location')
     items = relationship('Item', backref='location')
 
 
