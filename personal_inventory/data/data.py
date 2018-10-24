@@ -58,7 +58,7 @@ class UserData(ObjectData):
         :return: usuario con ese email o None si no existe
         :rtype: User | None
         """
-        pass
+        return self.session.query(User).filter(User.email == email).first()
 
     def get_by_username(self, username):
         """
@@ -69,6 +69,7 @@ class UserData(ObjectData):
         :return: usuario con ese email o None si no existe
         :rtype: User | None
         """
+        return self.session.query(User).filter(User.username == username).first()
 
     def get_all(self):
         """
@@ -80,13 +81,43 @@ class UserData(ObjectData):
         return self.session.query(User).all()
 
     def insert(self, user):
-        pass
+        """
+        Dar de alta un usuario.
+
+        :type user: User
+        :param user: el usuario a dar de alta
+        :return: el usuario dado de alta
+        :rtype: User
+        """
+        self.session.add(user)
+        self.session.commit()
+        return user
 
     def update(self, user):
-        pass
+        """
+        Guardar un usuario con sus datos modificados.
+
+        :type user: User
+        :param user: el usuario con datos modificados a guardar
+        :return: el usuario modificado
+        :rtype: User
+        """
+        self.session.commit()
+        return user
 
     def delete(self, user_id):
-        pass
+        """
+        Borrar un usuario dado su id.
+
+        :type user_id: int
+        :param user_id: id del usuario a eliminar
+        :return: True si el borrado fue exitoso
+        :rtype: bool
+        """
+        if self.session.query(User).filter(User.id == user_id).delete():
+            self.session.commit()
+            return True
+        return False
 
 
 class LocationData(ObjectData):

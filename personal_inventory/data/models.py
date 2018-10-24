@@ -9,11 +9,11 @@ class User(Base):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
-    firstname = Column(String(250))
-    lastname = Column(String(250))
-    email = Column(String(50), unique=True)
-    username = Column(String(50), unique=True)
-    password = Column(String(30))
+    firstname = Column(String(50), nullable=False)
+    lastname = Column(String(50), nullable=False)
+    email = Column(String(50), unique=True, nullable=False)
+    username = Column(String(50), unique=True, nullable=False)
+    password = Column(String(30), nullable=False)
     items = relationship('Item')
     locations = relationship('Location')
 
