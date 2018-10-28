@@ -5,16 +5,16 @@ Maneja las configuraciones para los entornos de producción
 y pruebas.
 """
 
-production = 'prod'
-testing = 'test'
+PRODUCTION = 'prod'
+TESTING = 'test'
 
-db_configs = {
+DB_CONFIGS = {
     'prod': {'db.url': 'sqlite:///db.sqlite'},
     'test': {'db.url': 'sqlite://'}
 }
 
-env = production
+env = PRODUCTION
 
 
 def getdbconf():
-    return db_configs[env]
+    return DB_CONFIGS[env]
