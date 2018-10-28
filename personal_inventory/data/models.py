@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, case, text, Date, Table
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
 Base = declarative_base()
 
@@ -14,8 +14,8 @@ class User(Base):
     email = Column(String(50), unique=True, nullable=False)
     username = Column(String(50), unique=True, nullable=False)
     password = Column(String(30), nullable=False)
-    items = relationship('Item')
-    locations = relationship('Location')
+    items = relationship('Item', viewonly=True)
+    locations = relationship('Location', viewonly=True)
 
 
 class Location(Base):
@@ -23,10 +23,12 @@ class Location(Base):
 
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
     owner_id = Column(Integer, ForeignKey('users.id'))
-    #parent_loc_id = Column(Integer, ForeignKey('locations.id'))
+    parent_loc_id = Column(Integer, ForeignKey('locations.id'))
     description = Column(String(50))
-    #sublocations = relationship('Location', backref='parent_location')
-    items = relationship('Item', backref='location')
+    sublocations = relationship('Location',
+                                backref=backref('parent_location', remote_side=[id]),
+                                viewonly=True)
+    items = relationship('Item', backref='location', viewonly=True)
 
 
 items_categories_association = Table('items_categories', Base.metadata,
@@ -41,22 +43,9 @@ class Item(Base):
     owner_id = Column(Integer, ForeignKey('users.id'))
     description = Column(String(50))
     location_id = Column(Integer, ForeignKey('locations.id'))
-    categories = relationship('Category', secondary=items_categories_association)
-    usages = relationship('Usage')
+    categories = relationship('Category', secondary=items_categories_association, viewonly=True)
+    usages = relationship('Usage', viewonly=True)
     quantity = Column(Integer)
-
-    __mapper_args__ = {
-        'polymorphic_on': case([
-            (text('quantity is null'), 'item')
-        ], else_='nonatomicitem'),
-        'polymorphic_identity': 'item'
-    }
-
-
-class NonAtomicItem(Item):
-    __mapper_args__ = {
-        'polymorphic_identity': 'nonatomicitem'
-    }
 
 
 class Category(Base):

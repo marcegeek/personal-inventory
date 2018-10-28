@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, engine_from_config
 from sqlalchemy.orm import sessionmaker
 
-from personal_inventory.data.models import Base, User
+from personal_inventory.data.models import Base, User, Location, Category, Item, Usage
 
 import config
 
@@ -34,28 +34,71 @@ class ObjectData:
         if not configured:
             configure()
         self.session = db_session(autoflush=False)
+        self.model = None  # reemplazar en las subclases
+
+    def get_by_id(self, object_id):
+        """
+        Recuperar un objeto de un modelo dado su id.
+
+        :type object_id: int
+        :rtype: Model
+        """
+        return self.session.query(self.model).filter(self.model.id == object_id).first()
+
+    def get_all(self):
+        """
+        Recuperar todos los objetos de un modelo.
+
+        :return: listado de todos los usuarios.
+        :rtype: list of Model
+        """
+        return self.session.query(self.model).all()
+
+    def insert(self, obj):
+        """
+        Dar de alta un objeto de un modelo.
+
+        :type obj: Model
+        :rtype: Model
+        """
+        self.session.add(obj)
+        self.session.commit()
+        return obj
+
+    def update(self, obj):
+        """
+        Guardar un objeto de un modelo con sus datos modificados.
+
+        :type obj: Model
+        :rtype: Model
+        """
+        self.session.commit()
+        return obj
+
+    def delete(self, object_id):
+        """
+        Borrar un objeto de un modelo dado su id.
+
+        :type object_id: int
+        :rtype: bool
+        """
+        if self.session.query(self.model).filter(self.model.id == object_id).delete():
+            self.session.commit()
+            return True
+        return False
 
 
 class UserData(ObjectData):
 
-    def get_by_id(self, user_id):
-        """
-        Recuperar un usuario dado su id.
-
-        :type user_id: int
-        :param user_id: id del usuario a recuperar
-        :return: usuario con ese id o None si no existe
-        :rtype: User | None
-        """
-        return self.session.query(User).filter(User.id == user_id).first()
+    def __init__(self):
+        super().__init__()
+        self.model = User
 
     def get_by_email(self, email):
         """
         Recuperar un usuario dado su email.
 
         :type email: str
-        :param email: email del usuario a recuperar
-        :return: usuario con ese email o None si no existe
         :rtype: User | None
         """
         return self.session.query(User).filter(User.email == email).first()
@@ -65,143 +108,99 @@ class UserData(ObjectData):
         Recuperar un usuario dado su nombre de usuario.
 
         :type username: str
-        :param username: nombre de usuario del usuario a recuperar
-        :return: usuario con ese email o None si no existe
         :rtype: User | None
         """
         return self.session.query(User).filter(User.username == username).first()
 
-    def get_all(self):
+    def get_by_username_email(self, username_email):
         """
-        Recuperar todos los usuarios.
+        Recuperar un usuario dado su nombre de usuario o e-mail.
 
-        :return: listado de todos los usuarios.
-        :rtype: list of User
+        :type username_email: str
+        :rtype: User | None
         """
-        return self.session.query(User).all()
-
-    def insert(self, user):
-        """
-        Dar de alta un usuario.
-
-        :type user: User
-        :param user: el usuario a dar de alta
-        :return: el usuario dado de alta
-        :rtype: User
-        """
-        self.session.add(user)
-        self.session.commit()
+        user = self.get_by_username(username_email)
+        if user is None:
+            user = self.get_by_email(username_email)
         return user
-
-    def update(self, user):
-        """
-        Guardar un usuario con sus datos modificados.
-
-        :type user: User
-        :param user: el usuario con datos modificados a guardar
-        :return: el usuario modificado
-        :rtype: User
-        """
-        self.session.commit()
-        return user
-
-    def delete(self, user_id):
-        """
-        Borrar un usuario dado su id.
-
-        :type user_id: int
-        :param user_id: id del usuario a eliminar
-        :return: True si el borrado fue exitoso
-        :rtype: bool
-        """
-        if self.session.query(User).filter(User.id == user_id).delete():
-            self.session.commit()
-            return True
-        return False
 
 
 class LocationData(ObjectData):
 
-    def get_by_id(self, location_id):
-        pass
+    def __init__(self):
+        super().__init__()
+        self.model = Location
 
-    def get_all_by_user(self, user):
-        pass
+    def get_all_by_user_id(self, user_id):
+        """
+        Recuperar todas las ubicaciones pertenecientes a un usuario dado su id.
 
-    def get_all(self):
-        pass
-
-    def insert(self, location):
-        pass
-
-    def update(self, location):
-        pass
-
-    def delete(self, location_id):
-        pass
+        :type user_id: int
+        :rtype: list of Location
+        """
+        return self.session.query(Location).filter(Location.owner_id == user_id).all()
 
 
 class CategoryData(ObjectData):
 
-    def get_by_id(self, category_id):
-        pass
+    def __init__(self):
+        super().__init__()
+        self.model = Category
 
-    def get_all_by_user(self, user):
-        pass
+    def get_general_categories(self):
+        """
+        Recuperar las categorías generales, no creadas por ningún usuario particular.
 
-    def get_all(self):
-        pass
+        :rtype: list of Category
+        """
+        self.session.query(Category).filter(Category.creator_id is None).all()
 
-    def insert(self, category):
-        pass
+    def get_all_by_user_id(self, user_id):
+        """
+        Recuperar todas las categorías creadas por un usuario dado su id.
 
-    def update(self, category):
-        pass
-
-    def delete(self, category_id):
-        pass
+        :type user_id: int
+        :rtype: list of Category
+        """
+        return self.session.query(Category).filter(Category.creator_id == user_id).all()
 
 
 class ItemData(ObjectData):
 
-    def get_by_id(self, item_id):
-        pass
+    def __init__(self):
+        super().__init__()
+        self.model = Item
 
-    def get_all_by_user(self, user):
-        pass
+    def get_all_by_user_id(self, user_id):
+        """
+        Recuperar todos los ítems pertenecientes a un usuario dado su id.
 
-    def get_all_by_location(self, location):
-        pass
+        :type user_id: int
+        :rtype: list of Item
+        """
+        return self.session.query(Item).filter(Item.owner_id == user_id).all()
 
-    def get_all(self):
-        pass
+    def get_all_by_location_id(self, location_id):
+        """
+        Recuperar todos los ítems que están en una ubicación dado su id.
 
-    def insert(self, item):
-        pass
-
-    def update(self, item):
-        pass
-
-    def delete(self, item_id):
-        pass
+        :type location_id: int
+        :rtype: list of Item
+        """
+        return self.session.query(Item).filter(Item.location_id == location_id).all()
 
 
 class UsageData(ObjectData):
 
-    def get_by_id(self, usage_id):
-        pass
+    def __init__(self):
+        super().__init__()
+        self.model = Usage
 
-    def get_all_by_item(self):
-        pass
+    def get_all_by_item_id(self, item_id):
+        """
+        Recuperar todas las utilizaciones de un item dado su id.
 
-    def get_all(self):
-        pass
-
-    def insert(self, usage):
-        pass
-
-    def update(self, usage):
-        pass
-
-    def delete(self, usage_id):
-        pass
+        :type item_id: int
+        :rtype: list of Usage
+        """
+        return self.session.query(Usage).filter(Usage.item_id == item_id).all()
