@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% block head %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>{% block title %}{% endblock %}Personal Inventory</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://bootswatch.com/4/flatly/bootstrap.min.css">
+
+    <!-- Sticky footer style -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='sticky-footer.css') }}">
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/favicons/apple-touch-icon.png') }}" sizes="180x180">
+    <link rel="icon" href="{{ url_for('static', filename='images/favicons/favicon-32.png') }}" sizes="32x32" type="image/png">
+    <link rel="icon" href="{{ url_for('static', filename='images/favicons/favicon-16.png') }}" sizes="16x16" type="image/png">
+    <link rel="manifest" href="{{ url_for('static', filename='images/favicons/manifest.json') }}" sizes="16x16" type="image/png">
+    <link rel="mask-icon" href="{{ url_for('static', filename='images/favicons/safari-pinned-tab.svg') }}" color="#2c3e50">
+    <link rel="icon" href="{{ url_for('static', filename='images/favicons/favicon.ico') }}">
+    <meta name="msapplication-config" content="{{ url_for('static', filename='images/favicons/browserconfig.xml') }}">
+    <meta name="theme-color" content="#2c3e50">
+    {% endblock %}
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-primary">
+      <a class="navbar-brand" href="{{ url_for('home') }}">
+        <svg width="30" height="30" viewBox="0 0 612 612" xmlns="http://www.w3.org/2000/svg" focusable="false"><path d="m 510,8 a 94.3,94.3 0 0 1 94,94 v 408 a 94.3,94.3 0 0 1 -94,94 H 102 A 94.3,94.3 0 0 1 8,510 V 102 A 94.3,94.3 0 0 1 102,8 h 408 m 0,-8 H 102 C 45.9,0 0,45.9 0,102 v 408 c 0,56.1 45.9,102 102,102 h 408 c 56.1,0 102,-45.9 102,-102 V 102 C 612,45.9 566.1,0 510,0 Z" style="fill:currentColor" /><path d="m 181.96522,224.8142 v 52.56492 H 151.2255 V 128.189 h 58.20054 q 16.80438,0 29.51013,6.14795 12.80822,6.14794 19.67342,17.52164 6.86521,11.27123 6.86521,25.7189 0,21.92767 -15.06246,34.63342 -14.96,12.60329 -41.49863,12.60329 z m 0,-24.89918 h 27.46082 q 12.19342,0 18.5463,-5.73808 6.45534,-5.73808 6.45534,-16.39452 0,-10.96383 -6.45534,-17.72657 -6.45534,-6.76274 -17.82904,-6.96767 h -28.17808 z" style="fill:currentColor" /><path d="m 331.56136,279.42844 q -24.38684,0 -39.7567,-14.96 -15.2674,-14.96 -15.2674,-39.85917 v -2.86904 q 0,-16.70192 6.45534,-29.81754 6.45534,-13.21808 18.2389,-20.28821 11.88603,-7.1726 27.05096,-7.1726 22.74739,0 35.76054,14.3452 13.11562,14.3452 13.11562,40.6789 v 12.09096 h -70.5989 q 1.43452,10.86137 8.60712,17.41917 7.27507,6.55781 18.34137,6.55781 17.11178,0 26.74356,-12.39835 l 14.55014,16.29205 q -6.66028,9.42685 -18.03397,14.75507 -11.3737,5.22575 -25.20658,5.22575 z m -3.38137,-90.98958 q -8.81205,0 -14.3452,5.94301 -5.43068,5.94302 -6.96767,17.00932 h 41.19123 v -2.35672 q -0.20493,-9.83671 -5.32822,-15.16493 -5.12329,-5.43068 -14.55014,-5.43068 z" style="fill:currentColor" /><path d="m 460.36464,194.27941 q -6.04548,-0.81973 -10.65644,-0.81973 -16.80438,0 -22.03013,11.3737 v 72.54574 h -29.6126 V 166.51119 h 27.97315 l 0.81972,13.21808 q 8.91452,-15.26739 24.69425,-15.26739 4.91835,0 9.22191,1.33205 z" style="fill:currentColor" /><path d="M 183.91207,445.259 H 153.17235 V 296.06888 h 30.73972 z" style="fill:currentColor" /><path d="m 237.60412,334.39106 0.92219,12.80822 q 11.88602,-14.85753 31.86684,-14.85753 17.62411,0 26.23123,10.34904 8.60712,10.34904 8.81206,30.94465 V 445.259 h -29.6126 v -70.9063 q 0,-9.42685 -4.09863,-13.62794 -4.09863,-4.30356 -13.62795,-4.30356 -12.50082,0 -18.75123,10.65644 V 445.259 h -29.6126 V 334.39106 Z" style="fill:currentColor" /><path d="m 369.47753,409.08859 20.59561,-74.69753 h 30.94466 l -37.4,110.86794 h -28.28054 l -37.4,-110.86794 h 30.94466 z" style="fill:currentColor" /></svg>
+        Personal Inventory
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarColor01">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link 2</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('items') }}">Items</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <main role="main" class="container mt-4">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <ul class="flashes">
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+      {% block main %}
+      {% endblock %}
+    </main>
+
+    <footer class="footer bg-primary">
+      <div class="container">
+        <span class="text-white text-muted">&copy; 2018</span>
+      </div>
+    </footer>
+
+    {% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    {% endblock %}
+  </body>
+</html>

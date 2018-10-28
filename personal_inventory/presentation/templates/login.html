@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='signin.css') }}">
+{% endblock %}
+
+{% block main %}
+  <div class="text-center">
+    <form class="form-signin" method="post">
+      <h1 class="h3 mb-3 font-weight-normal">Please login</h1>
+      <label for="inputUsernameEmail" class="sr-only">Username or e-mail</label>
+      <input type="text" id="inputUsernameEmail" name="username_email" class="form-control" placeholder="Username or e-mail" required autofocus>
+      <div class="mb-3">
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
+      </div>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+      <div class="mt-2">
+        <a href="{{ url_for('register') }}">Create accout</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}
