@@ -148,7 +148,13 @@ class UserLogic:
         raise ValidationException(errors)
 
     def delete(self, user_id):
-        pass
+        """
+        Dar de baja un usuario según su id.
+
+        :type user_id: int
+        :rtype: bool
+        """
+        return self.dao.delete(user_id)
 
     def validate_login(self, username_email, password):
         """

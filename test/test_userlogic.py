@@ -22,8 +22,88 @@ class TestUserLogic(Test):
                     password='123456')
         success = self.ul.insert(user)
 
+        # post-condiciones
         self.assertTrue(success)
         self.assertEqual(len(self.ul.get_all()), 1)
+
+    def test_update(self):
+        # pre-condiciones: no hay usuarios registrados
+        self.assertEqual(len(self.ul.get_all()), 0)
+
+        user1 = User(firstname='Carlos', lastname='Pérez',
+                     email='carlosperez@gmail.com', username='carlosperez',
+                     password='123456')
+        user2 = User(firstname='Roberto', lastname='García',
+                     email='robgarcia@gmail.com', username='rgarcia',
+                     password='123456')
+        user3 = User(firstname='José', lastname='Duval',
+                     email='jduval@gmail.com', username='jduval',
+                     password='123456')
+        self.ul.insert(user1)
+        self.ul.insert(user2)
+        self.ul.insert(user3)
+        user2.password = 'algomejor123456'
+        success = self.ul.update(user2)
+
+        updated = self.ul.get_by_id(user2.id)
+
+        # post-condiciones
+        self.assertTrue(success)
+        self.assertEqual(updated.id, user2.id)
+        self.assertEqual(updated.password, 'algomejor123456')
+
+    def test_delete(self):
+        # pre-condiciones: no hay usuarios registrados
+        self.assertEqual(len(self.ul.get_all()), 0)
+
+        user1 = User(firstname='Carlos', lastname='Pérez',
+                     email='carlosperez@gmail.com', username='carlosperez',
+                     password='123456')
+        user2 = User(firstname='Roberto', lastname='García',
+                     email='robgarcia@gmail.com', username='rgarcia',
+                     password='123456')
+        user3 = User(firstname='José', lastname='Duval',
+                     email='jduval@gmail.com', username='jduval',
+                     password='123456')
+        self.ul.insert(user1)
+        self.ul.insert(user2)
+        self.ul.insert(user3)
+        success = self.ul.delete(user2.id)
+        failure = self.ul.delete(4)
+
+        # post-condiciones
+        self.assertTrue(success)
+        self.assertFalse(failure)
+        self.assertEqual(len(self.ul.get_all()), 2)
+
+    def test_gets(self):
+        # pre-condiciones: no hay usuarios registrados
+        self.assertEqual(len(self.ul.get_all()), 0)
+
+        user1 = User(firstname='Carlos', lastname='Pérez',
+                     email='carlosperez@gmail.com', username='carlosperez',
+                     password='123456')
+        user2 = User(firstname='Roberto', lastname='García',
+                     email='robgarcia@gmail.com', username='rgarcia',
+                     password='123456')
+        user3 = User(firstname='José', lastname='Duval',
+                     email='jduval@gmail.com', username='jduval',
+                     password='123456')
+        self.ul.insert(user1)
+        self.ul.insert(user2)
+        self.ul.insert(user3)
+
+        # post-condiciones
+        self.assertEqual(self.ul.get_by_id(user1.id), user1)
+        self.assertEqual(self.ul.get_by_email(user1.email), user1)
+        self.assertEqual(self.ul.get_by_username(user1.username), user1)
+        self.assertEqual(self.ul.get_by_username_email(user1.username), user1)
+        self.assertEqual(self.ul.get_by_username_email(user1.email), user1)
+        self.assertEqual(self.ul.get_by_id(user2.id), user2)
+        self.assertEqual(self.ul.get_by_email(user2.email), user2)
+        self.assertEqual(self.ul.get_by_username(user2.username), user2)
+        self.assertEqual(self.ul.get_by_username_email(user2.username), user2)
+        self.assertEqual(self.ul.get_by_username_email(user2.email), user2)
 
     def test_rule_required_fields(self):
         # valida regla
