@@ -1,0 +1,2 @@
+recursive-include personal_inventory/presentation/templates *
+recursive-include personal_inventory/presentation/static *

@@ -8,11 +8,12 @@ setuptools.setup(
     version="0.0.1",
     author="Marcelo Castellano",
     author_email="marce.geek22@gmail.com",
-    description="Web application for managing an inventory o personal items",
+    description="Web application for managing an inventory of personal items",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/marcegeek/personal-inventory",
     packages=setuptools.find_packages(),
+    include_package_data=True,
     install_requires=[
         'sqlalchemy',
         'Flask',
