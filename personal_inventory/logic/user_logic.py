@@ -58,7 +58,7 @@ class ValidationException(Exception):
 
 
 class UserLogic:
-    NAME_LEN = (2, 50)
+    NAME_LEN = (2, 15)
     EMAIL_LEN = (3, 50)
     USERNAME_LEN = (5, 50)
     PASSWORD_LEN = (6, 30)
@@ -71,8 +71,6 @@ class UserLogic:
         Recuperar un usuario dado su id.
 
         :type user_id: int
-        :param user_id: id del usuario a recuperar
-        :return: usuario con ese id o None si no existe
         :rtype: User | None
         """
         return self.dao.get_by_id(user_id)
@@ -82,8 +80,6 @@ class UserLogic:
         Recuperar un usuario dado su email.
 
         :type email: str
-        :param email: email del usuario a recuperar
-        :return: usuario con ese email o None si no existe
         :rtype: User | None
         """
         return self.dao.get_by_email(email)
@@ -93,8 +89,6 @@ class UserLogic:
         Recuperar un usuario dado su nombre de usuario.
 
         :type username: str
-        :param username: nombre de usuario del usuario a recuperar
-        :return: usuario con ese email o None si no existe
         :rtype: User | None
         """
         return self.dao.get_by_username(username)
@@ -126,26 +120,11 @@ class UserLogic:
         errores de validación correspondientes.
 
         :type user: User
-        :return: True si el alta fue exitoso
         :rtype: bool
         :raise: ValidationException
         """
         errors = []
-        present_fields = []
-
-        self.rule_required_fields(user, errors, present_fields)
-        if 'email' in present_fields and self.rule_email_len(user, errors) and \
-                self.rule_valid_email(user, errors):
-            self.rule_unique_email(user, errors)
-        if 'username' in present_fields and self.rule_username_len(user, errors):
-            self.rule_unique_username(user, errors)
-        if 'firstname' in present_fields:
-            self.rule_firstname_len(user, errors)
-            self.rule_valid_username(user, errors)
-        if 'lastname' in present_fields:
-            self.rule_lastname_len(user, errors)
-
-        if len(errors) == 0:
+        if self.validate_all_rules(user, errors):
             self.dao.insert(user)
             return True
         raise ValidationException(*errors)
@@ -159,25 +138,11 @@ class UserLogic:
         errores de validación correspondientes.
 
         :type user: User
-        :return: True si la modificación fue exitosa
         :rtype: bool
         :raise: ValidationException
         """
         errors = []
-        present_fields = []
-
-        self.rule_required_fields(user, errors, present_fields)
-        if 'email' in present_fields and self.rule_email_len(user, errors) and \
-                self.rule_valid_email(user, errors):
-            self.rule_unique_email(user, errors)
-        if 'username' in present_fields and self.rule_username_len(user, errors):
-            self.rule_unique_username(user, errors)
-        if 'firstname' in present_fields:
-            self.rule_firstname_len(user, errors)
-        if 'lastname' in present_fields:
-            self.rule_lastname_len(user, errors)
-
-        if len(errors) == 0:
+        if self.validate_all_rules(user, errors):
             self.dao.update(user)
             return True
         raise ValidationException(errors)
@@ -197,6 +162,34 @@ class UserLogic:
         if user is not None and user.password == password:
             return True
         # user is None or user.password != password
+        return False
+
+    def validate_all_rules(self, user, errors):
+        """
+        Validar todas las reglas de negocio.
+
+        :type user: User
+        :type errors: list of ValidationError
+        :rtype: bool
+        """
+        errors.clear()
+        present_fields = []
+        self.rule_required_fields(user, errors, present_fields)
+        if 'email' in present_fields and self.rule_email_len(user, errors) and \
+                self.rule_valid_email(user, errors):
+            self.rule_unique_email(user, errors)
+        if 'username' in present_fields and self.rule_username_len(user, errors) and \
+                self.rule_valid_username(user, errors):
+            self.rule_unique_username(user, errors)
+        if 'firstname' in present_fields:
+            self.rule_firstname_len(user, errors)
+        if 'lastname' in present_fields:
+            self.rule_lastname_len(user, errors)
+        if 'password' in present_fields:
+            self.rule_password_len(user, errors)
+
+        if len(errors) == 0:
+            return True
         return False
 
     def rule_required_fields(self, user, errors, present_fields):
@@ -265,7 +258,7 @@ class UserLogic:
     def rule_firstname_len(self, user, errors):
         """
         Validar que el nombre del usuario cuente con al menos 2 caracteres
-        y no más de 50.
+        y no más de 15.
 
         :type user: User
         :type errors: list of ValidationError
@@ -279,7 +272,7 @@ class UserLogic:
     def rule_lastname_len(self, user, errors):
         """
         Validar que el apellido del usuario cuente con al menos 2 caracteres
-        y no más de 50.
+        y no más de 15.
 
         :type user: User
         :type errors: list of ValidationError
@@ -346,4 +339,18 @@ class UserLogic:
         if re.fullmatch('[a-z0-9_]+', user.username):
             return True
         errors.append(InvalidUsernameError())
+        return False
+
+    def rule_password_len(self, user, errors):
+        """
+        Validar que la contraseña cuente con al menos 6 caracteres
+        y no más de 30.
+
+        :type user: User
+        :type errors: list of ValidationError
+        :rtype: bool
+        """
+        if self.PASSWORD_LEN[0] <= len(user.password) <= self.PASSWORD_LEN[1]:
+            return True
+        errors.append(InvalidLengthError('password', self.PASSWORD_LEN))
         return False
