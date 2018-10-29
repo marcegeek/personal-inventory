@@ -104,6 +104,7 @@ class TestUserLogic(Test):
         self.assertEqual(self.ul.get_by_username(user2.username), user2)
         self.assertEqual(self.ul.get_by_username_email(user2.username), user2)
         self.assertEqual(self.ul.get_by_username_email(user2.email), user2)
+        self.assertEqual(len(self.ul.get_all()), 3)
 
     def test_rule_required_fields(self):
         # valida regla
