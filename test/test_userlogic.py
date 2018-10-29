@@ -1,5 +1,3 @@
-from dbm import error
-
 from personal_inventory.data.models import User
 from personal_inventory.logic import RequiredFieldError
 from personal_inventory.logic.user_logic import UserLogic, RepeatedEmailError, RepeatedUsernameError, \

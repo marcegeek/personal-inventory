@@ -1,5 +1,3 @@
-import unittest
-
 import personal_inventory.data.data as dal
 from personal_inventory.data.models import User
 from test import Test
