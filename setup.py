@@ -12,7 +12,8 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/marcegeek/personal-inventory",
-    packages=setuptools.find_packages(),
+    packages=['personal_inventory', 'personal_inventory.data',
+              'personal_inventory.logic', 'personal_inventory.presentation'],
     include_package_data=True,
     install_requires=[
         'sqlalchemy',
