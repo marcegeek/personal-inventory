@@ -1,12 +1,12 @@
 {% extends "layout.html" %}
 {% block head %}
   {{ super() }}
-  <link rel="stylesheet" href="{{ url_for('static', filename='signin.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 {% endblock %}
 
 {% block main %}
   <div class="text-center">
-    <form class="form-signin" method="post">
+    <form class="form-login" method="post">
       <h1 class="h3 mb-3 font-weight-normal">Please login</h1>
       <label for="inputUsernameEmail" class="sr-only">Username or e-mail</label>
       <input type="text" id="inputUsernameEmail" name="username_email" class="form-control" placeholder="Username or e-mail" required autofocus>
