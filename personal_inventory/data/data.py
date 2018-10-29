@@ -1,9 +1,9 @@
-from sqlalchemy import create_engine, engine_from_config
+from sqlalchemy import engine_from_config
 from sqlalchemy.orm import sessionmaker
 
 from personal_inventory.data.models import Base, User, Location, Category, Item, Usage
 
-import config
+from personal_inventory import config
 
 engine = None
 db_session = None

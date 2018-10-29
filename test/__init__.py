@@ -1,7 +1,7 @@
 import unittest
 
 import personal_inventory.data.data as dal
-import config
+from personal_inventory import config
 
 
 class Test(unittest.TestCase):
