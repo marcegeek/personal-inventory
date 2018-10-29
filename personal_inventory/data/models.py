@@ -22,9 +22,9 @@ class Location(Base):
     __tablename__ = 'locations'
 
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
-    owner_id = Column(Integer, ForeignKey('users.id'))
+    owner_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     parent_loc_id = Column(Integer, ForeignKey('locations.id'))
-    description = Column(String(50))
+    description = Column(String(50), nullable=False)
     sublocations = relationship('Location',
                                 backref=backref('parent_location', remote_side=[id]),
                                 viewonly=True)
@@ -32,17 +32,17 @@ class Location(Base):
 
 
 items_categories_association = Table('items_categories', Base.metadata,
-                                     Column('item_id', Integer, ForeignKey('items.id')),
-                                     Column('category_id', Integer, ForeignKey('categories.id')))
+                                     Column('item_id', Integer, ForeignKey('items.id'), nullable=False),
+                                     Column('category_id', Integer, ForeignKey('categories.id'), nullable=False))
 
 
 class Item(Base):
     __tablename__ = 'items'
 
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
-    owner_id = Column(Integer, ForeignKey('users.id'))
-    description = Column(String(50))
-    location_id = Column(Integer, ForeignKey('locations.id'))
+    owner_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    description = Column(String(50), nullable=False)
+    location_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
     categories = relationship('Category', secondary=items_categories_association, viewonly=True)
     usages = relationship('Usage', viewonly=True)
     quantity = Column(Integer)
@@ -52,7 +52,7 @@ class Category(Base):
     __tablename__ = 'categories'
 
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
-    description = Column(String(50))
+    description = Column(String(50), nullable=False)
     creator_id = Column(Integer, ForeignKey('users.id'))
 
 
@@ -60,6 +60,6 @@ class Usage(Base):
     __tablename__ = 'usages'
 
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
-    item_id = Column(Integer, ForeignKey('items.id'))
-    start_date = Column(Date)
+    item_id = Column(Integer, ForeignKey('items.id'), nullable=False)
+    start_date = Column(Date, nullable=False)
     end_date = Column(Date)
