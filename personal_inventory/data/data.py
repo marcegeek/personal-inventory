@@ -3,22 +3,19 @@ from sqlalchemy.orm import sessionmaker
 
 from personal_inventory.data.models import Base, User, Location, Category, Item, Usage
 
-from personal_inventory import config
-
 engine = None
 db_session = None
 configured = False
 
 
-def configure():
+def configure(db_url):
     """
-    Configurar la capa de datos.
+    Configurar la capa de datos con la url de la db.
 
-    Toma la información del módulo config. A la primera instanciación de
-    un objeto de acceso a datos esta función es llamada automáticamente.
+    :type db_url: str
     """
     global engine
-    engine = engine_from_config(config.getdbconf(), prefix='db.')
+    engine = engine_from_config({'db.url': db_url}, prefix='db.')
     Base.metadata.bind = engine
     global db_session
     db_session = sessionmaker()
@@ -32,7 +29,7 @@ class ObjectData:
 
     def __init__(self):
         if not configured:
-            configure()
+            raise Exception('Data layer not configured')
         self.session = db_session(autoflush=False)
         self.model = None  # reemplazar en las subclases
 
