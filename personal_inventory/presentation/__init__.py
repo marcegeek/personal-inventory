@@ -12,6 +12,8 @@ dal.configure(configs['data'])
 app.config.from_object(configs['flask'])
 if config.ENVIRONMENT == config.Environment.DEVELOPMENT:
     os.environ['FLASK_ENV'] = 'development'
+else:
+    os.environ['FLASK_ENV'] = 'production'
 
 
 @app.route('/')
