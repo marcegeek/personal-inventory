@@ -1,10 +1,9 @@
-import os
 import subprocess
 
+import config
 from personal_inventory.presentation import app
 
-env = os.environ.get('ENV')
-if env == 'PROD':
+if config.ENVIRONMENT == config.Environment.PRODUCTION:
     subprocess.call('gunicorn personal_inventory.presentation:app', shell=True)
 else:
     app.run()

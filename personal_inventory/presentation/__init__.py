@@ -1,28 +1,17 @@
 import os
 from flask import Flask, url_for, render_template, request, redirect, session, escape, flash, render_template_string
 
+import config
 from personal_inventory.data import data as dal
-from personal_inventory.defaultconfigs import ProductionDataConfig, TestingDataConfig
 from personal_inventory.logic.user_logic import UserLogic
 
 app = Flask(__name__)
 
-env = os.environ.get('ENV')
-if env == 'PROD':
-    dal.configure(ProductionDataConfig)
-    app.config.from_object('config.ProductionFlaskConfig')
-elif env == 'TESTING':
-    if os.environ.get('DATA') == 'PROD':
-        dal.configure(ProductionDataConfig)
-    else:
-        dal.configure(TestingDataConfig)
-    app.config.from_object('config.TestingFlaskConfig')
-else:
-    if os.environ.get('DATA') == 'PROD':
-        dal.configure(ProductionDataConfig)
-    else:
-        dal.configure(TestingDataConfig)
-    app.config.from_object('config.DevelopmentFlaskConfig')
+configs = config.get_configs()
+dal.configure(configs['data'])
+app.config.from_object(configs['flask'])
+if config.ENVIRONMENT == config.Environment.DEVELOPMENT:
+    os.environ['FLASK_ENV'] = 'development'
 
 
 @app.route('/')

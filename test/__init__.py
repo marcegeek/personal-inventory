@@ -10,4 +10,4 @@ class Test(unittest.TestCase):
         super().setUp()
         # configurar entorno de prueba: db en memoria
         # la db se resetea cada vez
-        dal.configure(config.TestingDataConfig)
+        dal.configure(config.MemoryDataConfig)

@@ -2,11 +2,11 @@ class DataConfig:
     DB_CONF = {'sqlalchemy.url': 'sqlite://'}
 
 
-class ProductionDataConfig(DataConfig):
+class PersistentDataConfig(DataConfig):
     DB_CONF = {'sqlalchemy.url': 'sqlite:///db.sqlite'}
 
 
-class TestingDataConfig(DataConfig):
+class MemoryDataConfig(DataConfig):
     pass
 
 
