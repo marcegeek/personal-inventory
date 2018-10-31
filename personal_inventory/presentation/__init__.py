@@ -1,8 +1,28 @@
+import os
 from flask import Flask, url_for, render_template, request, redirect, session, escape, flash, render_template_string
 
+from personal_inventory.data import data as dal
+from personal_inventory.defaultconfigs import ProductionDataConfig, TestingDataConfig
 from personal_inventory.logic.user_logic import UserLogic
 
 app = Flask(__name__)
+
+env = os.environ.get('ENV')
+if env == 'PROD':
+    dal.configure(ProductionDataConfig)
+    app.config.from_object('config.ProductionFlaskConfig')
+elif env == 'TESTING':
+    if os.environ.get('DATA') == 'PROD':
+        dal.configure(ProductionDataConfig)
+    else:
+        dal.configure(TestingDataConfig)
+    app.config.from_object('config.TestingFlaskConfig')
+else:
+    if os.environ.get('DATA') == 'PROD':
+        dal.configure(ProductionDataConfig)
+    else:
+        dal.configure(TestingDataConfig)
+    app.config.from_object('config.DevelopmentFlaskConfig')
 
 
 @app.route('/')

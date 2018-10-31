@@ -15,10 +15,12 @@ setuptools.setup(
     packages=['personal_inventory', 'personal_inventory.data',
               'personal_inventory.logic', 'personal_inventory.presentation'],
     include_package_data=True,
+    zip_safe=False,
     install_requires=[
         'sqlalchemy',
-        'Flask',
+        'flask',
         'email_validator',
+        'gunicorn',
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
