@@ -1,6 +1,7 @@
 import unittest
 
-from personal_inventory import config
+import personal_inventory.data.data as dal
+import personal_inventory.defaultconfigs as config
 
 
 class Test(unittest.TestCase):
@@ -9,4 +10,4 @@ class Test(unittest.TestCase):
         super().setUp()
         # configurar entorno de prueba: db en memoria
         # la db se resetea cada vez
-        config.set_data_enviroment(config.Environment.TESTING)
+        dal.configure(config.TestingDataConfig)

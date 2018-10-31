@@ -8,14 +8,14 @@ db_session = None
 configured = False
 
 
-def configure(db_url):
+def configure(data_conf):
     """
-    Configurar la capa de datos con la url de la db.
+    Configurar la capa de datos con la config de la db (url, etc).
 
-    :type db_url: str
+    :type data_conf: DataConf
     """
     global engine
-    engine = engine_from_config({'db.url': db_url}, prefix='db.')
+    engine = engine_from_config(data_conf.DB_CONF)
     Base.metadata.bind = engine
     global db_session
     db_session = sessionmaker()
