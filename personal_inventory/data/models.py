@@ -31,11 +31,6 @@ class Location(Base):
     items = relationship('Item', backref='location', viewonly=True)
 
 
-items_categories_association = Table('items_categories', Base.metadata,
-                                     Column('item_id', Integer, ForeignKey('items.id'), nullable=False),
-                                     Column('category_id', Integer, ForeignKey('categories.id'), nullable=False))
-
-
 class Item(Base):
     __tablename__ = 'items'
 
@@ -43,17 +38,8 @@ class Item(Base):
     owner_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     description = Column(String(50), nullable=False)
     location_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
-    categories = relationship('Category', secondary=items_categories_association, viewonly=True)
     usages = relationship('Usage', viewonly=True)
     quantity = Column(Integer)
-
-
-class Category(Base):
-    __tablename__ = 'categories'
-
-    id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
-    description = Column(String(50), nullable=False)
-    creator_id = Column(Integer, ForeignKey('users.id'))
 
 
 class Usage(Base):

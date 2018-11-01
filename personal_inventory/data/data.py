@@ -1,7 +1,7 @@
 from sqlalchemy import engine_from_config
 from sqlalchemy.orm import sessionmaker
 
-from personal_inventory.data.models import Base, User, Location, Category, Item, Usage
+from personal_inventory.data.models import Base, User, Location, Item, Usage
 
 engine = None
 db_session = None
@@ -136,30 +136,6 @@ class LocationData(ObjectData):
         :rtype: list of Location
         """
         return self.session.query(Location).filter(Location.owner_id == user_id).all()
-
-
-class CategoryData(ObjectData):
-
-    def __init__(self):
-        super().__init__()
-        self.model = Category
-
-    def get_general_categories(self):
-        """
-        Recuperar las categorías generales, no creadas por ningún usuario particular.
-
-        :rtype: list of Category
-        """
-        self.session.query(Category).filter(Category.creator_id is None).all()
-
-    def get_all_by_user_id(self, user_id):
-        """
-        Recuperar todas las categorías creadas por un usuario dado su id.
-
-        :type user_id: int
-        :rtype: list of Category
-        """
-        return self.session.query(Category).filter(Category.creator_id == user_id).all()
 
 
 class ItemData(ObjectData):
