@@ -103,7 +103,7 @@ class UserLogic(ObjectLogic):
         :rtype: bool
         """
         errors.clear()
-        present_fields = self.get_present_fields()
+        present_fields = self.get_present_fields(user)
         self.rule_required_fields(errors, present_fields)
         if 'email' in present_fields and self.rule_email_len(user, errors) and \
                 self.rule_valid_email(user, errors):

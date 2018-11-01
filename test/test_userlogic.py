@@ -110,8 +110,9 @@ class TestUserLogic(Test):
                       email='juangarcia@gmail.com', username='juangarcia',
                       password='123456')
 
-        errors, present_fields = [], []
-        self.assertTrue(self.ul.rule_required_fields(valido, errors, present_fields))
+        errors = []
+        present_fields = self.ul.get_present_fields(valido)
+        self.assertTrue(self.ul.rule_required_fields(errors, present_fields))
         self.assertEqual(len(errors), 0)
         for field in ['firstname', 'lastname', 'email', 'username', 'password']:
             self.assertIn(field, present_fields)
@@ -120,8 +121,9 @@ class TestUserLogic(Test):
         invalido = User(lastname='García',
                         email='juangarcia@gmail.com', username='juangarcia',
                         password='123456')
-        errors, present_fields = [], []
-        self.assertFalse(self.ul.rule_required_fields(invalido, errors, present_fields))
+        errors = []
+        present_fields = self.ul.get_present_fields(invalido)
+        self.assertFalse(self.ul.rule_required_fields(errors, present_fields))
         self.assertIsInstance(errors[0], RequiredFieldError)
         self.assertEqual(errors[0].field, 'firstname')
         self.assertNotIn('firstname', present_fields)
@@ -130,8 +132,9 @@ class TestUserLogic(Test):
         invalido = User(firstname='Juan',
                         email='juangarcia@gmail.com', username='juangarcia',
                         password='123456')
-        errors, present_fields = [], []
-        self.assertFalse(self.ul.rule_required_fields(invalido, errors, present_fields))
+        errors = []
+        present_fields = self.ul.get_present_fields(invalido)
+        self.assertFalse(self.ul.rule_required_fields(errors, present_fields))
         self.assertIsInstance(errors[0], RequiredFieldError)
         self.assertEqual(errors[0].field, 'lastname')
         self.assertNotIn('lastname', present_fields)
@@ -140,8 +143,9 @@ class TestUserLogic(Test):
         invalido = User(firstname='Juan', lastname='García',
                         username='juangarcia',
                         password='123456')
-        errors, present_fields = [], []
-        self.assertFalse(self.ul.rule_required_fields(invalido, errors, present_fields))
+        errors = []
+        present_fields = self.ul.get_present_fields(invalido)
+        self.assertFalse(self.ul.rule_required_fields(errors, present_fields))
         self.assertIsInstance(errors[0], RequiredFieldError)
         self.assertEqual(errors[0].field, 'email')
         self.assertNotIn('email', present_fields)
@@ -150,8 +154,9 @@ class TestUserLogic(Test):
         invalido = User(firstname='Juan', lastname='García',
                         email='juanggarcia@gmail.com',
                         password='123456')
-        errors, present_fields = [], []
-        self.assertFalse(self.ul.rule_required_fields(invalido, errors, present_fields))
+        errors = []
+        present_fields = self.ul.get_present_fields(invalido)
+        self.assertFalse(self.ul.rule_required_fields(errors, present_fields))
         self.assertIsInstance(errors[0], RequiredFieldError)
         self.assertEqual(errors[0].field, 'username')
         self.assertNotIn('username', present_fields)
@@ -159,8 +164,9 @@ class TestUserLogic(Test):
         # falta contraseña
         invalido = User(firstname='Juan', lastname='García',
                         email='juanggarcia@gmail.com', username='carlosgarcia')
-        errors, present_fields = [], []
-        self.assertFalse(self.ul.rule_required_fields(invalido, errors, present_fields))
+        errors = []
+        present_fields = self.ul.get_present_fields(invalido)
+        self.assertFalse(self.ul.rule_required_fields(errors, present_fields))
         self.assertIsInstance(errors[0], RequiredFieldError)
         self.assertEqual(errors[0].field, 'password')
         self.assertNotIn('password', present_fields)
