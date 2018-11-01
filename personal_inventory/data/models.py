@@ -1,6 +1,5 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, case, text, Date, Table
+from sqlalchemy import Column, Integer, String, ForeignKey, Date
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, backref
 
 Base = declarative_base()
 
@@ -14,8 +13,6 @@ class User(Base):
     email = Column(String(50), unique=True, nullable=False)
     username = Column(String(50), unique=True, nullable=False)
     password = Column(String(30), nullable=False)
-    items = relationship('Item', viewonly=True)
-    locations = relationship('Location', viewonly=True)
 
 
 class Location(Base):
@@ -25,10 +22,6 @@ class Location(Base):
     owner_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     parent_loc_id = Column(Integer, ForeignKey('locations.id'))
     description = Column(String(50), nullable=False)
-    sublocations = relationship('Location',
-                                backref=backref('parent_location', remote_side=[id]),
-                                viewonly=True)
-    items = relationship('Item', backref='location', viewonly=True)
 
 
 class Item(Base):
@@ -38,7 +31,6 @@ class Item(Base):
     owner_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     description = Column(String(50), nullable=False)
     location_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
-    usages = relationship('Usage', viewonly=True)
     quantity = Column(Integer)
 
 

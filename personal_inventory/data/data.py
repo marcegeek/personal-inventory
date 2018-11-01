@@ -128,14 +128,24 @@ class LocationData(ObjectData):
         super().__init__()
         self.model = Location
 
-    def get_all_by_user_id(self, user_id):
+    def get_all_by_user(self, user):
         """
-        Recuperar todas las ubicaciones pertenecientes a un usuario dado su id.
+        Recuperar todas las ubicaciones pertenecientes a un usuario.
 
-        :type user_id: int
+        :type user: User
         :rtype: list of Location
         """
-        return self.session.query(Location).filter(Location.owner_id == user_id).all()
+        return self.session.query(Location).filter(Location.owner_id == user.id).all()
+
+    def get_sublocations(self, location):
+        """
+        Recuperar las sub-ubicaciones de una ubicación,
+        sólo el nivel inmediatamente inferior.
+
+        :type location: Location
+        :rtype: List of Location
+        """
+        return self.session.query(Location).filter(Location.parent_loc_id == location.id).all()
 
 
 class ItemData(ObjectData):
@@ -144,23 +154,23 @@ class ItemData(ObjectData):
         super().__init__()
         self.model = Item
 
-    def get_all_by_user_id(self, user_id):
+    def get_all_by_user(self, user):
         """
-        Recuperar todos los ítems pertenecientes a un usuario dado su id.
+        Recuperar todos los ítems pertenecientes a un usuario.
 
-        :type user_id: int
+        :type user: User
         :rtype: list of Item
         """
-        return self.session.query(Item).filter(Item.owner_id == user_id).all()
+        return self.session.query(Item).filter(Item.owner_id == user.id).all()
 
-    def get_all_by_location_id(self, location_id):
+    def get_all_by_location(self, location):
         """
-        Recuperar todos los ítems que están en una ubicación dado su id.
+        Recuperar todos los ítems que están en una ubicación.
 
-        :type location_id: int
+        :type location: Location
         :rtype: list of Item
         """
-        return self.session.query(Item).filter(Item.location_id == location_id).all()
+        return self.session.query(Item).filter(Item.location_id == location.id).all()
 
 
 class UsageData(ObjectData):
@@ -169,11 +179,11 @@ class UsageData(ObjectData):
         super().__init__()
         self.model = Usage
 
-    def get_all_by_item_id(self, item_id):
+    def get_all_by_item(self, item):
         """
-        Recuperar todas las utilizaciones de un item dado su id.
+        Recuperar todas las utilizaciones de un item.
 
-        :type item_id: int
+        :type item: Item
         :rtype: list of Usage
         """
-        return self.session.query(Usage).filter(Usage.item_id == item_id).all()
+        return self.session.query(Usage).filter(Usage.item_id == item.id).all()
