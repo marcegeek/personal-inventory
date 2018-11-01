@@ -2,7 +2,7 @@ import email_validator
 import re
 
 from personal_inventory.data.data import UserData
-from personal_inventory.logic import ValidationError, RepeatedUniqueField, RequiredFieldError
+from personal_inventory.logic import ObjectLogic, ValidationError, RepeatedUniqueField, RequiredFieldError
 
 
 class InvalidEmailError(ValidationError):
@@ -53,27 +53,15 @@ class InvalidUsernameError(ValidationError):
         return fmt_str.format(self.field)
 
 
-class ValidationException(Exception):
-    pass
-
-
-class UserLogic:
+class UserLogic(ObjectLogic):
     NAME_LEN = (2, 15)
     EMAIL_LEN = (3, 50)
     USERNAME_LEN = (5, 50)
     PASSWORD_LEN = (6, 30)
 
     def __init__(self):
+        super().__init__()
         self.dao = UserData()
-
-    def get_by_id(self, user_id):
-        """
-        Recuperar un usuario dado su id.
-
-        :type user_id: int
-        :rtype: User | None
-        """
-        return self.dao.get_by_id(user_id)
 
     def get_by_email(self, email):
         """
@@ -101,60 +89,6 @@ class UserLogic:
         :rtype: User | None
         """
         return self.dao.get_by_username_email(username_email)
-
-    def get_all(self):
-        """
-        Recuperar todos los usuarios.
-
-        :return: listado de todos los usuarios.
-        :rtype: list of User
-        """
-        return self.dao.get_all()
-
-    def insert(self, user):
-        """
-        Dar de alta un usuario.
-
-        Primero se deben validar las reglas de negocio.
-        Si no validan, levantar una excepción con los
-        errores de validación correspondientes.
-
-        :type user: User
-        :rtype: bool
-        :raise: ValidationException
-        """
-        errors = []
-        if self.validate_all_rules(user, errors):
-            self.dao.insert(user)
-            return True
-        raise ValidationException(*errors)
-
-    def update(self, user):
-        """
-        Modfificar un usuario.
-
-        Primero se deben validar las reglas de negocio.
-        Si no validan, levantar una excepción con los
-        errores de validación correspondientes.
-
-        :type user: User
-        :rtype: bool
-        :raise: ValidationException
-        """
-        errors = []
-        if self.validate_all_rules(user, errors):
-            self.dao.update(user)
-            return True
-        raise ValidationException(errors)
-
-    def delete(self, user_id):
-        """
-        Dar de baja un usuario según su id.
-
-        :type user_id: int
-        :rtype: bool
-        """
-        return self.dao.delete(user_id)
 
     def validate_login(self, username_email, password):
         """
@@ -239,6 +173,7 @@ class UserLogic:
         Validar que el e-mail del usuario es único.
 
         :type user: User
+        :type errors: list of ValidationError
         :rtype: bool
         """
         enc = self.dao.get_by_email(user.email)
