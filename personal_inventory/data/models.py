@@ -35,13 +35,3 @@ class Item(Base):
     description = Column(String(50), nullable=False)
     location_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
     quantity = Column(Integer)
-    usages = relationship('Usage', viewonly=True, bake_queries=False)
-
-
-class Usage(Base):
-    __tablename__ = 'usages'
-
-    id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
-    item_id = Column(Integer, ForeignKey('items.id'), nullable=False)
-    start_date = Column(Date, nullable=False)
-    end_date = Column(Date)

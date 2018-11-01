@@ -1,7 +1,7 @@
 from sqlalchemy import engine_from_config
 from sqlalchemy.orm import sessionmaker
 
-from personal_inventory.data.models import Base, User, Location, Item, Usage
+from personal_inventory.data.models import Base, User, Location, Item
 
 engine = None
 db_session = None
@@ -160,19 +160,3 @@ class ItemData(ObjectData):
         :rtype: list of Item
         """
         return self.session.query(Item).filter(Item.location_id == location.id).all()
-
-
-class UsageData(ObjectData):
-
-    def __init__(self):
-        super().__init__()
-        self.model = Usage
-
-    def get_all_by_item(self, item):
-        """
-        Recuperar todas las utilizaciones de un item.
-
-        :type item: Item
-        :rtype: list of Usage
-        """
-        return self.session.query(Usage).filter(Usage.item_id == item.id).all()
