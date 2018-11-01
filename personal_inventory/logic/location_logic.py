@@ -1,20 +1,8 @@
 from personal_inventory.logic.user_logic import InvalidLengthError
 
-from personal_inventory.logic import ObjectLogic, RequiredFieldError, ValidationError
+from personal_inventory.logic import ObjectLogic, RequiredFieldError, ValidationError, ForeignKeyError
 
 from personal_inventory.data.data import LocationData, UserData
-
-
-class InexistentUserError(ValidationError):
-
-    def __init__(self):
-        super().__init__('user')
-
-
-class InexistentLocationError(ValidationError):
-
-    def __init__(self):
-        super().__init__('location')
 
 
 class LocationLogic(ObjectLogic):
@@ -105,7 +93,7 @@ class LocationLogic(ObjectLogic):
         """
         userdao = UserData()
         if userdao.get_by_id(location.owner_id) is None:
-            errors.append(InexistentUserError())
+            errors.append(ForeignKeyError('user'))
         return True
 
     def rule_parent_location_exists(self, location, errors):
@@ -117,7 +105,7 @@ class LocationLogic(ObjectLogic):
         :rtype: bool
         """
         if self.get_by_id(location.id) is None:
-            errors.append(InexistentLocationError())
+            errors.append(ForeignKeyError('location'))
         return True
 
     def rule_description_len(self, location, errors):

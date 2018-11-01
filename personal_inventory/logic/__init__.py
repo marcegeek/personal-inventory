@@ -22,6 +22,15 @@ class RepeatedUniqueField(ValidationError):
         return '{0} is repeated'.format(self.field)
 
 
+class ForeignKeyError(ValidationError):
+
+    def __init__(self, field):
+        super().__init__(field)
+
+    def __str__(self):
+        return "{0} foreign key doesn't exist".format(self.field)
+
+
 class ValidationException(Exception):
     pass
 
