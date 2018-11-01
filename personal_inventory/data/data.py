@@ -136,16 +136,6 @@ class LocationData(ObjectData):
         """
         return self.session.query(Location).filter(Location.owner_id == user.id).all()
 
-    def get_sublocations(self, location):
-        """
-        Recuperar las sub-ubicaciones de una ubicación,
-        sólo el nivel inmediatamente inferior.
-
-        :type location: Location
-        :rtype: List of Location
-        """
-        return self.session.query(Location).filter(Location.parent_loc_id == location.id).all()
-
 
 class ItemData(ObjectData):
 

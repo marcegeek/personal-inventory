@@ -14,7 +14,7 @@ class User(Base):
     email = Column(String(50), unique=True, nullable=False)
     username = Column(String(50), unique=True, nullable=False)
     password = Column(String(30), nullable=False)
-    items = relationship('Item', viewonly=True, bake_queries=False)
+    items = relationship('Item', backref='owner', viewonly=True, bake_queries=False)
     locations = relationship('Location', viewonly=True, bake_queries=False)
 
 
@@ -23,11 +23,7 @@ class Location(Base):
 
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
     owner_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    parent_loc_id = Column(Integer, ForeignKey('locations.id'))
     description = Column(String(50), nullable=False)
-    sublocations = relationship('Location',
-                                backref=backref('parent_location', remote_side=[id]),
-                                viewonly=True, bake_queries=False)
     items = relationship('Item', backref='location', viewonly=True, bake_queries=False)
 
 

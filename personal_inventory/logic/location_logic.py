@@ -22,16 +22,6 @@ class LocationLogic(ObjectLogic):
         """
         return self.dao.get_all_by_user(user)
 
-    def get_sublocations(self, location):
-        """
-        Recuperar las sub-ubicaciones de una ubicación,
-        sólo el nivel inmediatamente inferior.
-
-        :type location: Location
-        :rtype: list of Location
-        """
-        return self.dao.get_sublocations(location)
-
     def validate_all_rules(self, location, errors):
         """
         Validar todas las reglas de negocio.
@@ -45,8 +35,6 @@ class LocationLogic(ObjectLogic):
         self.rule_required_fields(errors, present_fields)
         if 'owner_id' in present_fields:
             self.rule_owner_user_exists(location, errors)
-        if 'parent_loc_id' in present_fields:
-            self.rule_parent_location_exists(location, errors)
         if 'description' in present_fields:
             self.rule_description_len(location, errors)
 
@@ -58,8 +46,6 @@ class LocationLogic(ObjectLogic):
         present_fields = []
         if location.owner_id:
             present_fields.append('owner_id')
-        if location.parent_loc_id:
-            present_fields.append('parent_loc_id')
         if location.description:
             present_fields.append('description')
         return present_fields
@@ -94,18 +80,6 @@ class LocationLogic(ObjectLogic):
         ul = UserLogic()
         if ul.get_by_id(location.owner_id) is None:
             errors.append(ForeignKeyError('owner_id'))
-        return True
-
-    def rule_parent_location_exists(self, location, errors):
-        """
-        Validar que existe la ubicación padre.
-
-        :type location: Location
-        :type errors: list of ValidationError
-        :rtype: bool
-        """
-        if self.get_by_id(location.id) is None:
-            errors.append(ForeignKeyError('parent_loc_id'))
         return True
 
     def rule_description_len(self, location, errors):
