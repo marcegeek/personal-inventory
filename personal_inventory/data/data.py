@@ -35,7 +35,7 @@ class ObjectData:
 
     def get_by_id(self, object_id):
         """
-        Recuperar un objeto de un modelo dado su id.
+        Recuperar un objeto del modelo dado su id.
 
         :type object_id: int
         :rtype: Model
@@ -44,16 +44,15 @@ class ObjectData:
 
     def get_all(self):
         """
-        Recuperar todos los objetos de un modelo.
+        Recuperar todos los objetos del modelo.
 
-        :return: listado de todos los usuarios.
         :rtype: list of Model
         """
         return self.session.query(self.model).all()
 
     def insert(self, obj):
         """
-        Dar de alta un objeto de un modelo.
+        Dar de alta un objeto del modelo.
 
         :type obj: Model
         :rtype: Model
@@ -64,7 +63,7 @@ class ObjectData:
 
     def update(self, obj):
         """
-        Guardar un objeto de un modelo con sus datos modificados.
+        Guardar un objeto del modelo con sus datos modificados.
 
         :type obj: Model
         :rtype: Model
@@ -74,7 +73,7 @@ class ObjectData:
 
     def delete(self, object_id):
         """
-        Borrar un objeto de un modelo dado su id.
+        Borrar un objeto del modelo dado su id.
 
         :type object_id: int
         :rtype: bool
