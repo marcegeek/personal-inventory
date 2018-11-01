@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/create-item.css') }}">
+{% endblock %}
+
+{% block main %}
+<div class="text-center">
+  {% if not user %}
+  <h1>User registration</h1>
+  {% else %}
+  <h1>Editing user profile</h1>
+  {% endif %}
+  <form class="form-item" method="post">
+    <label for="txtFirstname" class="sr-only">First name</label>
+    <input type="text" id="txtFirstname" name="firstname" class="form-control" placeholder="Firstname" required autofocus
+     {% if user %} value="{{ user.firstname }}" {% endif %}>
+    <label for="txtLastname" class="sr-only">Last name</label>
+    <input type="text" id="txtLastname" name="lastname" class="form-control" placeholder="Lastname" required
+     {% if user %} value="{{ user.lastname }}" {% endif %}>
+    <label for="txtEmail" class="sr-only">E-mail</label>
+    <input type="email" id="txtEmail" name="email" class="form-control" placeholder="E-mail" required
+     {% if user %} value="{{ user.email }}" {% endif %}>
+    <label for="txtUsername" class="sr-only">Username</label>
+    <input type="text" id="txtUsername" name="username" class="form-control" placeholder="Username" required
+     {% if user %} value="{{ user.username }}" {% endif %}>
+    <label for="txtPassword" class="sr-only">
+       {% if not user %}
+      Password
+       {% else %}
+      Password unchanged
+       {% endif %}
+    </label>
+    <input type="password" id="txtPassword" name="password" class="form-control"
+           placeholder={% if not user %} "Password" required {% else %} "(password unchanged)" {% endif %}>
+    <div class="mb-3">
+      <label for="txtConfirmPassword" class="sr-only">
+         {% if not user %}
+        Confirm password
+         {% else %}
+        Password unchanged
+         {% endif %}
+      </label>
+      <input type="password" id="txtConfirmPassword" name="confirm_password" class="form-control"
+             placeholder={% if not user %} "Confirm password" required {% else %}  "(password unchanged)" {% endif %}>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Save</button>
+  </form>
+</div>
+{% endblock %}

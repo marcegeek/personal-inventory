@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/create-item.css') }}">
+{% endblock %}
+
+{% block main %}
+<div class="text-center">
+  {% if not location %}
+  <h1>Creating location</h1>
+  {% else %}
+  <h1>Editing location</h1>
+  {% endif %}
+  <form class="form-item" method="post">
+    <div class="mb-3">
+      <label for="txtDescription" class="sr-only">Description</label>
+      <input type="text" id="txtDescription" name="description"  class="form-control" placeholder="Description" required autofocus
+       {% if location %} value="{{ location.description }}" {% endif %}>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Save</button>
+  </form>
+</div>
+{% endblock %}

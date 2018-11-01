@@ -36,27 +36,44 @@
       <div class="collapse navbar-collapse" id="navbarColor01">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="#">Link</a>
+            <a class="nav-link" href="{{ url_for('home') }}">Home</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link 2</a>
-          </li>
+          {% if 'user_id' in session %}
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('items') }}">Items</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('locations') }}">Locations</a>
+          </li>
+          {% endif %}
         </ul>
+        {% if 'user_id' in session %}
+        <ul class="navbar-nav mr-2">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('edit_profile') }}">Edit profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+          </li>
+        </ul>
+        {% endif %}
       </div>
     </nav>
 
     <main role="main" class="container mt-4">
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          <ul class="flashes">
-            {% for message in messages %}
-              <li>{{ message }}</li>
-            {% endfor %}
-          </ul>
-        {% endif %}
+      {% with errors = get_flashed_messages(category_filter=["error"]) %}
+      {% if errors %}
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <ul>
+          {%- for msg in errors %}
+          <li>{{ msg }}</li>
+          {% endfor -%}
+        </ul>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endif %}
       {% endwith %}
       {% block main %}
       {% endblock %}

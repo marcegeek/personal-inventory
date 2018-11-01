@@ -1,8 +1,12 @@
 import os
-from flask import Flask, url_for, render_template, request, redirect, session, escape, flash, render_template_string
+from flask import Flask, url_for, render_template, request, redirect, session, flash, render_template_string, abort
 
 import config
 from personal_inventory.data import data as dal
+from personal_inventory.data.models import Item, Location, User
+from personal_inventory.logic import ValidationException
+from personal_inventory.logic.item_logic import ItemLogic
+from personal_inventory.logic.location_logic import LocationLogic
 from personal_inventory.logic.user_logic import UserLogic
 
 app = Flask(__name__)
@@ -16,17 +20,26 @@ else:
     os.environ['FLASK_ENV'] = 'production'
 
 
+def get_user_from_session():
+    user = None
+    if 'user_id' in session:
+        user_id = session['user_id']
+        ul = UserLogic()
+        user = ul.get_by_id(user_id)
+    return user
+
+
+def set_user_in_session(user):
+    if user is not None:
+        session['user_id'] = user.id
+    else:
+        session.pop('user_id', None)
+
+
 @app.route('/')
 def home():
-    # if 'user_id' in session:
-    # return render_template('home.html')
-    #   user_id = session['user_id']
-    #   ul = UserLogic()
-    #  user = ul.get_by_id(user_id)
-    # return 'Welcome {0} {1}'.format(user.firstname, user.lastname)
-    # else:
-    # return redirect(url_for('login'))
-    return render_template('home.html')
+    user = get_user_from_session()
+    return render_template('home.html', user=user)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -36,41 +49,232 @@ def login():
         password = request.form['password']
         ul = UserLogic()
         if ul.validate_login(username_email, password):
-            session['user_id'] = ul.get_by_username_email(username_email).id
-            # flash('You were successfully logged in')
+            set_user_in_session(ul.get_by_username_email(username_email))
             return redirect(url_for('home'))
         else:
-            # flash ... error ...
-            pass
+            flash('Wrong username/e-mail or password', 'error')
     return render_template('login.html')
 
 
 @app.route('/logout')
 def logout():
-    session.pop('user_id', None)
+    set_user_in_session(None)
     return redirect(url_for('home'))
 
 
-@app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    return render_template_string(
-        '''{% extends "layout.html" %}
-{% block main %}
-<div class="text-center">
-  <h1>User registration</h1>
-  <p class="lead">
-    User registration not implemented.<br>
-    Go <a href="javascript:void(0)" onclick="window.history.back()">back</a>.
-  </p>
-</div>
-{% endblock %}''')
+    if request.method == 'POST':
+        firstname = request.form['firstname']
+        lastname = request.form['lastname']
+        email = request.form['email']
+        username = request.form['username']
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+        if password == confirm_password:
+            user = User(firstname=firstname, lastname=lastname, email=email,
+                        username=username, password=password)
+            try:
+                UserLogic().insert(user)
+                set_user_in_session(user)
+                return redirect(url_for('home'))
+            except ValidationException as ex:
+                for err in ex.args:
+                    flash(str(err), 'error')
+        else:
+            flash('Passwords don\'t match', 'error')
+    return render_template('user-editor.html', user=None)
+
+
+@app.route('/edit_profile', methods=['GET', 'POST'])
+def edit_profile():
+    user = get_user_from_session()
+    if user is not None:
+        if request.method == 'POST':
+            firstname = request.form['firstname']
+            lastname = request.form['lastname']
+            email = request.form['email']
+            username = request.form['username']
+            password = request.form['password']
+            confirm_password = request.form['confirm_password']
+            if len(password) == 0 or password == confirm_password:
+                user.firstname = firstname
+                user.lastname = lastname
+                user.email = email
+                user.username = username
+                if len(password) != 0:  # si no se ingresa nada se deja sin modificar
+                    user.password = password
+                try:
+                    UserLogic().update(user)
+                    return redirect(url_for('home'))
+                except ValidationException as ex:
+                    for err in ex.args:
+                        flash(str(err), 'error')
+            else:
+                flash('Passwords don\'t match', 'error')
+        return render_template('user-editor.html', user=user)
+    else:
+        abort(401)
 
 
 @app.route('/items')
 def items():
-    if 'user_id' in session:
-        ul = UserLogic()
-        user = ul.get_by_id(session['user_id'])
-        items = user.items
-        return render_template('items.html', items=items)
+    user = get_user_from_session()
+    if user is not None:
+        user_items = user.items
+        return render_template('items.html', items=user_items, locations=list(user.locations))
+    return redirect(url_for('home'))
+
+
+@app.route('/items/create', methods=['GET', 'POST'])
+def create_item():
+    user = get_user_from_session()
+    if user is not None:
+        if request.method == 'GET':
+            locations = user.locations
+            if len(locations) == 0:
+                flash('No locations were present, create one first', 'error')
+                return redirect(url_for('create_location'))
+            return render_template('item-editor.html', item=None, locations=list(locations))
+        else:
+            description = request.form['description'].strip()
+            location_id = request.form['location'].strip()
+            quantity = request.form['quantity'].strip()
+            if len(quantity) == 0:
+                quantity = None
+            new_item = Item(owner_id=user.id, location_id=location_id, description=description, quantity=quantity)
+            try:
+                ItemLogic().insert(new_item)
+                return redirect(url_for('items'))
+            except ValidationException as ex:
+                for err in ex.args:
+                    flash(str(err), 'error')
+            return redirect(url_for('create_item'))
+    return redirect(url_for('home'))
+
+
+@app.route('/items/<int:item_id>', methods=['GET', 'POST'])
+def item(item_id):
+    user = get_user_from_session()
+    if user is not None:
+        item_logic = ItemLogic()
+        item = item_logic.get_by_id(item_id)
+        if item is not None:
+            if item.owner_id == user.id:
+                locations = user.locations
+                if request.method == 'GET':
+                    return render_template('item-editor.html', item=item, locations=locations)
+                else:
+                    description = request.form['description'].strip()
+                    location_id = request.form['location'].strip()
+                    quantity = request.form['quantity'].strip()
+                    if len(quantity) == 0:
+                        quantity = None
+                    item.description = description
+                    item.location_id = location_id
+                    item.quantity = quantity
+                    try:
+                        item_logic.update(item)
+                        return redirect(url_for('items'))
+                    except ValidationException as ex:
+                        for err in ex.args:
+                            flash(str(err), 'error')
+                    return redirect(url_for('item', item_id=item_id))
+            else:
+                abort(401)
+        else:
+            abort(404)
+    return redirect(url_for('home'))
+
+
+@app.route('/items/delete/<int:item_id>', methods=['POST'])
+def item_delete(item_id):
+    user = get_user_from_session()
+    if user is not None:
+        item_logic = ItemLogic()
+        item = item_logic.get_by_id(item_id)
+        if item is not None:
+            if item.owner_id == user.id:
+                confirmed = request.form.get('confirmed')
+                if confirmed:
+                    item_logic.delete(item_id)
+                return redirect(url_for('items'))
+            else:
+                abort(401)
+        else:
+            abort(404)
+    return redirect(url_for('home'))
+
+
+@app.route('/locations')
+def locations():
+    user = get_user_from_session()
+    if user is not None:
+        user_locations = user.locations
+        return render_template('locations.html', locations=user_locations)
+    return redirect(url_for('home'))
+
+
+@app.route('/locations/create', methods=['GET', 'POST'])
+def create_location():
+    user = get_user_from_session()
+    if user is not None:
+        if request.method == 'GET':
+            return render_template('location-editor.html', location=None)
+        else:
+            description = request.form['description'].strip()
+            new_loc = Location(owner_id=user.id, description=description)
+            try:
+                LocationLogic().insert(new_loc)
+                return redirect(url_for('locations'))
+            except ValidationException as ex:
+                for err in ex.args:
+                    flash(str(err), 'error')
+            return redirect(url_for('create_location'))
+    return redirect(url_for('home'))
+
+
+@app.route('/locations/<int:item_id>', methods=['GET', 'POST'])
+def location(location_id):
+    user = get_user_from_session()
+    if user is not None:
+        location_logic = LocationLogic()
+        location = location_logic.get_by_id(location_id)
+        if item is not None:
+            if item.owner_id == user.id:
+                if request.method == 'GET':
+                    return render_template('location-editor.html', location=location)
+                else:
+                    description = request.form['description'].strip()
+                    location.description = description
+                    try:
+                        location_logic.update(item)
+                        return redirect(url_for('locations'))
+                    except ValidationException as ex:
+                        for err in ex.args:
+                            flash(str(err), 'error')
+                    return redirect(url_for('location', item_id=location_id))
+            else:
+                abort(401)
+        else:
+            abort(404)
+    return redirect(url_for('home'))
+
+
+@app.route('/locations/delete/<int:location_id>', methods=['POST'])
+def location_delete(location_id):
+    user = get_user_from_session()
+    if user is not None:
+        location_logic = LocationLogic()
+        location = location_logic.get_by_id(location_id)
+        if location is not None:
+            if location.owner_id == user.id:
+                confirmed = request.form.get('confirmed')
+                if confirmed:
+                    location_logic.delete(location_id)
+                return redirect(url_for('locations'))
+            else:
+                abort(401)
+        else:
+            abort(404)
     return redirect(url_for('home'))

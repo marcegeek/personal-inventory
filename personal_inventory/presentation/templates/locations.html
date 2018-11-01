@@ -5,42 +5,34 @@
 {% endblock %}
 
 {% block main %}
-<h1 class="text-center">Item list</h1>
+<h1 class="text-center">Location list</h1>
 <div class="text-right">
   <label for="btnCreate" class="sr-only">Create new item</label>
-  <a id="btnCreate" class="btn btn-primary" href="{{ url_for('create_item') }}">
-    Create a new item  &nbsp;&nbsp;<i class="fa fa-plus"></i>
+  <a id="btnCreate" class="btn btn-primary" href="{{ url_for('create_location') }}">
+    Create a new location &nbsp;&nbsp;<i class="fa fa-plus"></i>
   </a>
 </div>
 <table class="table">
   <thead>
     <tr>
-      <th>Description</th>
-      <th>Location</th>
-      <th>Quantity</th>
+      <th colspan="4">Description</th>
       <th></th>
       <th></th>
     </tr>
   </thead>
   <tbody>
-    {% for item in items %}
+    {% for location in locations %}
     <tr>
-      <td>{{ item.description }}</td>
-      <td>{{ item.location.description }}</td>
-      {% if item.quantity is none %}
-      <td>N/A</td>
-      {% else %}
-      <td>{{ item.quantity }}</td>
-      {% endif %}
+      <td>{{ location.description }}</td>
       <td>
-        <a class="btn btn-link" href="{{ url_for('item', item_id=item.id) }}">
+        <a class="btn btn-link" href="{{ url_for('location', item_id=location.id) }}">
           Edit &nbsp;&nbsp;<i class="fa fa-edit"></i>
         </a>
       </td>
       <td>
-        <form action="{{ url_for('item_delete', item_id=item.id) }}" method="post">
+        <form action="{{ url_for('location_delete', location_id=location.id) }}" method="post">
           <button type="submit" class="btn btn-link"
-             name="item_id" value="{{ item.id }}">
+             name="item_id" value="{{ location.id }}">
             Remove &nbsp;&nbsp;<i class="fa fa-trash-alt"></i>
           </button>
           <div class="form-check">
