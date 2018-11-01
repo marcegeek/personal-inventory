@@ -103,8 +103,8 @@ class UserLogic(ObjectLogic):
         :rtype: bool
         """
         errors.clear()
-        present_fields = []
-        self.rule_required_fields(user, errors, present_fields)
+        present_fields = self.get_present_fields()
+        self.rule_required_fields(errors, present_fields)
         if 'email' in present_fields and self.rule_email_len(user, errors) and \
                 self.rule_valid_email(user, errors):
             self.rule_unique_email(user, errors)
@@ -122,35 +122,38 @@ class UserLogic(ObjectLogic):
             return True
         return False
 
-    def rule_required_fields(self, user, errors, present_fields):
-        """
-        Validar la presencia de los campos requeridos.
+    def get_present_fields(self, user):
+        present_fields = []
+        if user.firstname:
+            present_fields.append('firstname')
+        if user.lastname:
+            present_fields.append('lastname')
+        if user.email:
+            present_fields.append('email')
+        if user.username:
+            present_fields.append('username')
+        if user.password:
+            present_fields.append('password')
+        return present_fields
 
-        :type user: User
+    def rule_required_fields(self, errors, present_fields):
+        """
+        Validar la presencia de los campos requeridos, dada la lista de los presentes.
+
         :type errors: list of ValidationError
         :type present_fields: list of str
         :rtype: bool
         """
         field_errors = []
-        if user.firstname:
-            present_fields.append('firstname')
-        else:
+        if 'firstname' not in present_fields:
             field_errors.append(RequiredFieldError('firstname'))
-        if user.lastname:
-            present_fields.append('lastname')
-        else:
+        if 'lastname' not in present_fields:
             field_errors.append(RequiredFieldError('lastname'))
-        if user.email:
-            present_fields.append('email')
-        else:
+        if 'email' not in present_fields:
             field_errors.append(RequiredFieldError('email'))
-        if user.username:
-            present_fields.append('username')
-        else:
+        if 'username' not in present_fields:
             field_errors.append(RequiredFieldError('username'))
-        if user.password:
-            present_fields.append('password')
-        else:
+        if 'password' not in present_fields:
             field_errors.append(RequiredFieldError('password'))
         if len(field_errors) == 0:
             return True

@@ -42,7 +42,7 @@ class LocationLogic(ObjectLogic):
         """
         errors.clear()
         present_fields = self.get_present_fields(location)
-        self.rule_required_fields(location, errors, present_fields)
+        self.rule_required_fields(errors, present_fields)
         if 'owner_id' in present_fields:
             self.rule_owner_user_exists(location, errors)
         if 'parent_loc_id' in present_fields:
@@ -64,11 +64,10 @@ class LocationLogic(ObjectLogic):
             present_fields.append('description')
         return present_fields
 
-    def rule_required_fields(self, location, errors, present_fields):
+    def rule_required_fields(self, errors, present_fields):
         """
         Validar la presencia de los campos requeridos, dada la lista de los presentes.
 
-        :type location: Location
         :type errors: list of ValidationError
         :type present_fields: list of str
         :rtype: bool

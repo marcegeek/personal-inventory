@@ -35,7 +35,7 @@ class ItemLogic(ObjectLogic):
         :type location: Location
         :rtype: list of Item
         """
-        return self.dao.get_all_by_location()
+        return self.dao.get_all_by_location(location)
 
     def validate_all_rules(self, item, errors):
         """
@@ -47,7 +47,7 @@ class ItemLogic(ObjectLogic):
         """
         errors.clear()
         present_fields = self.get_present_fields(item)
-        self.rule_required_fields(item, errors, present_fields)
+        self.rule_required_fields(errors, present_fields)
         if 'owner_id' in present_fields:
             self.rule_owner_user_exists(item, errors)
         if 'location_id' in present_fields:
@@ -73,11 +73,10 @@ class ItemLogic(ObjectLogic):
             present_fields.append('quantity')
         return present_fields
 
-    def rule_required_fields(self, item, errors, present_fields):
+    def rule_required_fields(self, errors, present_fields):
         """
         Validar la presencia de los campos requeridos, dada la lista de los presentes.
 
-        :type item: Item
         :type errors: list of ValidationError
         :type present_fields: list of str
         :rtype: bool
