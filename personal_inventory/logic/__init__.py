@@ -96,7 +96,7 @@ class ObjectLogic:
         if self.validate_all_rules(obj, errors):
             self.dao.update(obj)
             return True
-        raise ValidationException(errors)
+        raise ValidationException(*errors)
 
     def delete(self, object_id):
         """
