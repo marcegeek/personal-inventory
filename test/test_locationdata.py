@@ -25,7 +25,7 @@ class TestLocationData(Test):
 
         self.assertEqual(loc1.id, 1)
         self.assertEqual(loc2.id, 2)
-        self.assertEqual(len(self.locationdao.get_all_by_user(u)), 2)
+        self.assertEqual(len(u.locations), 2)
 
     def test_insert_sublocation(self):
         # pre-condiciones: no hay ubicaciones registradas
@@ -45,5 +45,5 @@ class TestLocationData(Test):
         self.assertEqual(root.id, 1)
         self.assertEqual(child1.id, 2)
         self.assertEqual(child2.id, 3)
-        self.assertEqual(len(self.locationdao.get_sublocations(root)), 2)
-        self.assertEqual(len(self.locationdao.get_all_by_user(u)), 3)
+        self.assertEqual(len(root.sublocations), 2)
+        self.assertEqual(len(u.locations), 3)
