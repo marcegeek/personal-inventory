@@ -1,8 +1,9 @@
-from personal_inventory.logic.user_logic import InvalidLengthError
+from personal_inventory.logic.user_logic import UserLogic
 
-from personal_inventory.logic import ObjectLogic, RequiredFieldError, ValidationError, ForeignKeyError
+from personal_inventory.logic import ObjectLogic, RequiredFieldError, ValidationError, ForeignKeyError, \
+    InvalidLengthError
 
-from personal_inventory.data.data import LocationData, UserData
+from personal_inventory.data.data import LocationData
 
 
 class LocationLogic(ObjectLogic):
@@ -91,9 +92,9 @@ class LocationLogic(ObjectLogic):
         :type errors: list of ValidationError
         :rtype: bool
         """
-        userdao = UserData()
-        if userdao.get_by_id(location.owner_id) is None:
-            errors.append(ForeignKeyError('user'))
+        ul = UserLogic()
+        if ul.get_by_id(location.owner_id) is None:
+            errors.append(ForeignKeyError('owner_id'))
         return True
 
     def rule_parent_location_exists(self, location, errors):
@@ -105,7 +106,7 @@ class LocationLogic(ObjectLogic):
         :rtype: bool
         """
         if self.get_by_id(location.id) is None:
-            errors.append(ForeignKeyError('location'))
+            errors.append(ForeignKeyError('parent_loc_id'))
         return True
 
     def rule_description_len(self, location, errors):

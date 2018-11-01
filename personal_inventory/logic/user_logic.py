@@ -2,7 +2,8 @@ import email_validator
 import re
 
 from personal_inventory.data.data import UserData
-from personal_inventory.logic import ObjectLogic, ValidationError, RepeatedUniqueField, RequiredFieldError
+from personal_inventory.logic import ObjectLogic, ValidationError, RepeatedUniqueField, RequiredFieldError, \
+    InvalidLengthError
 
 
 class InvalidEmailError(ValidationError):
@@ -30,17 +31,6 @@ class RepeatedUsernameError(RepeatedUniqueField):
 
     def __str__(self):
         return 'Username is repeated'
-
-
-class InvalidLengthError(ValidationError):
-
-    def __init__(self, field, len_range):
-        super().__init__(field)
-        self.range = len_range
-
-    def __str__(self):
-        fmt_str = '{0} length must be between {1} and {2}'
-        return fmt_str.format(self.field, self.range[0], self.range[1])
 
 
 class InvalidUsernameError(ValidationError):

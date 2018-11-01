@@ -15,20 +15,25 @@ class RequiredFieldError(ValidationError):
 
 class RepeatedUniqueField(ValidationError):
 
-    def __init__(self, field):
-        super().__init__(field)
-
     def __str__(self):
         return '{0} is repeated'.format(self.field)
 
 
 class ForeignKeyError(ValidationError):
 
-    def __init__(self, field):
-        super().__init__(field)
-
     def __str__(self):
         return "{0} foreign key doesn't exist".format(self.field)
+
+
+class InvalidLengthError(ValidationError):
+
+    def __init__(self, field, len_range):
+        super().__init__(field)
+        self.range = len_range
+
+    def __str__(self):
+        fmt_str = '{0} length must be between {1} and {2}'
+        return fmt_str.format(self.field, self.range[0], self.range[1])
 
 
 class ValidationException(Exception):
