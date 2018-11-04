@@ -1,7 +1,11 @@
+from sqlalchemy.pool import StaticPool
+
+
 class DataConfig:
     DB_CONF = {
         'sqlalchemy.url': 'sqlite://',
-        'sqlalchemy.connect_args': {'check_same_thread': False}
+        'sqlalchemy.connect_args': {'check_same_thread': False},
+        'sqlalchemy.poolclass': StaticPool
     }
 
 
