@@ -1,3 +1,9 @@
+import abc
+
+from personal_inventory.data.data import ObjectData
+from personal_inventory.logic.plain_object import PlainObject
+
+
 class ValidationError:
 
     def __init__(self, field):
@@ -25,6 +31,12 @@ class ForeignKeyError(ValidationError):
         return "{0} foreign key doesn't exist".format(self.field)
 
 
+class DeleteForeingKeyError(ValidationError):
+
+    def __str__(self):
+        return "Still some {0} referencing object".format(self.field)
+
+
 class InvalidLengthError(ValidationError):
 
     def __init__(self, field, len_range):
@@ -40,60 +52,66 @@ class ValidationException(Exception):
     pass
 
 
-class ObjectLogic:
+class ObjectLogic(abc.ABC):
 
     def __init__(self):
-        self.dao = None  # reemplazar en las subclases
+        self.dao = ObjectData()  # reemplazar en las subclases
+        self.plain_object_factory = PlainObject  # reemplazar en las subclases
 
     def get_by_id(self, object_id):
         """
         Recuperar un objeto del modelo dado su id.
 
         :type object_id: int
-        :rtype: Model | None
+        :rtype: PlainObject | None
         """
-        return self.dao.get_by_id(object_id)
+        return self.plain_object_factory.make_from_model(self.dao.get_by_id(object_id))
 
     def get_all(self):
         """
         Recuperar todos los objetos del modelo.
 
-        :rtype: list of Model
+        :rtype: list of PlainObject
         """
-        return self.dao.get_all()
+        return [self.plain_object_factory.make_from_model(om) for om in self.dao.get_all()]
 
     def insert(self, obj):
         """
-        Dar de alta un objeto del modelo.
+        Dar de alta un objeto plano en el modelo.
 
         Primero se deben validar las reglas de negocio.
         Si no validan, levantar una excepción con los
         errores de validación correspondientes.
 
-        :type obj: Model
+        :type obj: PlainObject
         :rtype: bool
         :raise: ValidationException
         """
         errors = []
         if self.validate_all_rules(obj, errors):
-            self.dao.insert(obj)
+            om = self.dao.insert(obj.to_model())
+            obj.id = om.id
             return True
         raise ValidationException(*errors)
 
     def update(self, obj):
         """
-        Modfificar un objeto del modelo.
+        Modfificar un objeto plano en el modelo.
 
         Primero se deben validar las reglas de negocio.
         Si no validan, levantar una excepción con los
         errores de validación correspondientes.
 
-        :type obj: Model
+        :type obj: PlainObject
         :rtype: bool
         :raise: ValidationException
         """
         errors = []
         if self.validate_all_rules(obj, errors):
+            model_object = self.dao.get_by_id(obj.id)
+            if model_object is None:
+                return False
+            obj.update_model(model_object)
             self.dao.update(obj)
             return True
         raise ValidationException(*errors)
@@ -102,10 +120,21 @@ class ObjectLogic:
         """
         Dar de baja un objeto del modelo según su id.
 
+        Primero se deben validar las reglas de eliminación
+        (no romper claves foráneas obligatorias de otros objetos).
+
         :type object_id: int
         :rtype: bool
         """
-        return self.dao.delete(object_id)
+        errors = []
+        if self.validate_deletion_fk_rules(object_id, errors):
+            return self.dao.delete(object_id)
+        raise ValidationException(*errors)
 
+    @abc.abstractmethod
     def validate_all_rules(self, obj, errors):
-        return False  # reemplazar en las subclases
+        pass
+
+    @abc.abstractmethod
+    def validate_deletion_fk_rules(self, object_id, errors):
+        pass

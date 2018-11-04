@@ -1,11 +1,10 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Date
+from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, backref
 
 Base = declarative_base()
 
 
-class User(Base):
+class UserModel(Base):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
@@ -14,20 +13,17 @@ class User(Base):
     email = Column(String(50), unique=True, nullable=False)
     username = Column(String(50), unique=True, nullable=False)
     password = Column(String(30), nullable=False)
-    items = relationship('Item', backref='owner', viewonly=True, bake_queries=False)
-    locations = relationship('Location', viewonly=True, bake_queries=False)
 
 
-class Location(Base):
+class LocationModel(Base):
     __tablename__ = 'locations'
 
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
     owner_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     description = Column(String(50), nullable=False)
-    items = relationship('Item', backref='location', viewonly=True, bake_queries=False)
 
 
-class Item(Base):
+class ItemModel(Base):
     __tablename__ = 'items'
 
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)

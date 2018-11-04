@@ -1,9 +1,7 @@
-from personal_inventory.logic.location_logic import LocationLogic
-from personal_inventory.logic.user_logic import UserLogic
-
 from personal_inventory.data.data import ItemData
 from personal_inventory.logic import ObjectLogic, RequiredFieldError, ForeignKeyError, InvalidLengthError, \
     ValidationError
+from personal_inventory.logic.plain_object import Item
 
 
 class InvalidValueError(ValidationError):
@@ -18,24 +16,39 @@ class ItemLogic(ObjectLogic):
     def __init__(self):
         super().__init__()
         self.dao = ItemData()
+        self.plain_object_factory = Item
 
-    def get_all_by_user(self, user):
+    def get_all_by_user(self, user, fill_location=False):
         """
         Recuperar todos los ítems pertenecientes a un usuario.
 
         :type user: User
+        :type fill_location: bool
         :rtype: list of Item
         """
-        return self.dao.get_all_by_user(user)
+        item_list = [Item.make_from_model(im) for im in self.dao.get_all_by_user(user)]
+        if fill_location:
+            from personal_inventory.logic.location_logic import LocationLogic
+            for item in item_list:
+                item.location = LocationLogic().get_by_id(item.id)
+        return item_list
 
-    def get_all_by_location(self, location):
+    def get_all_by_location(self, location, fill_location=False):
         """
         Recuperar todos los ítems que están en una ubicación.
 
         :type location: Location
+        :type fill_location: bool
         :rtype: list of Item
         """
-        return self.dao.get_all_by_location(location)
+        item_list = [Item.make_from_model(im) for im in self.dao.get_all_by_location(location)]
+        if fill_location:
+            for item in item_list:
+                item.location = location
+        return item_list
+
+    def validate_deletion_fk_rules(self, object_id, errors):
+        return True  # nada depende del ítem (por ahora)
 
     def validate_all_rules(self, item, errors):
         """
@@ -61,7 +74,8 @@ class ItemLogic(ObjectLogic):
             return True
         return False
 
-    def get_present_fields(self, item):
+    @staticmethod
+    def get_present_fields(item):
         present_fields = []
         if item.owner_id:
             present_fields.append('owner_id')
@@ -73,7 +87,8 @@ class ItemLogic(ObjectLogic):
             present_fields.append('quantity')
         return present_fields
 
-    def rule_required_fields(self, errors, present_fields):
+    @staticmethod
+    def rule_required_fields(errors, present_fields):
         """
         Validar la presencia de los campos requeridos, dada la lista de los presentes.
 
@@ -94,7 +109,8 @@ class ItemLogic(ObjectLogic):
             errors.append(f)
         return False
 
-    def rule_owner_user_exists(self, item, errors):
+    @staticmethod
+    def rule_owner_user_exists(item, errors):
         """
         Validar que existe el usuario propietario del item.
 
@@ -102,12 +118,14 @@ class ItemLogic(ObjectLogic):
         :type errors: list of ValidationError
         :rtype: bool
         """
+        from personal_inventory.logic.user_logic import UserLogic
         ul = UserLogic()
         if ul.get_by_id(item.owner_id) is None:
             errors.append(ForeignKeyError('owner_id'))
         return True
 
-    def rule_location_exists(self, item, errors):
+    @staticmethod
+    def rule_location_exists(item, errors):
         """
         Validar que existe la ubicación del ítem.
 
@@ -115,12 +133,14 @@ class ItemLogic(ObjectLogic):
         :type errors: list of ValidationError
         :rtype: bool
         """
+        from personal_inventory.logic.location_logic import LocationLogic
         ll = LocationLogic()
         if ll.get_by_id(item.location_id) is None:
             errors.append(ForeignKeyError('location_id'))
         return True
 
-    def rule_description_len(self, item, errors):
+    @classmethod
+    def rule_description_len(cls, item, errors):
         """
         Validar que la descripción del ítem cuente con al menos 3 caracteres
         y no más de 50.
@@ -129,12 +149,13 @@ class ItemLogic(ObjectLogic):
         :type errors: list of ValidationError
         :rtype: bool
         """
-        if not self.DESCRIPTION_LEN[0] <= len(item.description) <= self.DESCRIPTION_LEN[1]:
-            errors.append(InvalidLengthError('description', self.DESCRIPTION_LEN))
+        if not cls.DESCRIPTION_LEN[0] <= len(item.description) <= cls.DESCRIPTION_LEN[1]:
+            errors.append(InvalidLengthError('description', cls.DESCRIPTION_LEN))
             return False
         return True
 
-    def rule_valid_quantity(self, item, errors):
+    @staticmethod
+    def rule_valid_quantity(item, errors):
         """
         Validar que la cantidad es un número entero no negativo.
 
@@ -146,8 +167,10 @@ class ItemLogic(ObjectLogic):
             q = int(item.quantity)
             if q >= 0:
                 return True
-        except Exception:
+        except ValueError:
             pass  # ignorar
+        except TypeError:
+            pass
         # si validó ya salió retornando True
         errors.append(InvalidValueError('quantity'))
         return False

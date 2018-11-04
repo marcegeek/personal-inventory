@@ -25,14 +25,14 @@
     <tr>
       <td>{{ location.description }}</td>
       <td>
-        <a class="btn btn-link" href="{{ url_for('location', item_id=location.id) }}">
+        <a class="btn btn-link" href="{{ url_for('location', location_id=location.id) }}">
           Edit &nbsp;&nbsp;<i class="fa fa-edit"></i>
         </a>
       </td>
       <td>
         <form action="{{ url_for('location_delete', location_id=location.id) }}" method="post">
           <button type="submit" class="btn btn-link"
-             name="item_id" value="{{ location.id }}">
+             name="location_id" value="{{ location.id }}">
             Remove &nbsp;&nbsp;<i class="fa fa-trash-alt"></i>
           </button>
           <div class="form-check">

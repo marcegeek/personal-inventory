@@ -10,18 +10,18 @@ Cada ítem pertenece a un único usuario y se localiza en una ubicación. Del mi
 
 Algunos ítems pueden además ser no-atómicos, es decir, están formados por muchos ítems pequeños e idénticos que se manejan como si fueran uno solo (ej.: agujas, alfileres, clavos, etc.). En este caso, se registra la cantidad actual del mismo.
 
-* Item:
+* ItemModel:
   * Id
   * Description
-  * Location
-  * User
+  * LocationModel
+  * UserModel
 
-* NonAtomicItem: Item
+* NonAtomicItemModel: ItemModel
   * Quantity
 
 De cada usuario se registra un id, el nombre y apellido, un e-mail y el nombre de usuario.
 
-* User:
+* UserModel:
   * Id
   * FirstName
   * LastName
@@ -30,10 +30,10 @@ De cada usuario se registra un id, el nombre y apellido, un e-mail y el nombre d
 
 Cada ubicación pertenece a un único usuario. De la misma se registra un id y una descripción.
 
-* Location:
+* LocationModel:
   * Id
   * Description
-  * User
+  * UserModel
 
 ### Modelo de dominio
 

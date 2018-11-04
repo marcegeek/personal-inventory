@@ -1,5 +1,5 @@
 import personal_inventory.data.data as dal
-from personal_inventory.data.models import User
+from personal_inventory.data.models import UserModel
 from test import Test
 
 
@@ -8,12 +8,12 @@ class TestUserData(Test):
     def setUp(self):
         super().setUp()
         self.userdao = dal.UserData()
-        self.users = [User(firstname='Carlos', lastname='Pérez',
-                           email='carlosperez@gmail.com', username='carlosperez',
-                           password='123456'),
-                      User(firstname='Roberto', lastname='García',
-                           email='robgarcia@gmail.com', username='robgarcia',
-                           password='123456')]
+        self.users = [UserModel(firstname='Carlos', lastname='Pérez',
+                                email='carlosperez@gmail.com', username='carlosperez',
+                                password='123456'),
+                      UserModel(firstname='Roberto', lastname='García',
+                                email='robgarcia@gmail.com', username='robgarcia',
+                                password='123456')]
 
     def test_insert(self):
         # pre-condiciones: no hay usuarios registrados

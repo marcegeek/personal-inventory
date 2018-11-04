@@ -3,7 +3,8 @@ import re
 
 from personal_inventory.data.data import UserData
 from personal_inventory.logic import ObjectLogic, ValidationError, RepeatedUniqueField, RequiredFieldError, \
-    InvalidLengthError
+    InvalidLengthError, DeleteForeingKeyError
+from personal_inventory.logic.plain_object import User
 
 
 class InvalidEmailError(ValidationError):
@@ -52,6 +53,7 @@ class UserLogic(ObjectLogic):
     def __init__(self):
         super().__init__()
         self.dao = UserData()
+        self.plain_object_factory = User
 
     def get_by_email(self, email):
         """
@@ -60,7 +62,7 @@ class UserLogic(ObjectLogic):
         :type email: str
         :rtype: User | None
         """
-        return self.dao.get_by_email(email)
+        return User.make_from_model(self.dao.get_by_email(email))
 
     def get_by_username(self, username):
         """
@@ -69,7 +71,7 @@ class UserLogic(ObjectLogic):
         :type username: str
         :rtype: User | None
         """
-        return self.dao.get_by_username(username)
+        return User.make_from_model(self.dao.get_by_username(username))
 
     def get_by_username_email(self, username_email):
         """
@@ -78,7 +80,7 @@ class UserLogic(ObjectLogic):
         :type username_email: str
         :rtype: User | None
         """
-        return self.dao.get_by_username_email(username_email)
+        return User.make_from_model(self.dao.get_by_username_email(username_email))
 
     def validate_login(self, username_email, password):
         """
@@ -93,6 +95,27 @@ class UserLogic(ObjectLogic):
             return True
         # user is None or user.password != password
         return False
+
+    def validate_deletion_fk_rules(self, user_id, errors):
+        """
+        Validar las reglas de eliminación.
+
+        :type user_id: int
+        :type errors: list of ValidationError
+        :rtype: bool
+        """
+        user = self.get_by_id(user_id)
+        if user is not None:
+            from personal_inventory.logic.item_logic import ItemLogic
+            from personal_inventory.logic.location_logic import LocationLogic
+
+            if len(ItemLogic().get_all_by_user(user)):
+                errors.append(DeleteForeingKeyError('item'))
+                return False
+            if len(LocationLogic().get_all_by_user(user)):
+                errors.append(DeleteForeingKeyError('location'))
+                return False
+        return True  # no importa si el usuario no existe
 
     def validate_all_rules(self, user, errors):
         """
@@ -122,7 +145,8 @@ class UserLogic(ObjectLogic):
             return True
         return False
 
-    def get_present_fields(self, user):
+    @staticmethod
+    def get_present_fields(user):
         present_fields = []
         if user.firstname:
             present_fields.append('firstname')
@@ -136,7 +160,8 @@ class UserLogic(ObjectLogic):
             present_fields.append('password')
         return present_fields
 
-    def rule_required_fields(self, errors, present_fields):
+    @staticmethod
+    def rule_required_fields(errors, present_fields):
         """
         Validar la presencia de los campos requeridos, dada la lista de los presentes.
 
@@ -189,7 +214,8 @@ class UserLogic(ObjectLogic):
         errors.append(RepeatedUsernameError())
         return False
 
-    def rule_firstname_len(self, user, errors):
+    @classmethod
+    def rule_firstname_len(cls, user, errors):
         """
         Validar que el nombre del usuario cuente con al menos 2 caracteres
         y no más de 15.
@@ -198,12 +224,13 @@ class UserLogic(ObjectLogic):
         :type errors: list of ValidationError
         :rtype: bool
         """
-        if not self.NAME_LEN[0] <= len(user.firstname) <= self.NAME_LEN[1]:
-            errors.append(InvalidLengthError('firstname', self.NAME_LEN))
+        if not cls.NAME_LEN[0] <= len(user.firstname) <= cls.NAME_LEN[1]:
+            errors.append(InvalidLengthError('firstname', cls.NAME_LEN))
             return False
         return True
 
-    def rule_lastname_len(self, user, errors):
+    @classmethod
+    def rule_lastname_len(cls, user, errors):
         """
         Validar que el apellido del usuario cuente con al menos 2 caracteres
         y no más de 15.
@@ -212,12 +239,13 @@ class UserLogic(ObjectLogic):
         :type errors: list of ValidationError
         :rtype: bool
         """
-        if not self.NAME_LEN[0] <= len(user.lastname) <= self.NAME_LEN[1]:
-            errors.append(InvalidLengthError('lastname', self.NAME_LEN))
+        if not cls.NAME_LEN[0] <= len(user.lastname) <= cls.NAME_LEN[1]:
+            errors.append(InvalidLengthError('lastname', cls.NAME_LEN))
             return False
         return True
 
-    def rule_email_len(self, user, errors):
+    @classmethod
+    def rule_email_len(cls, user, errors):
         """
         Validar que el e-mail del usuario cuente con al menos 3 caracteres
         y no más de 50.
@@ -226,12 +254,13 @@ class UserLogic(ObjectLogic):
         :type errors: list of ValidationError
         :rtype: bool
         """
-        if self.EMAIL_LEN[0] <= len(user.email) <= self.EMAIL_LEN[1]:
+        if cls.EMAIL_LEN[0] <= len(user.email) <= cls.EMAIL_LEN[1]:
             return True
-        errors.append(InvalidLengthError('email', self.EMAIL_LEN))
+        errors.append(InvalidLengthError('email', cls.EMAIL_LEN))
         return False
 
-    def rule_valid_email(self, user, errors):
+    @staticmethod
+    def rule_valid_email(user, errors):
         """
         Validar que el e-mail del usuario sea una dirección válida.
 
@@ -247,7 +276,8 @@ class UserLogic(ObjectLogic):
             errors.append(InvalidEmailError())
             return False
 
-    def rule_username_len(self, user, errors):
+    @classmethod
+    def rule_username_len(cls, user, errors):
         """
         Validar que el nombre de usuario cuente con al menos 5 caracteres
         y no más de 50.
@@ -256,12 +286,13 @@ class UserLogic(ObjectLogic):
         :type errors: list of ValidationError
         :rtype: bool
         """
-        if self.USERNAME_LEN[0] <= len(user.username) <= self.USERNAME_LEN[1]:
+        if cls.USERNAME_LEN[0] <= len(user.username) <= cls.USERNAME_LEN[1]:
             return True
-        errors.append(InvalidLengthError('username', self.USERNAME_LEN))
+        errors.append(InvalidLengthError('username', cls.USERNAME_LEN))
         return False
 
-    def rule_valid_username(self, user, errors):
+    @staticmethod
+    def rule_valid_username(user, errors):
         """
         Validar que el nombre de usuario sea válido:
         minúsculas, números y guiones bajos
@@ -275,7 +306,8 @@ class UserLogic(ObjectLogic):
         errors.append(InvalidUsernameError())
         return False
 
-    def rule_password_len(self, user, errors):
+    @classmethod
+    def rule_password_len(cls, user, errors):
         """
         Validar que la contraseña cuente con al menos 6 caracteres
         y no más de 30.
@@ -284,7 +316,7 @@ class UserLogic(ObjectLogic):
         :type errors: list of ValidationError
         :rtype: bool
         """
-        if self.PASSWORD_LEN[0] <= len(user.password) <= self.PASSWORD_LEN[1]:
+        if cls.PASSWORD_LEN[0] <= len(user.password) <= cls.PASSWORD_LEN[1]:
             return True
-        errors.append(InvalidLengthError('password', self.PASSWORD_LEN))
+        errors.append(InvalidLengthError('password', cls.PASSWORD_LEN))
         return False

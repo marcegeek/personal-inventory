@@ -1,7 +1,7 @@
 from sqlalchemy import engine_from_config
 from sqlalchemy.orm import sessionmaker
 
-from personal_inventory.data.models import Base, User, Location, Item
+from personal_inventory.data.models import Base, UserModel, LocationModel, ItemModel
 
 engine = None
 db_session = None
@@ -88,32 +88,32 @@ class UserData(ObjectData):
 
     def __init__(self):
         super().__init__()
-        self.model = User
+        self.model = UserModel
 
     def get_by_email(self, email):
         """
         Recuperar un usuario dado su email.
 
         :type email: str
-        :rtype: User | None
+        :rtype: UserModel | None
         """
-        return self.session.query(User).filter(User.email == email).first()
+        return self.session.query(UserModel).filter(UserModel.email == email).first()
 
     def get_by_username(self, username):
         """
         Recuperar un usuario dado su nombre de usuario.
 
         :type username: str
-        :rtype: User | None
+        :rtype: UserModel | None
         """
-        return self.session.query(User).filter(User.username == username).first()
+        return self.session.query(UserModel).filter(UserModel.username == username).first()
 
     def get_by_username_email(self, username_email):
         """
         Recuperar un usuario dado su nombre de usuario o e-mail.
 
         :type username_email: str
-        :rtype: User | None
+        :rtype: UserModel | None
         """
         user = self.get_by_username(username_email)
         if user is None:
@@ -125,38 +125,38 @@ class LocationData(ObjectData):
 
     def __init__(self):
         super().__init__()
-        self.model = Location
+        self.model = LocationModel
 
     def get_all_by_user(self, user):
         """
         Recuperar todas las ubicaciones pertenecientes a un usuario.
 
-        :type user: User
-        :rtype: list of Location
+        :type user: UserModel
+        :rtype: list of LocationModel
         """
-        return self.session.query(Location).filter(Location.owner_id == user.id).all()
+        return self.session.query(LocationModel).filter(LocationModel.owner_id == user.id).all()
 
 
 class ItemData(ObjectData):
 
     def __init__(self):
         super().__init__()
-        self.model = Item
+        self.model = ItemModel
 
     def get_all_by_user(self, user):
         """
         Recuperar todos los ítems pertenecientes a un usuario.
 
-        :type user: User
-        :rtype: list of Item
+        :type user: UserModel
+        :rtype: list of ItemModel
         """
-        return self.session.query(Item).filter(Item.owner_id == user.id).all()
+        return self.session.query(ItemModel).filter(ItemModel.owner_id == user.id).all()
 
     def get_all_by_location(self, location):
         """
         Recuperar todos los ítems que están en una ubicación.
 
-        :type location: Location
-        :rtype: list of Item
+        :type location: LocationModel
+        :rtype: list of ItemModel
         """
-        return self.session.query(Item).filter(Item.location_id == location.id).all()
+        return self.session.query(ItemModel).filter(ItemModel.location_id == location.id).all()

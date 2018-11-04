@@ -1,5 +1,5 @@
-from personal_inventory.data.models import User
 from personal_inventory.logic import RequiredFieldError
+from personal_inventory.logic.plain_object import User
 from personal_inventory.logic.user_logic import UserLogic, RepeatedEmailError, RepeatedUsernameError, \
     InvalidLengthError, InvalidUsernameError, InvalidEmailError
 from test import Test
@@ -22,6 +22,7 @@ class TestUserLogic(Test):
 
         # post-condiciones
         self.assertTrue(success)
+        self.assertEqual(user.id, 1)
         self.assertEqual(len(self.ul.get_all()), 1)
 
     def test_update(self):
@@ -92,16 +93,16 @@ class TestUserLogic(Test):
         self.ul.insert(user3)
 
         # post-condiciones
-        self.assertEqual(self.ul.get_by_id(user1.id), user1)
-        self.assertEqual(self.ul.get_by_email(user1.email), user1)
-        self.assertEqual(self.ul.get_by_username(user1.username), user1)
-        self.assertEqual(self.ul.get_by_username_email(user1.username), user1)
-        self.assertEqual(self.ul.get_by_username_email(user1.email), user1)
-        self.assertEqual(self.ul.get_by_id(user2.id), user2)
-        self.assertEqual(self.ul.get_by_email(user2.email), user2)
-        self.assertEqual(self.ul.get_by_username(user2.username), user2)
-        self.assertEqual(self.ul.get_by_username_email(user2.username), user2)
-        self.assertEqual(self.ul.get_by_username_email(user2.email), user2)
+        self.assertEqual(self.ul.get_by_id(user1.id).id, user1.id)
+        self.assertEqual(self.ul.get_by_email(user1.email).id, user1.id)
+        self.assertEqual(self.ul.get_by_username(user1.username).id, user1.id)
+        self.assertEqual(self.ul.get_by_username_email(user1.username).id, user1.id)
+        self.assertEqual(self.ul.get_by_username_email(user1.email).id, user1.id)
+        self.assertEqual(self.ul.get_by_id(user2.id).id, user2.id)
+        self.assertEqual(self.ul.get_by_email(user2.email).id, user2.id)
+        self.assertEqual(self.ul.get_by_username(user2.username).id, user2.id)
+        self.assertEqual(self.ul.get_by_username_email(user2.username).id, user2.id)
+        self.assertEqual(self.ul.get_by_username_email(user2.email).id, user2.id)
         self.assertEqual(len(self.ul.get_all()), 3)
 
     def test_rule_required_fields(self):

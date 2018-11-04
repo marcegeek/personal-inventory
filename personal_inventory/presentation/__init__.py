@@ -1,12 +1,12 @@
 import os
-from flask import Flask, url_for, render_template, request, redirect, session, flash, render_template_string, abort
+from flask import Flask, url_for, render_template, request, redirect, session, flash, abort
 
 import config
 from personal_inventory.data import data as dal
-from personal_inventory.data.models import Item, Location, User
 from personal_inventory.logic import ValidationException
 from personal_inventory.logic.item_logic import ItemLogic
 from personal_inventory.logic.location_logic import LocationLogic
+from personal_inventory.logic.plain_object import User, Item, Location
 from personal_inventory.logic.user_logic import UserLogic
 
 app = Flask(__name__)
@@ -121,8 +121,9 @@ def edit_profile():
 def items():
     user = get_user_from_session()
     if user is not None:
-        user_items = user.items
-        return render_template('items.html', items=user_items, locations=list(user.locations))
+        user_items = ItemLogic().get_all_by_user(user, fill_location=True)
+        user_locations = LocationLogic().get_all_by_user(user)
+        return render_template('items.html', items=user_items, locations=user_locations)
     return redirect(url_for('home'))
 
 
@@ -131,11 +132,11 @@ def create_item():
     user = get_user_from_session()
     if user is not None:
         if request.method == 'GET':
-            locations = user.locations
-            if len(locations) == 0:
+            user_locations = LocationLogic().get_all_by_user(user)
+            if len(user_locations) == 0:
                 flash('No locations were present, create one first', 'error')
                 return redirect(url_for('create_location'))
-            return render_template('item-editor.html', item=None, locations=list(locations))
+            return render_template('item-editor.html', item=None, locations=user_locations)
         else:
             description = request.form['description'].strip()
             location_id = request.form['location'].strip()
@@ -158,23 +159,23 @@ def item(item_id):
     user = get_user_from_session()
     if user is not None:
         item_logic = ItemLogic()
-        item = item_logic.get_by_id(item_id)
-        if item is not None:
-            if item.owner_id == user.id:
-                locations = user.locations
+        current_item = item_logic.get_by_id(item_id)
+        if current_item is not None:
+            if current_item.owner_id == user.id:
+                user_locations = LocationLogic().get_all_by_user(user)
                 if request.method == 'GET':
-                    return render_template('item-editor.html', item=item, locations=locations)
+                    return render_template('item-editor.html', item=current_item, locations=user_locations)
                 else:
                     description = request.form['description'].strip()
                     location_id = request.form['location'].strip()
                     quantity = request.form['quantity'].strip()
                     if len(quantity) == 0:
                         quantity = None
-                    item.description = description
-                    item.location_id = location_id
-                    item.quantity = quantity
+                    current_item.description = description
+                    current_item.location_id = location_id
+                    current_item.quantity = quantity
                     try:
-                        item_logic.update(item)
+                        item_logic.update(current_item)
                         return redirect(url_for('items'))
                     except ValidationException as ex:
                         for err in ex.args:
@@ -192,12 +193,16 @@ def item_delete(item_id):
     user = get_user_from_session()
     if user is not None:
         item_logic = ItemLogic()
-        item = item_logic.get_by_id(item_id)
-        if item is not None:
-            if item.owner_id == user.id:
+        current_item = item_logic.get_by_id(item_id)
+        if current_item is not None:
+            if current_item.owner_id == user.id:
                 confirmed = request.form.get('confirmed')
                 if confirmed:
-                    item_logic.delete(item_id)
+                    try:
+                        item_logic.delete(item_id)
+                    except ValidationException as ex:
+                        for err in ex.args:
+                            flash(str(err), 'error')
                 return redirect(url_for('items'))
             else:
                 abort(401)
@@ -210,7 +215,7 @@ def item_delete(item_id):
 def locations():
     user = get_user_from_session()
     if user is not None:
-        user_locations = user.locations
+        user_locations = LocationLogic().get_all_by_user(user)
         return render_template('locations.html', locations=user_locations)
     return redirect(url_for('home'))
 
@@ -234,21 +239,21 @@ def create_location():
     return redirect(url_for('home'))
 
 
-@app.route('/locations/<int:item_id>', methods=['GET', 'POST'])
+@app.route('/locations/<int:location_id>', methods=['GET', 'POST'])
 def location(location_id):
     user = get_user_from_session()
     if user is not None:
         location_logic = LocationLogic()
-        location = location_logic.get_by_id(location_id)
-        if item is not None:
-            if item.owner_id == user.id:
+        current_location = location_logic.get_by_id(location_id)
+        if current_location is not None:
+            if current_location.owner_id == user.id:
                 if request.method == 'GET':
-                    return render_template('location-editor.html', location=location)
+                    return render_template('location-editor.html', location=current_location)
                 else:
                     description = request.form['description'].strip()
-                    location.description = description
+                    current_location.description = description
                     try:
-                        location_logic.update(item)
+                        location_logic.update(current_location)
                         return redirect(url_for('locations'))
                     except ValidationException as ex:
                         for err in ex.args:
@@ -266,9 +271,9 @@ def location_delete(location_id):
     user = get_user_from_session()
     if user is not None:
         location_logic = LocationLogic()
-        location = location_logic.get_by_id(location_id)
-        if location is not None:
-            if location.owner_id == user.id:
+        current_location = location_logic.get_by_id(location_id)
+        if current_location is not None:
+            if current_location.owner_id == user.id:
                 confirmed = request.form.get('confirmed')
                 if confirmed:
                     location_logic.delete(location_id)
