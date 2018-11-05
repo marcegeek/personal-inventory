@@ -1,4 +1,4 @@
-from sqlalchemy import engine_from_config
+from sqlalchemy import engine_from_config, func
 from sqlalchemy.orm import sessionmaker
 
 from personal_inventory.data.models import Base
@@ -42,7 +42,7 @@ class ObjectData:
         Recuperar un objeto del modelo dado su id.
 
         :type object_id: int
-        :rtype: Model
+        :rtype: Model | None
         """
         return self.session.query(self.model).filter(self.model.id == object_id).first()
 
@@ -180,3 +180,25 @@ class UsageData(ObjectData):
         :rtype: list of UsageModel
         """
         return self.session.query(UsageModel).filter(UsageModel.item_id == item.id).all()
+
+    def get_by_item_and_start_date(self, item, start_date):
+        """
+        Recuperar la utilización de un ítem a partir de una fecha de inicio.
+
+        :type item: ItemModel
+        :type start_date: datetime.Date
+        :rtype: UsageModel | None
+        """
+        return self.session.query(UsageModel).filter(UsageModel.item_id == item.id and
+                                                     UsageModel.start_date == start_date).first()
+
+    def get_last_usage_by_item(self, item):
+        """
+        Recuperar la última utilización de un ítem.
+
+        :type item: ItemModel
+        :rtype: UsageModel | None
+        """
+        return self.session.query(UsageModel).filter_by(item_id=item.id).\
+            group_by(UsageModel.item_id).\
+            having(func.max(UsageModel.start_date) == UsageModel.start_date).first()

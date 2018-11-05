@@ -1,5 +1,5 @@
 from personal_inventory.business.entities.user import User
-from personal_inventory.business.logic import RequiredFieldError, InvalidLengthError
+from personal_inventory.business.logic import RequiredFieldError, InvalidLength
 from personal_inventory.business.logic.user_logic import UserLogic, RepeatedEmailError, RepeatedUsernameError, \
     InvalidUsernameError, InvalidEmailError
 from test import Test
@@ -229,7 +229,7 @@ class TestUserLogic(Test):
         # nombre menor que 2 caracteres
         user = User(firstname='A')
         self.assertFalse(self.ul.rule_firstname_len(user, errors))
-        self.assertIsInstance(errors[0], InvalidLengthError)
+        self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'firstname')
 
     def test_rule_firstname_len_greater_than_15(self):
@@ -242,7 +242,7 @@ class TestUserLogic(Test):
         # nombre mayor que 15 caracteres
         invalido = User(firstname='María Antonietaa')
         self.assertFalse(self.ul.rule_firstname_len(invalido, errors))
-        self.assertIsInstance(errors[0], InvalidLengthError)
+        self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'firstname')
 
     def test_rule_lastname_len_less_than_2(self):
@@ -255,7 +255,7 @@ class TestUserLogic(Test):
         # apellido menor que 2 caracteres
         invalido = User(lastname='B')
         self.assertFalse(self.ul.rule_lastname_len(invalido, errors))
-        self.assertIsInstance(errors[0], InvalidLengthError)
+        self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'lastname')
 
     def test_rule_lastname_len_greater_than_15(self):
@@ -268,7 +268,7 @@ class TestUserLogic(Test):
         # apellido mayor que 15 caracteres
         invalido = User(lastname='Cenarruzabeitias')
         self.assertFalse(self.ul.rule_lastname_len(invalido, errors))
-        self.assertIsInstance(errors[0], InvalidLengthError)
+        self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'lastname')
 
     def test_rule_email_len_less_than_3(self):
@@ -281,7 +281,7 @@ class TestUserLogic(Test):
         # e-mail menor que 3 caracteres
         invalido = User(email='a@')
         self.assertFalse(self.ul.rule_email_len(invalido, errors))
-        self.assertIsInstance(errors[0], InvalidLengthError)
+        self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'email')
 
     def test_rule_email_len_greater_than_50(self):
@@ -294,7 +294,7 @@ class TestUserLogic(Test):
         # e-mail mayor que 50 caracteres
         invalido = User(email='gytwaehwkidtuywxdmxyegiixtkfwvfdjgixifzj1@gmail.com')
         self.assertFalse(self.ul.rule_email_len(invalido, errors))
-        self.assertIsInstance(errors[0], InvalidLengthError)
+        self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'email')
 
     def test_rule_valid_email(self):
@@ -320,7 +320,7 @@ class TestUserLogic(Test):
         # nombre de usuario menor que 5 caracteres
         invalido = User(username='admi')
         self.assertFalse(self.ul.rule_username_len(invalido, errors))
-        self.assertIsInstance(errors[0], InvalidLengthError)
+        self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'username')
 
     def test_rule_username_len_greater_than_50(self):
@@ -333,7 +333,7 @@ class TestUserLogic(Test):
         # nombre de usuario mayor que 50 caracteres
         invalido = User(username='fbeumyivwzzxzrigiuhijhhacvjkncgzpvfnctaubxjlhmffcbc')
         self.assertFalse(self.ul.rule_username_len(invalido, errors))
-        self.assertIsInstance(errors[0], InvalidLengthError)
+        self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'username')
 
     def test_rule_valid_username(self):
@@ -366,7 +366,7 @@ class TestUserLogic(Test):
         # contraseña menor que 6 caracteres
         invalido = User(password='12345')
         self.assertFalse(self.ul.rule_password_len(invalido, errors))
-        self.assertIsInstance(errors[0], InvalidLengthError)
+        self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'password')
 
     def test_rule_password_len_greater_than_30(self):
@@ -379,5 +379,5 @@ class TestUserLogic(Test):
         # contraseña mayor que 30 caracteres
         invalido = User(password='rixrbeggtviybiavhotaegkznidjtqx')
         self.assertFalse(self.ul.rule_password_len(invalido, errors))
-        self.assertIsInstance(errors[0], InvalidLengthError)
+        self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'password')

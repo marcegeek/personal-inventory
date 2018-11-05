@@ -1,6 +1,6 @@
 from personal_inventory.business.entities.location import Location
 from personal_inventory.business.logic import RequiredFieldError, ForeignKeyError, \
-    DeleteForeingKeyError, InvalidLengthError, EntityLogic
+    DeleteForeingKeyError, InvalidLength, EntityLogic
 from personal_inventory.data.data import LocationData
 
 
@@ -112,6 +112,6 @@ class LocationLogic(EntityLogic):
         :rtype: bool
         """
         if not cls.DESCRIPTION_LEN[0] <= len(location.description) <= cls.DESCRIPTION_LEN[1]:
-            errors.append(InvalidLengthError('description', cls.DESCRIPTION_LEN))
+            errors.append(InvalidLength('description', cls.DESCRIPTION_LEN))
             return False
         return True

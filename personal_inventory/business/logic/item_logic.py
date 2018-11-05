@@ -1,13 +1,35 @@
+import datetime
+
 from personal_inventory.business.entities.item import Item
-from personal_inventory.business.logic import RequiredFieldError, ForeignKeyError, InvalidLengthError, EntityLogic
+from personal_inventory.business.entities.usage import Usage
+from personal_inventory.business.logic import RequiredFieldError, ForeignKeyError, InvalidLength, EntityLogic, \
+    ValidationException, DeleteForeingKeyError, RepeatedUniqueField
 from personal_inventory.business.logic import ValidationError
-from personal_inventory.data.data import ItemData
+from personal_inventory.data.data import ItemData, UsageData
 
 
-class InvalidValueError(ValidationError):
+class InvalidValue(ValidationError):
 
     def __str__(self):
         return '{0} value is invalid'.format(self.field)
+
+
+class ItemAlreadyInUse(ValidationError):
+
+    def __init__(self):
+        super().__init__(None)
+
+    def __str__(self):
+        return 'Item is already in use'
+
+
+class ItemNotCurrentlyInUse(ValidationError):
+
+    def __init__(self):
+        super().__init__(None)
+
+    def __str__(self):
+        return 'Item isn\'t currently in use'
 
 
 class ItemLogic(EntityLogic):
@@ -16,6 +38,7 @@ class ItemLogic(EntityLogic):
     def __init__(self):
         super().__init__()
         self.dao = ItemData()
+        self.usagedao = UsageData()
         self.plain_object_factory = Item
 
     def get_all_by_user(self, user, fill_location=False):
@@ -47,8 +70,99 @@ class ItemLogic(EntityLogic):
                 item.location = location
         return item_list
 
-    def validate_deletion_fk_rules(self, object_id, errors):
-        return True  # nada depende del ítem (por ahora)
+    def get_all_usages(self, item):
+        """
+        Recuperar todas las utilizaciones del ítem.
+
+        :type item: Item
+        :rtype: list of Usage
+        """
+        return [Usage.make_from_model(um) for um in self.usagedao.get_all_by_item(item.to_model())]
+
+    def get_usage_by_start_date(self, item, start_date):
+        """
+        Recuperar la utilización del ítem a partir de una fecha de inicio.
+
+        :type item: Item
+        :type start_date: datetime.Date
+        :rtype: Usage | None
+        """
+        return Usage.make_from_model(self.usagedao.get_by_item_and_start_date(item.to_model(), start_date))
+
+    def get_last_usage(self, item):
+        """
+        Recuperar la última utilización de un ítem.
+
+        :type item: Item
+        :rtype: Usage | None
+        """
+        return Usage.make_from_model(self.usagedao.get_last_usage_by_item(item.to_model()))
+
+    def is_item_in_use(self, item):
+        """
+        Determinar si el ítem se encuentra actualmente en uso.
+
+        :type item: Item
+        :rtype: bool
+        """
+        last = self.get_last_usage(item)
+        if last is not None and last.end_date is None:
+            return True
+        return False
+
+    def begin_usage(self, item):
+        """
+        Comenzar a utilizar el ítem. El mismo permanecerá 'en uso'
+        hasta que se marque el fin de uso.
+
+        :type item: Item
+        :rtype: bool
+        :raises: ValidationException
+        """
+        today = datetime.date.today()
+        errors = []
+        self.rule_unique_usage_start_date(item, today, errors)
+        self.rule_not_already_in_use(item, errors)
+
+        if len(errors) == 0:
+            new_usage = Usage(item_id=item.id, start_date=today)
+            self.usagedao.insert(new_usage)
+            return True
+        else:
+            raise ValidationException(*errors)
+
+    def end_usage(self, item):
+        """
+        Terminar de utilizar el ítem. El mismo ahora quedará 'no en uso'.
+
+        :type item
+        :rtype: bool
+        :raises: ValidationException
+        """
+        if not self.is_item_in_use(item):
+            last_usage = self.get_last_usage(item)
+            last_usage.end_date = datetime.date.today()
+            usagemodel = self.usagedao.get_by_id(last_usage.id)
+            last_usage.update_model(usagemodel)
+            self.usagedao.update(usagemodel)
+            return True
+        else:
+            raise ValidationException(ItemNotCurrentlyInUse())
+
+    def validate_deletion_fk_rules(self, item_id, errors):
+        """
+        Validar las reglas de eliminación.
+
+        :type item_id: int
+        :type errors: list of ValidationError
+        :rtype: bool
+        """
+        item = self.get_by_id(item_id)
+        if item is not None:
+            if len(self.get_all_usages(item)):
+                errors.append(DeleteForeingKeyError('usage'))  # FIXME mejorar esto
+                return False
+        return True  # no importa si el ítem no existe
 
     def validate_all_rules(self, item, errors):
         """
@@ -150,7 +264,7 @@ class ItemLogic(EntityLogic):
         :rtype: bool
         """
         if not cls.DESCRIPTION_LEN[0] <= len(item.description) <= cls.DESCRIPTION_LEN[1]:
-            errors.append(InvalidLengthError('description', cls.DESCRIPTION_LEN))
+            errors.append(InvalidLength('description', cls.DESCRIPTION_LEN))
             return False
         return True
 
@@ -172,5 +286,32 @@ class ItemLogic(EntityLogic):
         except TypeError:
             pass
         # si validó ya salió retornando True
-        errors.append(InvalidValueError('quantity'))
+        errors.append(InvalidValue('quantity'))
+        return False
+
+    def rule_unique_usage_start_date(self, item, start_date, errors):
+        """
+        Validar que la fecha de inicio de una nueva utilización del ítem es única.
+
+        :type item: Item
+        :type start_date: datetime.Date
+        :type errors: list of ValidationError
+        :rtype: bool
+        """
+        if self.get_usage_by_start_date(item, start_date) is None:
+            return True
+        errors.append(RepeatedUniqueField('start_date'))
+        return False
+
+    def rule_not_already_in_use(self, item, errors):
+        """
+        Validar que el ítem no se encuentre ya en uso.
+
+        :type item: Item
+        :type errors: list of ValidationError
+        :rtype: bool
+        """
+        if not self.is_item_in_use(item):
+            return True
+        errors.append(ItemAlreadyInUse())
         return False

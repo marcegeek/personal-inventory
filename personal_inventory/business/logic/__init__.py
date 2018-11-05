@@ -37,7 +37,7 @@ class DeleteForeingKeyError(ValidationError):
         return "Still some {0} referencing object".format(self.field)
 
 
-class InvalidLengthError(ValidationError):
+class InvalidLength(ValidationError):
 
     def __init__(self, field, len_range):
         super().__init__(field)

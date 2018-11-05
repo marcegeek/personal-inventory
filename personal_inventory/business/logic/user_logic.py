@@ -4,7 +4,7 @@ import email_validator
 
 from personal_inventory.business.entities.user import User
 from personal_inventory.business.logic import RequiredFieldError, RepeatedUniqueField, \
-    DeleteForeingKeyError, InvalidLengthError, EntityLogic
+    DeleteForeingKeyError, InvalidLength, EntityLogic
 from personal_inventory.business.logic import ValidationError
 from personal_inventory.data.data import UserData
 
@@ -227,7 +227,7 @@ class UserLogic(EntityLogic):
         :rtype: bool
         """
         if not cls.NAME_LEN[0] <= len(user.firstname) <= cls.NAME_LEN[1]:
-            errors.append(InvalidLengthError('firstname', cls.NAME_LEN))
+            errors.append(InvalidLength('firstname', cls.NAME_LEN))
             return False
         return True
 
@@ -242,7 +242,7 @@ class UserLogic(EntityLogic):
         :rtype: bool
         """
         if not cls.NAME_LEN[0] <= len(user.lastname) <= cls.NAME_LEN[1]:
-            errors.append(InvalidLengthError('lastname', cls.NAME_LEN))
+            errors.append(InvalidLength('lastname', cls.NAME_LEN))
             return False
         return True
 
@@ -258,7 +258,7 @@ class UserLogic(EntityLogic):
         """
         if cls.EMAIL_LEN[0] <= len(user.email) <= cls.EMAIL_LEN[1]:
             return True
-        errors.append(InvalidLengthError('email', cls.EMAIL_LEN))
+        errors.append(InvalidLength('email', cls.EMAIL_LEN))
         return False
 
     @staticmethod
@@ -290,7 +290,7 @@ class UserLogic(EntityLogic):
         """
         if cls.USERNAME_LEN[0] <= len(user.username) <= cls.USERNAME_LEN[1]:
             return True
-        errors.append(InvalidLengthError('username', cls.USERNAME_LEN))
+        errors.append(InvalidLength('username', cls.USERNAME_LEN))
         return False
 
     @staticmethod
@@ -320,5 +320,5 @@ class UserLogic(EntityLogic):
         """
         if cls.PASSWORD_LEN[0] <= len(user.password) <= cls.PASSWORD_LEN[1]:
             return True
-        errors.append(InvalidLengthError('password', cls.PASSWORD_LEN))
+        errors.append(InvalidLength('password', cls.PASSWORD_LEN))
         return False
