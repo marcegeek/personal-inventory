@@ -1,7 +1,10 @@
 from sqlalchemy import engine_from_config
 from sqlalchemy.orm import sessionmaker
 
-from personal_inventory.data.models import Base, UserModel, LocationModel, ItemModel
+from personal_inventory.data.models import Base
+from personal_inventory.data.models.itemmodel import ItemModel
+from personal_inventory.data.models.locationmodel import LocationModel
+from personal_inventory.data.models.usermodel import UserModel
 
 engine = None
 db_session = None

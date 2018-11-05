@@ -1,7 +1,7 @@
 from personal_inventory.data.data import ItemData
-from personal_inventory.logic import ObjectLogic, RequiredFieldError, ForeignKeyError, InvalidLengthError, \
-    ValidationError
-from personal_inventory.logic.plain_object import Item
+from personal_inventory.business.logic import ValidationError
+from personal_inventory.business.logic import RequiredFieldError, ForeignKeyError, InvalidLengthError, EntityLogic
+from personal_inventory.business.entities.item import Item
 
 
 class InvalidValueError(ValidationError):
@@ -10,7 +10,7 @@ class InvalidValueError(ValidationError):
         return '{0} value is invalid'.format(self.field)
 
 
-class ItemLogic(ObjectLogic):
+class ItemLogic(EntityLogic):
     DESCRIPTION_LEN = (3, 50)
 
     def __init__(self):
@@ -28,7 +28,7 @@ class ItemLogic(ObjectLogic):
         """
         item_list = [Item.make_from_model(im) for im in self.dao.get_all_by_user(user)]
         if fill_location:
-            from personal_inventory.logic.location_logic import LocationLogic
+            from personal_inventory.business.logic.location_logic import LocationLogic
             for item in item_list:
                 item.location = LocationLogic().get_by_id(item.id)
         return item_list
@@ -118,7 +118,7 @@ class ItemLogic(ObjectLogic):
         :type errors: list of ValidationError
         :rtype: bool
         """
-        from personal_inventory.logic.user_logic import UserLogic
+        from personal_inventory.business.logic.user_logic import UserLogic
         ul = UserLogic()
         if ul.get_by_id(item.owner_id) is None:
             errors.append(ForeignKeyError('owner_id'))
@@ -133,7 +133,7 @@ class ItemLogic(ObjectLogic):
         :type errors: list of ValidationError
         :rtype: bool
         """
-        from personal_inventory.logic.location_logic import LocationLogic
+        from personal_inventory.business.logic.location_logic import LocationLogic
         ll = LocationLogic()
         if ll.get_by_id(item.location_id) is None:
             errors.append(ForeignKeyError('location_id'))

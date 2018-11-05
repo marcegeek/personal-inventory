@@ -1,11 +1,11 @@
-from personal_inventory.logic import ObjectLogic, RequiredFieldError, ValidationError, ForeignKeyError, \
-    InvalidLengthError, DeleteForeingKeyError
+from personal_inventory.business.logic import RequiredFieldError, ForeignKeyError, DeleteForeingKeyError, \
+    InvalidLengthError, EntityLogic
 
 from personal_inventory.data.data import LocationData
-from personal_inventory.logic.plain_object import Location
+from personal_inventory.business.entities.location import Location
 
 
-class LocationLogic(ObjectLogic):
+class LocationLogic(EntityLogic):
     DESCRIPTION_LEN = (3, 50)
 
     def __init__(self):
@@ -32,7 +32,7 @@ class LocationLogic(ObjectLogic):
         """
         location = self.get_by_id(location_id)
         if location is not None:
-            from personal_inventory.logic.item_logic import ItemLogic
+            from personal_inventory.business.logic.item_logic import ItemLogic
             if len(ItemLogic().get_all_by_location(location)):
                 errors.append(DeleteForeingKeyError('item'))  # FIXME mejorar esto
                 return False
@@ -96,7 +96,7 @@ class LocationLogic(ObjectLogic):
         :type errors: list of ValidationError
         :rtype: bool
         """
-        from personal_inventory.logic.user_logic import UserLogic
+        from personal_inventory.business.logic.user_logic import UserLogic
         ul = UserLogic()
         if ul.get_by_id(location.owner_id) is None:
             errors.append(ForeignKeyError('owner_id'))

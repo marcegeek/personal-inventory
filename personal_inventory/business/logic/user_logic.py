@@ -2,9 +2,10 @@ import email_validator
 import re
 
 from personal_inventory.data.data import UserData
-from personal_inventory.logic import ObjectLogic, ValidationError, RepeatedUniqueField, RequiredFieldError, \
-    InvalidLengthError, DeleteForeingKeyError
-from personal_inventory.logic.plain_object import User
+from personal_inventory.business.logic import ValidationError
+from personal_inventory.business.logic import RequiredFieldError, RepeatedUniqueField, DeleteForeingKeyError, \
+    InvalidLengthError, EntityLogic
+from personal_inventory.business.entities.user import User
 
 
 class InvalidEmailError(ValidationError):
@@ -44,7 +45,7 @@ class InvalidUsernameError(ValidationError):
         return fmt_str.format(self.field)
 
 
-class UserLogic(ObjectLogic):
+class UserLogic(EntityLogic):
     NAME_LEN = (2, 15)
     EMAIL_LEN = (3, 50)
     USERNAME_LEN = (5, 50)
@@ -106,8 +107,8 @@ class UserLogic(ObjectLogic):
         """
         user = self.get_by_id(user_id)
         if user is not None:
-            from personal_inventory.logic.item_logic import ItemLogic
-            from personal_inventory.logic.location_logic import LocationLogic
+            from personal_inventory.business.logic.item_logic import ItemLogic
+            from personal_inventory.business.logic.location_logic import LocationLogic
 
             if len(ItemLogic().get_all_by_user(user)):
                 errors.append(DeleteForeingKeyError('item'))

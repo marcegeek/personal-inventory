@@ -1,7 +1,7 @@
 import abc
 
+from personal_inventory.business.entities import BusinessEntity
 from personal_inventory.data.data import ObjectData
-from personal_inventory.logic.plain_object import PlainObject
 
 
 class ValidationError:
@@ -52,18 +52,18 @@ class ValidationException(Exception):
     pass
 
 
-class ObjectLogic(abc.ABC):
+class EntityLogic(abc.ABC):
 
     def __init__(self):
         self.dao = ObjectData()  # reemplazar en las subclases
-        self.plain_object_factory = PlainObject  # reemplazar en las subclases
+        self.plain_object_factory = BusinessEntity  # reemplazar en las subclases
 
     def get_by_id(self, object_id):
         """
         Recuperar un objeto del modelo dado su id.
 
         :type object_id: int
-        :rtype: PlainObject | None
+        :rtype: BusinessEntity | None
         """
         return self.plain_object_factory.make_from_model(self.dao.get_by_id(object_id))
 
@@ -71,19 +71,19 @@ class ObjectLogic(abc.ABC):
         """
         Recuperar todos los objetos del modelo.
 
-        :rtype: list of PlainObject
+        :rtype: list of BusinessEntity
         """
         return [self.plain_object_factory.make_from_model(om) for om in self.dao.get_all()]
 
     def insert(self, obj):
         """
-        Dar de alta un objeto plano en el modelo.
+        Dar de alta un objeto de negocio en el modelo.
 
         Primero se deben validar las reglas de negocio.
         Si no validan, levantar una excepción con los
         errores de validación correspondientes.
 
-        :type obj: PlainObject
+        :type obj: BusinessEntity
         :rtype: bool
         :raise: ValidationException
         """
@@ -96,13 +96,13 @@ class ObjectLogic(abc.ABC):
 
     def update(self, obj):
         """
-        Modfificar un objeto plano en el modelo.
+        Modfificar un objeto de negocio en el modelo.
 
         Primero se deben validar las reglas de negocio.
         Si no validan, levantar una excepción con los
         errores de validación correspondientes.
 
-        :type obj: PlainObject
+        :type obj: BusinessEntity
         :rtype: bool
         :raise: ValidationException
         """

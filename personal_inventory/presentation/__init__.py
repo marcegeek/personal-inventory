@@ -3,11 +3,13 @@ from flask import Flask, url_for, render_template, request, redirect, session, f
 
 import config
 from personal_inventory.data import data as dal
-from personal_inventory.logic import ValidationException
-from personal_inventory.logic.item_logic import ItemLogic
-from personal_inventory.logic.location_logic import LocationLogic
-from personal_inventory.logic.plain_object import User, Item, Location
-from personal_inventory.logic.user_logic import UserLogic
+from personal_inventory.business.logic import ValidationException
+from personal_inventory.business.logic.item_logic import ItemLogic
+from personal_inventory.business.logic.location_logic import LocationLogic
+from personal_inventory.business.entities.item import Item
+from personal_inventory.business.entities.location import Location
+from personal_inventory.business.entities.user import User
+from personal_inventory.business.logic.user_logic import UserLogic
 
 app = Flask(__name__)
 
