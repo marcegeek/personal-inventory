@@ -1,5 +1,5 @@
-from personal_inventory.business.logic import RequiredFieldError, InvalidLengthError
 from personal_inventory.business.entities.user import User
+from personal_inventory.business.logic import RequiredFieldError, InvalidLengthError
 from personal_inventory.business.logic.user_logic import UserLogic, RepeatedEmailError, RepeatedUsernameError, \
     InvalidUsernameError, InvalidEmailError
 from test import Test

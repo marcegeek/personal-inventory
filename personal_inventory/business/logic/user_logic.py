@@ -1,11 +1,12 @@
-import email_validator
 import re
 
-from personal_inventory.data.data import UserData
-from personal_inventory.business.logic import ValidationError
-from personal_inventory.business.logic import RequiredFieldError, RepeatedUniqueField, DeleteForeingKeyError, \
-    InvalidLengthError, EntityLogic
+import email_validator
+
 from personal_inventory.business.entities.user import User
+from personal_inventory.business.logic import RequiredFieldError, RepeatedUniqueField, \
+    DeleteForeingKeyError, InvalidLengthError, EntityLogic
+from personal_inventory.business.logic import ValidationError
+from personal_inventory.data.data import UserData
 
 
 class InvalidEmailError(ValidationError):

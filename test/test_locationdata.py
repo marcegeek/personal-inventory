@@ -1,6 +1,6 @@
+import personal_inventory.data.data as dal
 from personal_inventory.data.models.locationmodel import LocationModel
 from personal_inventory.data.models.usermodel import UserModel
-import personal_inventory.data.data as dal
 from test import Test
 
 

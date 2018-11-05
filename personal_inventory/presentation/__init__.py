@@ -1,15 +1,17 @@
 import os
-from flask import Flask, url_for, render_template, request, redirect, session, flash, abort
+
+from flask import Flask, url_for, render_template, request, redirect, session, \
+    flash, abort
 
 import config
-from personal_inventory.data import data as dal
-from personal_inventory.business.logic import ValidationException
-from personal_inventory.business.logic.item_logic import ItemLogic
-from personal_inventory.business.logic.location_logic import LocationLogic
 from personal_inventory.business.entities.item import Item
 from personal_inventory.business.entities.location import Location
 from personal_inventory.business.entities.user import User
+from personal_inventory.business.logic import ValidationException
+from personal_inventory.business.logic.item_logic import ItemLogic
+from personal_inventory.business.logic.location_logic import LocationLogic
 from personal_inventory.business.logic.user_logic import UserLogic
+from personal_inventory.data import data as dal
 
 app = Flask(__name__)
 
@@ -138,14 +140,16 @@ def create_item():
             if len(user_locations) == 0:
                 flash('No locations were present, create one first', 'error')
                 return redirect(url_for('create_location'))
-            return render_template('item-editor.html', item=None, locations=user_locations)
+            return render_template('item-editor.html', item=None,
+                                   locations=user_locations)
         else:
             description = request.form['description'].strip()
             location_id = request.form['location'].strip()
             quantity = request.form['quantity'].strip()
             if len(quantity) == 0:
                 quantity = None
-            new_item = Item(owner_id=user.id, location_id=location_id, description=description, quantity=quantity)
+            new_item = Item(owner_id=user.id, location_id=location_id,
+                            description=description, quantity=quantity)
             try:
                 ItemLogic().insert(new_item)
                 return redirect(url_for('items'))
@@ -250,7 +254,8 @@ def location(location_id):
         if current_location is not None:
             if current_location.owner_id == user.id:
                 if request.method == 'GET':
-                    return render_template('location-editor.html', location=current_location)
+                    return render_template('location-editor.html',
+                                           location=current_location)
                 else:
                     description = request.form['description'].strip()
                     current_location.description = description
