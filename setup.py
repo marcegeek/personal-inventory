@@ -12,8 +12,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/marcegeek/personal-inventory",
-    packages=['personal_inventory', 'personal_inventory.data',
-              'personal_inventory.logic', 'personal_inventory.presentation'],
+    packages=setuptools.find_packages(exclude=['test']),
     include_package_data=True,
     zip_safe=False,
     install_requires=[
