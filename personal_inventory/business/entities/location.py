@@ -30,8 +30,9 @@ class Location(BusinessEntity):
 
         :rtype: LocationModel
         """
-        return LocationModel(id=self.id, owner_id=self.owner_id,
-                             description=self.description)
+        locationmodel = LocationModel(id=self.id)
+        self.update_model(locationmodel)
+        return locationmodel
 
     def update_model(self, locationmodel):
         """

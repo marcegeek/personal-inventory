@@ -35,8 +35,9 @@ class User(BusinessEntity):
 
         :rtype: UserModel
         """
-        return UserModel(id=self.id, firstname=self.firstname, lastname=self.lastname,
-                         email=self.email, username=self.username, password=self.password)
+        usermodel = UserModel(id=self.id)
+        self.update_model(usermodel)
+        return usermodel
 
     def update_model(self, usermodel):
         """

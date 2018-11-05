@@ -17,7 +17,7 @@ class Item(BusinessEntity):
         Generar un objeto ítem de negocio a partir del modelo.
 
         :type itemmodel: ItemModel
-        :return: Item
+        :rtype: Item
         """
         if itemmodel is None:
             return None
@@ -33,8 +33,9 @@ class Item(BusinessEntity):
 
         :rtype: ItemModel
         """
-        return ItemModel(id=self.id, owner_id=self.owner_id, location_id=self.location_id,
-                         description=self.description, quantity=self.quantity)
+        itemmodel = ItemModel(id=self.id)
+        self.update_model(itemmodel)
+        return itemmodel
 
     def update_model(self, itemmodel):
         """
