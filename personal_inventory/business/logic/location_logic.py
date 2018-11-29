@@ -1,7 +1,16 @@
 from personal_inventory.business.entities.location import Location
 from personal_inventory.business.logic import RequiredFieldError, ForeignKeyError, \
-    DeleteForeingKeyError, InvalidLength, EntityLogic
+    DeleteForeingKeyError, InvalidLength, EntityLogic, RepeatedUniqueField
 from personal_inventory.data.data import LocationData
+
+
+class RepeatedLocationNameError(RepeatedUniqueField):
+
+    def __init__(self):
+        super().__init__('description')
+
+    def __str__(self):
+        return 'Location name repeated'
 
 
 class LocationLogic(EntityLogic):
@@ -52,6 +61,7 @@ class LocationLogic(EntityLogic):
             self.rule_owner_user_exists(location, errors)
         if 'description' in present_fields:
             self.rule_description_len(location, errors)
+            self.rule_unique_description_per_user(location, errors)
 
         if len(errors) == 0:
             return True
@@ -114,4 +124,20 @@ class LocationLogic(EntityLogic):
         if not cls.DESCRIPTION_LEN[0] <= len(location.description) <= cls.DESCRIPTION_LEN[1]:
             errors.append(InvalidLength('description', cls.DESCRIPTION_LEN))
             return False
+        return True
+
+    def rule_unique_description_per_user(self, location, errors):
+        """
+        Validar que el nombre de la ubicación es única para el usuario correspondiente.
+
+        :type location: Location
+        :type errors: list of ValidationError
+        :rtype: bool
+        """
+        from personal_inventory.business.entities.user import UserModel
+        user_locs = self.dao.get_all_by_user(UserModel(id=location.owner_id))
+        for found in user_locs:
+            if location.id != found.id and location.description == found.description:
+                errors.append(RepeatedLocationNameError())
+                return False
         return True
