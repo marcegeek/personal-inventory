@@ -1,23 +1,45 @@
-{% extends "layout.html" %}
-{% block head %}
-  {{ super() }}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/create-item.css') }}">
-{% endblock %}
-
-{% block main %}
-<div class="text-center">
-  {% if not location %}
-  <h1>Creating location</h1>
-  {% else %}
-  <h1>Editing location</h1>
-  {% endif %}
-  <form class="form-item" method="post">
-    <div class="mb-3">
-      <label for="txtDescription" class="sr-only">Description</label>
-      <input type="text" id="txtDescription" name="description"  class="form-control" placeholder="Description" required autofocus
-       {% if location %} value="{{ location.description }}" {% endif %}>
+{% macro location_editor_modal(loc=None) %}
+    <div id={% if loc is none %}
+            "new-location-modal"
+            {% else %}
+            "edit-location-{{loc.id}}-modal"
+            {% endif %} class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form action={% if loc is none %}
+                       "{{ url_for('locations') }}"
+                       {% else %}
+                       "{{ url_for('location', location_id=loc.id) }}"
+                       {% endif %} method="post">
+            <div class="modal-header">
+              <h3 class="modal-title">
+                {% if loc is none %}
+                New Location
+                {% else %}
+                Editing Location
+                {% endif %}
+              </h3>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <label
+                   for={% if loc is none %} "description" {% else %} "description-{{loc.id}}" {% endif %}
+                   class="sr-only">
+                  Description
+                </label>
+                <input
+                   id={% if loc is none %} "description" {% else %} "description-{{loc.id}}" {% endif %}
+                   name="description" class="form-control" placeholder="Description" type="text" required
+                   value={% if loc is not none %} "{{loc.description}}" {% endif %}>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+              <input type="submit" class="btn btn-success" value="Save">
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Save</button>
-  </form>
-</div>
-{% endblock %}
+{% endmacro %}

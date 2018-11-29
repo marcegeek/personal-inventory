@@ -217,31 +217,22 @@ def item_delete(item_id):
     return redirect(url_for('home'))
 
 
-@app.route('/locations')
+@app.route('/locations', methods=['GET', 'POST'])
 def locations():
     user = get_user_from_session()
     if user is not None:
-        user_locations = LocationLogic().get_all_by_user(user)
-        return render_template('locations.html', locations=user_locations)
-    return redirect(url_for('home'))
-
-
-@app.route('/locations/create', methods=['GET', 'POST'])
-def create_location():
-    user = get_user_from_session()
-    if user is not None:
         if request.method == 'GET':
-            return render_template('location-editor.html', location=None)
+            user_locations = LocationLogic().get_all_by_user(user)
+            return render_template('locations.html', locations=user_locations)
         else:
             description = request.form['description'].strip()
             new_loc = Location(owner_id=user.id, description=description)
             try:
                 LocationLogic().insert(new_loc)
-                return redirect(url_for('locations'))
             except ValidationException as ex:
                 for err in ex.args:
                     flash(str(err), 'error')
-            return redirect(url_for('create_location'))
+            return redirect(url_for('locations'))
     return redirect(url_for('home'))
 
 
@@ -254,37 +245,23 @@ def location(location_id):
         if current_location is not None:
             if current_location.owner_id == user.id:
                 if request.method == 'GET':
-                    return render_template('location-editor.html',
+                    return render_template('location.html',
                                            location=current_location)
                 else:
-                    description = request.form['description'].strip()
-                    current_location.description = description
-                    try:
-                        location_logic.update(current_location)
-                        return redirect(url_for('locations'))
-                    except ValidationException as ex:
-                        for err in ex.args:
-                            flash(str(err), 'error')
-                    return redirect(url_for('location', item_id=location_id))
-            else:
-                abort(401)
-        else:
-            abort(404)
-    return redirect(url_for('home'))
-
-
-@app.route('/locations/delete/<int:location_id>', methods=['POST'])
-def location_delete(location_id):
-    user = get_user_from_session()
-    if user is not None:
-        location_logic = LocationLogic()
-        current_location = location_logic.get_by_id(location_id)
-        if current_location is not None:
-            if current_location.owner_id == user.id:
-                confirmed = request.form.get('confirmed')
-                if confirmed:
-                    location_logic.delete(location_id)
-                return redirect(url_for('locations'))
+                    delete = request.form.get('delete')
+                    if not delete:
+                        description = request.form['description'].strip()
+                        current_location.description = description
+                        try:
+                            location_logic.update(current_location)
+                            return redirect(request.referrer)
+                        except ValidationException as ex:
+                            for err in ex.args:
+                                flash(str(err), 'error')
+                        return redirect(request.referrer)
+                    else:
+                        location_logic.delete(location_id)
+                        return redirect(request.referrer)
             else:
                 abort(401)
         else:

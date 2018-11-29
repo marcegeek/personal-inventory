@@ -4,47 +4,82 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
 {% endblock %}
 
+{% import 'location-editor.html' as loc_ed %}
 {% block main %}
-<h1 class="text-center">Location list</h1>
-<div class="text-right">
-  <label for="btnCreate" class="sr-only">Create new item</label>
-  <a id="btnCreate" class="btn btn-primary" href="{{ url_for('create_location') }}">
-    Create a new location &nbsp;&nbsp;<i class="fa fa-plus"></i>
-  </a>
+<div class="row mb-2">
+  <h1 class="col-sm-5">Managing Locations</h1>
+  <div class="col-sm-5 mt-2">
+    <form class="form-inline justify-content-sm-end">
+      <input class="form-control mr-sm-2" placeholder="Location" type="text">
+      <button class="btn btn-primary my-2 my-sm-0" type="submit"><i class="fa fa-search"></i> Search locations</button>
+    </form>
+  </div>
+  <div class="col-sm-2 mt-2">
+    <a href="#new-location-modal" class="btn btn-success justify-content-sm-end" role="button" data-toggle="modal"><i class="fa fa-plus"></i> New Location</a>
+  </div>
 </div>
-<table class="table">
-  <thead>
-    <tr>
-      <th colspan="4">Description</th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for location in locations %}
-    <tr>
-      <td>{{ location.description }}</td>
-      <td>
-        <a class="btn btn-link" href="{{ url_for('location', location_id=location.id) }}">
-          Edit &nbsp;&nbsp;<i class="fa fa-edit"></i>
-        </a>
-      </td>
-      <td>
-        <form action="{{ url_for('location_delete', location_id=location.id) }}" method="post">
-          <button type="submit" class="btn btn-link"
-             name="location_id" value="{{ location.id }}">
-            Remove &nbsp;&nbsp;<i class="fa fa-trash-alt"></i>
-          </button>
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="chkConfirm" name="confirmed">
-            <label class="form-check-label" for="chkConfirm">
-              Confirm removal
-            </label>
+<div class="pb-1">
+  {% if not locations %}
+  <p class="lead">No locations yet, try creating some location first.</p>
+  {% endif %}
+  {% for location in locations %}
+  <div class="card mb-2">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-sm-8">
+          <h2 class="card-title"><strong>{{location.description}}</strong></h2>
+        </div>
+        <div class="col-sm-4">
+          <a href="{{ url_for('location', location_id=location.id) }}" class="btn btn-primary"><i class="far fa-eye"></i> Explore</a>
+          <a href="#edit-location-{{location.id}}-modal" class="btn btn-warning" role="button" data-toggle="modal"><i class="fas fa-edit"></i> Edit</a>
+          <a href="#delete-location-{{location.id}}-modal" class="btn btn-danger" role="button" data-toggle="modal"><i class="fas fa-trash-alt"></i> Delete</a>
+        </div>
+      </div>
+      <p class="card-text"><strong>Sublocations:</strong> Immediate: 1&nbsp;&nbsp;&nbsp;&nbsp;Total: 3</p>
+      <p class="card-text"><strong>Items:</strong> Immediate: 0&nbsp;&nbsp;&nbsp;&nbsp;Total: 0</p>
+      <a href="#new-sublocation-in-{{location.id}}-modal" class="btn btn-success" role="button" data-toggle="modal"><i class="fas fa-plus"></i> New Sublocation</a>
+      <a href="#new-item-in-{{location.id}}-modal" class="btn btn-success" role="button" data-toggle="modal"><i class="fas fa-plus"></i> New Item</a>
+    </div>
+  </div>
+  {{ loc_ed.location_editor_modal(location) }}
+  <!-- Delete Modal HTML -->
+  <div id="delete-location-{{location.id}}-modal" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form action="{{ url_for('location', location_id=location.id) }}" method="post">
+          <input type="hidden" name="delete" value="true">
+          <div class="modal-header">
+            <h3 class="modal-title">Delete Location</h3>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          </div>
+          <div class="modal-body">
+            <p class="lead">Are you sure you want to delete location "{{location.description}}"</p>
+            <p class="text-warning">This action cannot be undone.</p>
+          </div>
+          <div class="modal-footer">
+            <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+            <input type="submit" class="btn btn-danger" value="Delete">
           </div>
         </form>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{{ loc_ed.location_editor_modal() }}
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+  modal_focus = function(modal_id, input_id) {
+    $(modal_id).on('shown.bs.modal', function () {
+      $(input_id).trigger('focus');
+    });
+  }
+  modal_focus('#new-location-modal', '#description');
+  {% for location in locations %}
+  modal_focus('#edit-location-{{location.id}}-modal', '#description-{{location.id}}');
+  {% endfor %}
+</script>
 {% endblock %}
