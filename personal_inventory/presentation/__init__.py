@@ -150,7 +150,7 @@ def items():
     return redirect(url_for('home'))
 
 
-@app.route('/items/<int:item_id>', methods=['GET', 'POST'])
+@app.route('/items/<int:item_id>', methods=['POST'])
 def item(item_id):
     user = get_user_from_session()
     if user is not None:
@@ -158,33 +158,28 @@ def item(item_id):
         current_item = item_logic.get_by_id(item_id)
         if current_item is not None:
             if current_item.owner_id == user.id:
-                if request.method == 'GET':
-                    user_locations = LocationLogic().get_all_by_user(user)
-                    return render_template('item', item=current_item, locations=user_locations)
+                delete = request.form.get('delete')
+                if not delete:
+                    description = request.form['description'].strip()
+                    location_id = request.form['location'].strip()
+                    quantity = request.form['quantity'].strip()
+                    if len(quantity) == 0:
+                        quantity = None
+                    current_item.description = description
+                    current_item.location_id = location_id
+                    current_item.quantity = quantity
+                    try:
+                        item_logic.update(current_item)
+                    except ValidationException as ex:
+                        for err in ex.args:
+                            flash(str(err), 'error')
                 else:
-                    delete = request.form.get('delete')
-                    if not delete:
-                        description = request.form['description'].strip()
-                        location_id = request.form['location'].strip()
-                        quantity = request.form['quantity'].strip()
-                        if len(quantity) == 0:
-                            quantity = None
-                        current_item.description = description
-                        current_item.location_id = location_id
-                        current_item.quantity = quantity
-                        try:
-                            item_logic.update(current_item)
-                            return redirect(request.referrer)
-                        except ValidationException as ex:
-                            for err in ex.args:
-                                flash(str(err), 'error')
-                    else:
-                        try:
-                            item_logic.delete(item_id)
-                        except ValidationException as ex:
-                            for err in ex.args:
-                                flash(str(err), 'error')
-                    return redirect(request.referrer)
+                    try:
+                        item_logic.delete(item_id)
+                    except ValidationException as ex:
+                        for err in ex.args:
+                            flash(str(err), 'error')
+                return redirect(request.referrer)
             else:
                 abort(401)
         else:
