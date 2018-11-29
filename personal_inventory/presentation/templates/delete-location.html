@@ -1,0 +1,23 @@
+{% macro delete_location_modal(loc) %}
+<div id="delete-location-{{loc.id}}-modal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="{{ url_for('location', location_id=loc.id) }}" method="post">
+        <input type="hidden" name="delete" value="true">
+        <div class="modal-header">
+          <h3 class="modal-title">Delete Location</h3>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p class="lead">Are you sure you want to delete location "{{loc.description}}"</p>
+          <p class="text-warning">This action cannot be undone.</p>
+        </div>
+        <div class="modal-footer">
+          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+          <input type="submit" class="btn btn-danger" value="Delete">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endmacro %}

@@ -4,55 +4,55 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
 {% endblock %}
 
+{% import 'item-editor.html' as it_ed %}
+{% import 'delete-item.html' as it_del %}
 {% block main %}
-<h1 class="text-center">Item list</h1>
-<div class="text-right">
-  <label for="btnCreate" class="sr-only">Create new item</label>
-  <a id="btnCreate" class="btn btn-primary" href="{{ url_for('create_item') }}">
-    Create a new item  &nbsp;&nbsp;<i class="fa fa-plus"></i>
-  </a>
+<div class="row mb-2">
+  <h1 class="col-sm-10">Managing Items</h1>
+  <div class="col-sm-2 mt-2">
+    <a href="#new-item-modal" class="btn btn-success justify-content-sm-end" role="button" data-toggle="modal"><i class="fa fa-plus"></i> New Item</a>
+  </div>
 </div>
-<table class="table">
-  <thead>
-    <tr>
-      <th>Description</th>
-      <th>Location</th>
-      <th>Quantity</th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for item in items %}
-    <tr>
-      <td>{{ item.description }}</td>
-      <td>{{ item.location.description }}</td>
-      {% if item.quantity is none %}
-      <td>N/A</td>
-      {% else %}
-      <td>{{ item.quantity }}</td>
+<div class="pb-1">
+  {% if not items %}
+  <p class="lead">No items yet, try creating some item first.</p>
+  {% endif %}
+  {% for item in items %}
+  <div class="card mb-2">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-sm-8">
+          <h2 class="card-title"><strong>{{item.description}}</strong></h2>
+        </div>
+        <div class="col-sm-4">
+          <a href="{{ url_for('item', item_id=item.id) }}" class="btn btn-primary"><i class="far fa-eye"></i> View</a>
+          <a href="#edit-item-{{item.id}}-modal" class="btn btn-warning" role="button" data-toggle="modal"><i class="fas fa-edit"></i> Edit</a>
+          <a href="#delete-item-{{item.id}}-modal" class="btn btn-danger" role="button" data-toggle="modal"><i class="fas fa-trash-alt"></i> Delete</a>
+        </div>
+      </div>
+      {% if item.quantity is not none %}
+      <p class="card-text"><strong>Quantity:</strong> {{item.quantity}}</p>
       {% endif %}
-      <td>
-        <a class="btn btn-link" href="{{ url_for('item', item_id=item.id) }}">
-          Edit &nbsp;&nbsp;<i class="fa fa-edit"></i>
-        </a>
-      </td>
-      <td>
-        <form action="{{ url_for('item_delete', item_id=item.id) }}" method="post">
-          <button type="submit" class="btn btn-link"
-             name="item_id" value="{{ item.id }}">
-            Remove &nbsp;&nbsp;<i class="fa fa-trash-alt"></i>
-          </button>
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="chkConfirm" name="confirmed">
-            <label class="form-check-label" for="chkConfirm">
-              Confirm removal
-            </label>
-          </div>
-        </form>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+    </div>
+  </div>
+  {{ it_ed.item_editor_modal(locations, item) }}
+  {{ it_del.delete_item_modal(item) }}
+  {% endfor %}
+</div>
+{{ it_ed.item_editor_modal(locations) }}
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+  modal_focus = function(modal_id, input_id) {
+    $(modal_id).on('shown.bs.modal', function () {
+      $(input_id).trigger('focus');
+    });
+  }
+  modal_focus('#new-item-modal', '#description');
+  {% for item in items %}
+  modal_focus('#edit-item-{{item.id}}-modal', '#description-{{item.id}}');
+  {% endfor %}
+</script>
 {% endblock %}

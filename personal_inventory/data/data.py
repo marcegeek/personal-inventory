@@ -4,7 +4,6 @@ from sqlalchemy.orm import sessionmaker
 from personal_inventory.data.models import Base
 from personal_inventory.data.models.itemmodel import ItemModel
 from personal_inventory.data.models.locationmodel import LocationModel
-from personal_inventory.data.models.usagemodel import UsageModel
 from personal_inventory.data.models.usermodel import UserModel
 
 engine = None
@@ -164,41 +163,3 @@ class ItemData(ObjectData):
         :rtype: list of ItemModel
         """
         return self.session.query(ItemModel).filter(ItemModel.location_id == location.id).all()
-
-
-class UsageData(ObjectData):
-
-    def __init__(self):
-        super().__init__()
-        self.model = UsageModel
-
-    def get_all_by_item(self, item):
-        """
-        Recuperar todas las utilizaciones de un ítem.
-
-        :type item: ItemModel
-        :rtype: list of UsageModel
-        """
-        return self.session.query(UsageModel).filter(UsageModel.item_id == item.id).all()
-
-    def get_by_item_and_start_date(self, item, start_date):
-        """
-        Recuperar la utilización de un ítem a partir de una fecha de inicio.
-
-        :type item: ItemModel
-        :type start_date: datetime.Date
-        :rtype: UsageModel | None
-        """
-        return self.session.query(UsageModel).filter(UsageModel.item_id == item.id and
-                                                     UsageModel.start_date == start_date).first()
-
-    def get_last_usage_by_item(self, item):
-        """
-        Recuperar la última utilización de un ítem.
-
-        :type item: ItemModel
-        :rtype: UsageModel | None
-        """
-        return self.session.query(UsageModel).filter_by(item_id=item.id).\
-            group_by(UsageModel.item_id).\
-            having(func.max(UsageModel.start_date) == UsageModel.start_date).first()

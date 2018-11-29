@@ -5,15 +5,11 @@
 {% endblock %}
 
 {% import 'location-editor.html' as loc_ed %}
+{% import 'delete-location.html' as loc_del %}
+{% import 'item-editor.html' as it_ed %}
 {% block main %}
 <div class="row mb-2">
-  <h1 class="col-sm-5">Managing Locations</h1>
-  <div class="col-sm-5 mt-2">
-    <form class="form-inline justify-content-sm-end">
-      <input class="form-control mr-sm-2" placeholder="Location" type="text">
-      <button class="btn btn-primary my-2 my-sm-0" type="submit"><i class="fa fa-search"></i> Search locations</button>
-    </form>
-  </div>
+  <h1 class="col-sm-10">Managing Locations</h1>
   <div class="col-sm-2 mt-2">
     <a href="#new-location-modal" class="btn btn-success justify-content-sm-end" role="button" data-toggle="modal"><i class="fa fa-plus"></i> New Location</a>
   </div>
@@ -35,33 +31,13 @@
           <a href="#delete-location-{{location.id}}-modal" class="btn btn-danger" role="button" data-toggle="modal"><i class="fas fa-trash-alt"></i> Delete</a>
         </div>
       </div>
-      <p class="card-text"><strong>Items:</strong> 0</p>
+      <p class="card-text"><strong>Items:</strong> {{location.items|length}}</p>
       <a href="#new-item-in-{{location.id}}-modal" class="btn btn-success" role="button" data-toggle="modal"><i class="fas fa-plus"></i> New Item</a>
     </div>
   </div>
   {{ loc_ed.location_editor_modal(location) }}
-  <!-- Delete Modal HTML -->
-  <div id="delete-location-{{location.id}}-modal" class="modal fade">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <form action="{{ url_for('location', location_id=location.id) }}" method="post">
-          <input type="hidden" name="delete" value="true">
-          <div class="modal-header">
-            <h3 class="modal-title">Delete Location</h3>
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          </div>
-          <div class="modal-body">
-            <p class="lead">Are you sure you want to delete location "{{location.description}}"</p>
-            <p class="text-warning">This action cannot be undone.</p>
-          </div>
-          <div class="modal-footer">
-            <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-            <input type="submit" class="btn btn-danger" value="Delete">
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
+  {{ loc_del.delete_location_modal(location) }}
+  {{ it_ed.item_editor_modal(locations=locations, default_location=location) }}
   {% endfor %}
 </div>
 {{ loc_ed.location_editor_modal() }}
