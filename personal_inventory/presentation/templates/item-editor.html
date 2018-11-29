@@ -28,14 +28,14 @@
             <div class="modal-body">
               <div class="form-group">
                 <label
-                   for={% if item is none %} "description" {% else %} "description-{{item.id}}" {% endif %}
+                   for={% if item is none %} "item-description" {% else %} "item-description-{{item.id}}" {% endif %}
                    class="sr-only">
                   Description
                 </label>
                 <input
-                   id={% if item is none %} "description" {% else %} "description-{{item.id}}" {% endif %}
+                   id={% if item is none %} "item-description" {% else %} "item-description-{{item.id}}" {% endif %}
                    name="description" class="form-control" placeholder="Description" type="text" required
-                   value={% if item is not none %} "{{item.description}}" {% endif %}>
+                   value={% if item is none %} "" {% else %} "{{item.description}}" {% endif %}>
               </div>
               <div class="form-group">
                 <select name="location">
@@ -64,7 +64,7 @@
                 <input
                    id={% if item is none %} "quantity" {% else %} "quantity-{{item.id}}" {% endif %}
                    name="quantity" class="form-control" placeholder="Quantity" type="number"
-                   value={% if item is not none %} "{{item.quantity}}" {% endif %}>
+                   value={% if item is none %} "" {% else %} "{{item.quantity}}" {% endif %}>
               </div>
             </div>
             <div class="modal-footer">

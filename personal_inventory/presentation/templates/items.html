@@ -29,6 +29,12 @@
           <a href="#delete-item-{{item.id}}-modal" class="btn btn-danger" role="button" data-toggle="modal"><i class="fas fa-trash-alt"></i> Delete</a>
         </div>
       </div>
+      <p class="card-text">
+        Location:
+        <a href="{{url_for('location', location_id=item.location.id)}}">
+        {{item.location.description}}
+      </a>
+      </p>
       {% if item.quantity is not none %}
       <p class="card-text"><strong>Quantity:</strong> {{item.quantity}}</p>
       {% endif %}
@@ -49,9 +55,9 @@
       $(input_id).trigger('focus');
     });
   }
-  modal_focus('#new-item-modal', '#description');
+  modal_focus('#new-item-modal', '#item-description');
   {% for item in items %}
-  modal_focus('#edit-item-{{item.id}}-modal', '#description-{{item.id}}');
+  modal_focus('#edit-item-{{item.id}}-modal', '#item-description-{{item.id}}');
   {% endfor %}
 </script>
 {% endblock %}
