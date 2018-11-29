@@ -33,7 +33,7 @@ class ItemLogic(EntityLogic):
         if fill_location:
             from personal_inventory.business.logic.location_logic import LocationLogic
             for item in item_list:
-                item.location = LocationLogic().get_by_id(item.id)
+                item.location = LocationLogic().get_by_id(item.location_id)
         return item_list
 
     def get_all_by_location(self, location, fill_location=False):
