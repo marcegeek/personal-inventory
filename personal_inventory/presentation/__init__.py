@@ -2,6 +2,7 @@ import os
 
 from flask import Flask, url_for, render_template, request, redirect, session, \
     flash, abort
+from flask_babel import Babel
 
 import config
 from personal_inventory.business.entities.item import Item
@@ -23,6 +24,8 @@ if config.ENVIRONMENT == config.Environment.DEVELOPMENT:
 else:
     os.environ['FLASK_ENV'] = 'production'
 
+babel = Babel(app)
+
 
 def get_user_from_session():
     user = None
@@ -38,6 +41,18 @@ def set_user_in_session(user):
         session['user_id'] = user.id
     else:
         session.pop('user_id', None)
+
+
+@babel.localeselector
+def get_locale():
+    # si hay un usuario logueado, intentar tomar la localización
+    # de la configuración del usuario
+    user = get_user_from_session()
+    if user and user.locale:
+        return user.locale
+    # si no, intentar tomarla desde la cabecera Accept que
+    # envía el navegador
+    return request.accept_languages.best_match(['es', 'en'])
 
 
 @app.route('/')
