@@ -18,9 +18,9 @@
             <div class="modal-header">
               <h3 class="modal-title">
                 {% if item is none %}
-                New Item
+                {{ _('New Item') }}
                 {% else %}
-                Editing Item
+                {{ _('Editing Item') }}
                 {% endif %}
               </h3>
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -30,11 +30,11 @@
                 <label
                    for={% if item is none %} "item-description" {% else %} "item-description-{{item.id}}" {% endif %}
                    class="sr-only">
-                  Description
+                  {{ _('Description') }}
                 </label>
                 <input
                    id={% if item is none %} "item-description" {% else %} "item-description-{{item.id}}" {% endif %}
-                   name="description" class="form-control" placeholder="Description" type="text" required
+                   name="description" class="form-control" placeholder="{{ _('Description') }}" type="text" required
                    value={% if item is none %} "" {% else %} "{{item.description}}" {% endif %}>
               </div>
               <div class="form-group">
@@ -59,17 +59,17 @@
                 <label
                    for={% if item is none %} "quantity" {% else %} "quantity-{{item.id}}" {% endif %}
                    class="sr-only">
-                  Quantity
+                  {{ _('Quantity') }}
                 </label>
                 <input
                    id={% if item is none %} "quantity" {% else %} "quantity-{{item.id}}" {% endif %}
-                   name="quantity" class="form-control" placeholder="Quantity" type="number"
+                   name="quantity" class="form-control" placeholder="{{ _('Quantity') }}" type="number"
                    value={% if item is none %} "" {% else %} "{{item.quantity}}" {% endif %}>
               </div>
             </div>
             <div class="modal-footer">
-              <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-              <input type="submit" class="btn btn-success" value="Save">
+              <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ _('Cancel') }}">
+              <input type="submit" class="btn btn-success" value="{{ _('Save') }}">
             </div>
           </form>
         </div>

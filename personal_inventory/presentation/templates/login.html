@@ -7,16 +7,16 @@
 {% block main %}
   <div class="text-center">
     <form class="form-login" method="post">
-      <h1 class="h3 mb-3 font-weight-normal">Please login</h1>
-      <label for="inputUsernameEmail" class="sr-only">Username or e-mail</label>
-      <input type="text" id="inputUsernameEmail" name="username_email" class="form-control" placeholder="Username or e-mail" required autofocus>
+      <h1 class="h3 mb-3 font-weight-normal">{{ _('Please login') }}</h1>
+      <label for="inputUsernameEmail" class="sr-only">{{ _('Username or e-mail') }}</label>
+      <input type="text" id="inputUsernameEmail" name="username_email" class="form-control" placeholder="{{ _('Username or e-mail') }}" required autofocus>
       <div class="mb-3">
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
+        <label for="inputPassword" class="sr-only">{{ _('Password') }}</label>
+        <input type="password" id="inputPassword" name="password" class="form-control" placeholder="{{ _('Password') }}" required>
       </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">{{ _('Login') }}</button>
       <div class="mt-2">
-        <a href="{{ url_for('register') }}">Create accout</a>
+        <a href="{{ url_for('register') }}">{{ _('Create account') }}</a>
       </div>
     </form>
   </div>

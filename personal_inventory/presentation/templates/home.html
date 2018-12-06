@@ -3,13 +3,14 @@
 {% block main %}
   <div class="text-center">
     <h1>Personal Inventory</h1>
-    <p class="lead">Web application written in Python with
+    <p class="lead">{% trans %}Web application written in Python with
       <strong>Flask</strong> and <strong>SQLAlchemy</strong> for managing
-      an inventory of personal objects.
+      an inventory of personal objects.{% endtrans %}
     </p>
     {% if not user %}
-    <p class="lead">Please <a href="{{ url_for('login') }}">login</a>
-      or <a href="{{ url_for('register') }}">register</a> to use the application.
+    <p class="lead">
+      {{ _('Please <a href="%(login)s">login</a> or <a href="%(register)s">register</a> to use the application.',
+           login=url_for('login'), register=url_for('register')) }}
     </p>
     {% endif %}
   </div>

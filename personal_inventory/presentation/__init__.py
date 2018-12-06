@@ -13,6 +13,7 @@ from personal_inventory.business.logic.item_logic import ItemLogic
 from personal_inventory.business.logic.location_logic import LocationLogic
 from personal_inventory.business.logic.user_logic import UserLogic
 from personal_inventory.data import data as dal
+from personal_inventory.presentation import error_handler
 
 app = Flask(__name__)
 
@@ -45,14 +46,13 @@ def set_user_in_session(user):
 
 @babel.localeselector
 def get_locale():
-    # si hay un usuario logueado, intentar tomar la localización
+    # si hay un usuario logueado, tomar la localización
     # de la configuración del usuario
     user = get_user_from_session()
     if user and user.locale:
         return user.locale
-    # si no, intentar tomarla desde la cabecera Accept que
-    # envía el navegador
-    return request.accept_languages.best_match(['es', 'en'])
+    # si no, tomarla de la request que envía el navegador
+    return request.accept_languages.best_match(config.LANGUAGES.keys())
 
 
 @app.route('/')
@@ -99,7 +99,7 @@ def register():
                 return redirect(url_for('home'))
             except ValidationException as ex:
                 for err in ex.args:
-                    flash(str(err), 'error')
+                    flash(error_handler.error_str(err), 'error')
         else:
             flash('Passwords don\'t match', 'error')
     return render_template('user-editor.html', user=None)
@@ -128,7 +128,7 @@ def edit_profile():
                     return redirect(url_for('home'))
                 except ValidationException as ex:
                     for err in ex.args:
-                        flash(str(err), 'error')
+                        flash(error_handler.error_str(err), 'error')
             else:
                 flash('Passwords don\'t match', 'error')
         return render_template('user-editor.html', user=user)
@@ -160,7 +160,7 @@ def items():
                 ItemLogic().insert(new_item)
             except ValidationException as ex:
                 for err in ex.args:
-                    flash(str(err), 'error')
+                    flash(error_handler.error_str(err), 'error')
             return redirect(request.referrer)
     return redirect(url_for('home'))
 
@@ -187,13 +187,13 @@ def item(item_id):
                         item_logic.update(current_item)
                     except ValidationException as ex:
                         for err in ex.args:
-                            flash(str(err), 'error')
+                            flash(error_handler.error_str(err), 'error')
                 else:
                     try:
                         item_logic.delete(item_id)
                     except ValidationException as ex:
                         for err in ex.args:
-                            flash(str(err), 'error')
+                            flash(error_handler.error_str(err), 'error')
                 return redirect(request.referrer)
             else:
                 abort(401)
@@ -218,7 +218,7 @@ def locations():
                 LocationLogic().insert(new_loc)
             except ValidationException as ex:
                 for err in ex.args:
-                    flash(str(err), 'error')
+                    flash(error_handler.error_str(err), 'error')
             return redirect(url_for('locations'))
     return redirect(url_for('home'))
 
@@ -246,14 +246,14 @@ def location(location_id):
                             return redirect(request.referrer)
                         except ValidationException as ex:
                             for err in ex.args:
-                                flash(str(err), 'error')
+                                flash(error_handler.error_str(err), 'error')
                         return redirect(request.referrer)
                     else:
                         try:
                             location_logic.delete(location_id)
                         except ValidationException as ex:
                             for err in ex.args:
-                                flash(str(err), 'error')
+                                flash(error_handler.error_str(err), 'error')
                         return redirect(request.referrer)
             else:
                 abort(401)

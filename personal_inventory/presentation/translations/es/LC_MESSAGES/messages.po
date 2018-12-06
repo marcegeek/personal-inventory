@@ -1,0 +1,263 @@
+# Spanish translations for PROJECT.
+# Copyright (C) 2018 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2018-12-06 19:51-0300\n"
+"PO-Revision-Date: 2018-12-06 19:58-0300\n"
+"Last-Translator: \n"
+"Language: es\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.6.0\n"
+"X-Generator: Poedit 2.0.4\n"
+
+#: error_handler.py:11
+#, python-format
+msgid "%(field)s is required"
+msgstr "%(field)s es requerido"
+
+#: error_handler.py:13
+#, python-format
+msgid "%(field)s foreign key doesn't exist"
+msgstr "La clave foránea de %(field)s no existe"
+
+#: error_handler.py:15
+#, python-format
+msgid "Still some %(field)s referencing object"
+msgstr "Aun algún %(field)s referenciando al objeto"
+
+#: error_handler.py:17
+#, python-format
+msgid "%{field}s length must be between %(min)d and %(max)d"
+msgstr "La longitud de %{field}s debe estrar entre %(min)d y %(max)d"
+
+#: error_handler.py:20
+msgid "Invalid e-mail address"
+msgstr "Dirección de e-mail inválida"
+
+#: error_handler.py:22
+msgid "Username is repeated"
+msgstr "Nombre de usuario repetido"
+
+#: error_handler.py:24
+msgid "Username must be made of lowercase letters, digits and underscores"
+msgstr ""
+"El nombre de usuario debe estar formado por letras minúsculas, dígitos y "
+"guiones bajos"
+
+#: error_handler.py:26
+msgid "Location name repeated"
+msgstr "Nombre de ubicación repetido"
+
+#: error_handler.py:28
+#, python-format
+msgid "%(field)s value is invalid"
+msgstr "El valor de %(field)s es inválido"
+
+#: templates/delete-item.html:8
+msgid "Delete Item"
+msgstr "Eliminar Ítem"
+
+#: templates/delete-item.html:12 templates/delete-location.html:12
+#, python-format
+msgid "Do you really want to delete item \"%(name)s\"?"
+msgstr "¿Realmente quiere eliminar el ítem \"%(name)s\"?"
+
+#: templates/delete-item.html:13 templates/delete-location.html:13
+msgid "This action cannot be undone."
+msgstr "Esta acción no se puede deshacer."
+
+#: templates/delete-item.html:16 templates/delete-location.html:16
+#: templates/item-editor.html:71 templates/location-editor.html:38
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: templates/delete-item.html:17 templates/delete-location.html:17
+#: templates/items.html:29 templates/location.html:16
+#: templates/location.html:41 templates/locations.html:31
+msgid "Delete"
+msgstr "Eliminar"
+
+#: templates/delete-location.html:8
+msgid "Delete Location"
+msgstr "Eliminar Ubicación"
+
+#: templates/home.html:6
+msgid ""
+"Web application written in Python with\n"
+"      <strong>Flask</strong> and <strong>SQLAlchemy</strong> for "
+"managing\n"
+"      an inventory of personal objects."
+msgstr ""
+"Aplicación web escrita en Python con\n"
+"      <strong>Flask</strong> y <strong>SQLAlchemy</strong> para "
+"administrar\n"
+"      un inventario de objetos personales."
+
+#: templates/home.html:12
+#, python-format
+msgid ""
+"Please <a href=\"%(login)s\">login</a> or <a href=\"%(register)s"
+"\">register</a> to use the application."
+msgstr ""
+"Por favor <a href=\"%(login)s\">ingrese</a> o <a href=\"%(register)s"
+"\">regístrese</a> para usar la aplicación."
+
+#: templates/item-editor.html:21 templates/items.html:13
+#: templates/location.html:22 templates/locations.html:35
+msgid "New Item"
+msgstr "Nuevo Ítem"
+
+#: templates/item-editor.html:23
+msgid "Editing Item"
+msgstr "Editando Ítem"
+
+#: templates/item-editor.html:33 templates/location-editor.html:29
+#: templates/location-editor.html:33
+msgid "Description"
+msgstr "Descripción"
+
+#: templates/item-editor.html:62 templates/item-editor.html:66
+msgid "Quantity"
+msgstr "Cantidad"
+
+#: templates/item-editor.html:72 templates/location-editor.html:39
+#: templates/user-editor.html:47
+msgid "Save"
+msgstr "Guardar"
+
+#: templates/items.html:11
+msgid "Managing Items"
+msgstr "Administrando Ítems"
+
+#: templates/items.html:18
+msgid "No items yet, try creating some item first."
+msgstr "Todavía no hay ítems, intente crear alguno."
+
+#: templates/items.html:28 templates/location.html:15
+#: templates/location.html:40 templates/locations.html:30
+msgid "Edit"
+msgstr "Editar"
+
+#: templates/items.html:33
+msgid "Location:"
+msgstr "Ubicación:"
+
+#: templates/items.html:39 templates/location.html:45
+msgid "Quantity:"
+msgstr "Cantidad:"
+
+#: templates/layout.html:39
+msgid "Home"
+msgstr "Inicio"
+
+#: templates/layout.html:43 templates/location.html:20
+#: templates/locations.html:34
+msgid "Items"
+msgstr "Ítems"
+
+#: templates/layout.html:46
+msgid "Locations"
+msgstr "Ubicaciones"
+
+#: templates/layout.html:53
+msgid "Edit profile"
+msgstr "Editar perfil"
+
+#: templates/layout.html:56
+msgid "Logout"
+msgstr "Cerrar sesión"
+
+#: templates/location-editor.html:17
+msgid "New Location"
+msgstr "Nueva Ubicación"
+
+#: templates/location-editor.html:19
+msgid "Editing Location"
+msgstr "Editando Ubicación"
+
+#: templates/location.html:13
+#, python-format
+msgid "Location: %(name)s"
+msgstr "Ubicación: %(name)s"
+
+#: templates/location.html:29
+msgid "No items in this location yet, try creating some item first."
+msgstr "Todavía no hay ítems en esta ubicación, intente crear alguno."
+
+#: templates/locations.html:12
+msgid "Managing Locations"
+msgstr "Administrando Ubicaciones"
+
+#: templates/locations.html:19
+msgid "No locations yet, try creating some location first."
+msgstr "Todavía no hay ubicaciones, intente crear alguno."
+
+#: templates/locations.html:29
+msgid "Explore"
+msgstr "Explorar"
+
+#: templates/login.html:10
+msgid "Please login"
+msgstr "Por favor inicie sesión"
+
+#: templates/login.html:11 templates/login.html:12
+msgid "Username or e-mail"
+msgstr "Nombre de usuario o e-mail"
+
+#: templates/login.html:14 templates/login.html:15
+#: templates/user-editor.html:29 templates/user-editor.html:35
+msgid "Password"
+msgstr "Contraseña"
+
+#: templates/login.html:17
+msgid "Login"
+msgstr "Iniciar sesión"
+
+#: templates/login.html:19
+msgid "Create account"
+msgstr "Crear cuenta"
+
+#: templates/user-editor.html:10
+msgid "User registration"
+msgstr "Registro de usuario"
+
+#: templates/user-editor.html:12
+msgid "Editing user profile"
+msgstr "Editando perfil de usuario"
+
+#: templates/user-editor.html:15 templates/user-editor.html:16
+msgid "First name"
+msgstr "Nombre"
+
+#: templates/user-editor.html:18 templates/user-editor.html:19
+msgid "Last name"
+msgstr "Apellido"
+
+#: templates/user-editor.html:21 templates/user-editor.html:22
+msgid "E-mail"
+msgstr "E-mail"
+
+#: templates/user-editor.html:24 templates/user-editor.html:25
+msgid "Username"
+msgstr "Nombre de usuario"
+
+#: templates/user-editor.html:31 templates/user-editor.html:41
+msgid "Password unchanged"
+msgstr "Contraseña sin cambios"
+
+#: templates/user-editor.html:35 templates/user-editor.html:45
+msgid "(password unchanged)"
+msgstr "(contraseña sin cambios)"
+
+#: templates/user-editor.html:39 templates/user-editor.html:45
+msgid "Confirm password"
+msgstr "Confirmar contraseña"

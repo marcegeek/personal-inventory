@@ -42,3 +42,9 @@ def get_configs():
         return {'data': data, 'flask': DevelopmentFlaskConfig}
     else:
         raise Exception('bad environment configuration')
+
+
+LANGUAGES = {
+    'en': 'English',
+    'es': 'Español'
+}

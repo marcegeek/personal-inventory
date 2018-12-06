@@ -7,44 +7,44 @@
 {% block main %}
 <div class="text-center">
   {% if not user %}
-  <h1>User registration</h1>
+  <h1>{{ _('User registration') }}</h1>
   {% else %}
-  <h1>Editing user profile</h1>
+  <h1>{{ _('Editing user profile') }}</h1>
   {% endif %}
   <form class="form-item" method="post">
-    <label for="txtFirstname" class="sr-only">First name</label>
-    <input type="text" id="txtFirstname" name="firstname" class="form-control" placeholder="Firstname" required autofocus
+    <label for="txtFirstname" class="sr-only">{{ _('First name') }}</label>
+    <input type="text" id="txtFirstname" name="firstname" class="form-control" placeholder="{{ _('First name') }}" required autofocus
      {% if user %} value="{{ user.firstname }}" {% endif %}>
-    <label for="txtLastname" class="sr-only">Last name</label>
-    <input type="text" id="txtLastname" name="lastname" class="form-control" placeholder="Lastname" required
+    <label for="txtLastname" class="sr-only">{{ _('Last name') }}</label>
+    <input type="text" id="txtLastname" name="lastname" class="form-control" placeholder="{{ _('Last name') }}" required
      {% if user %} value="{{ user.lastname }}" {% endif %}>
-    <label for="txtEmail" class="sr-only">E-mail</label>
-    <input type="email" id="txtEmail" name="email" class="form-control" placeholder="E-mail" required
+    <label for="txtEmail" class="sr-only">{{ _('E-mail') }}</label>
+    <input type="email" id="txtEmail" name="email" class="form-control" placeholder="{{ _('E-mail') }}" required
      {% if user %} value="{{ user.email }}" {% endif %}>
-    <label for="txtUsername" class="sr-only">Username</label>
-    <input type="text" id="txtUsername" name="username" class="form-control" placeholder="Username" required
+    <label for="txtUsername" class="sr-only">{{ _('Username') }}</label>
+    <input type="text" id="txtUsername" name="username" class="form-control" placeholder="{{ _('Username') }}" required
      {% if user %} value="{{ user.username }}" {% endif %}>
     <label for="txtPassword" class="sr-only">
        {% if not user %}
-      Password
+      {{ _('Password') }}
        {% else %}
-      Password unchanged
+      {{ _('Password unchanged') }}
        {% endif %}
     </label>
     <input type="password" id="txtPassword" name="password" class="form-control"
-           placeholder={% if not user %} "Password" required {% else %} "(password unchanged)" {% endif %}>
+           placeholder={% if not user %} "{{ _('Password') }}" required {% else %} "{{ _('(password unchanged)') }}" {% endif %}>
     <div class="mb-3">
       <label for="txtConfirmPassword" class="sr-only">
          {% if not user %}
-        Confirm password
+        {{ _('Confirm password') }}
          {% else %}
-        Password unchanged
+        {{ _('Password unchanged') }}
          {% endif %}
       </label>
       <input type="password" id="txtConfirmPassword" name="confirm_password" class="form-control"
-             placeholder={% if not user %} "Confirm password" required {% else %}  "(password unchanged)" {% endif %}>
+             placeholder={% if not user %} "{{ _('Confirm password') }}" required {% else %}  "{{ _('(password unchanged)') }}" {% endif %}>
     </div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Save</button>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">{{ _('Save') }}</button>
   </form>
 </div>
 {% endblock %}

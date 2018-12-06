@@ -14,9 +14,9 @@
             <div class="modal-header">
               <h3 class="modal-title">
                 {% if loc is none %}
-                New Location
+                {{ _('New Location') }}
                 {% else %}
-                Editing Location
+                {{ _('Editing Location') }}
                 {% endif %}
               </h3>
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -26,17 +26,17 @@
                 <label
                    for={% if loc is none %} "loc-description" {% else %} "loc-description-{{loc.id}}" {% endif %}
                    class="sr-only">
-                  Description
+                  {{ _('Description') }}
                 </label>
                 <input
                    id={% if loc is none %} "loc-description" {% else %} "loc-description-{{loc.id}}" {% endif %}
-                   name="description" class="form-control" placeholder="Description" type="text" required
+                   name="description" class="form-control" placeholder="{{ _('Description') }}" type="text" required
                    value={% if loc is not none %} "{{loc.description}}" {% endif %}>
               </div>
             </div>
             <div class="modal-footer">
-              <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-              <input type="submit" class="btn btn-success" value="Save">
+              <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ _('Cancel') }}">
+              <input type="submit" class="btn btn-success" value="{{ _('Save') }}">
             </div>
           </form>
         </div>

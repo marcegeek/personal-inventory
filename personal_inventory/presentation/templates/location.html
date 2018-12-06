@@ -10,23 +10,23 @@
 {% import 'delete-item.html' as it_del %}
 {% block main %}
 <div class="row mb-3">
-  <h1 class="col-sm-9">Location: {{location.description}}</h1>
+  <h1 class="col-sm-9">{{ _('Location: %(name)s', name=location.description) }}</h1>
   <div class="col-sm-3 mt-2">
-    <a href="#edit-location-{{location.id}}-modal" class="btn btn-warning" role="button" data-toggle="modal"><i class="fas fa-edit"></i> Edit</a>
-    <a href="#delete-location-{{location.id}}-modal" class="btn btn-danger" role="button" data-toggle="modal"><i class="fas fa-trash-alt"></i> Delete</a>
+    <a href="#edit-location-{{location.id}}-modal" class="btn btn-warning" role="button" data-toggle="modal"><i class="fas fa-edit"></i> {{ _('Edit') }}</a>
+    <a href="#delete-location-{{location.id}}-modal" class="btn btn-danger" role="button" data-toggle="modal"><i class="fas fa-trash-alt"></i> {{ _('Delete') }}</a>
   </div>
 </div>
 <div class="row mb-1">
-  <h2 class="col-sm-9">Items</h2>
+  <h2 class="col-sm-9">{{ _('Items') }}</h2>
   <div class="col-sm-3">
-    <a href="#new-item-in-{{location.id}}-modal" class="btn btn-success" role="button" data-toggle="modal"><i class="fas fa-plus"></i> New Item</a>
+    <a href="#new-item-in-{{location.id}}-modal" class="btn btn-success" role="button" data-toggle="modal"><i class="fas fa-plus"></i> {{ _('New Item') }}</a>
   </div>
 </div>
 {{ loc_ed.location_editor_modal(location) }}
 {{ loc_del.delete_location_modal(location) }}
 {{ it_ed.item_editor_modal(locations=locations, default_location=location) }}
 {% if not location.items %}
-<p class="lead">No items in this location yet, try creating some item first.</p>
+<p class="lead">{{ _('No items in this location yet, try creating some item first.') }}</p>
 {% endif %}
 <div class="pb-1">
   {% for item in location.items %}
@@ -37,12 +37,12 @@
           <h3 class="card-title"><strong>{{item.description}}</strong></h3>
         </div>
         <div class="col-sm-3">
-          <a href="#edit-item-{{item.id}}-modal" class="btn btn-warning" role="button" data-toggle="modal"><i class="fas fa-edit"></i> Edit</a>
-          <a href="#delete-item-{{item.id}}-modal" class="btn btn-danger" role="button" data-toggle="modal"><i class="fas fa-trash-alt"></i> Delete</a>
+          <a href="#edit-item-{{item.id}}-modal" class="btn btn-warning" role="button" data-toggle="modal"><i class="fas fa-edit"></i> {{ _('Edit') }}</a>
+          <a href="#delete-item-{{item.id}}-modal" class="btn btn-danger" role="button" data-toggle="modal"><i class="fas fa-trash-alt"></i> {{ _('Delete') }}</a>
         </div>
       </div>
       {% if item.quantity is not none %}
-      <p class="card-text"><strong>Quantity: </strong>{{item.quantity}}</p>
+      <p class="card-text"><strong>{{ _('Quantity:') }} </strong>{{item.quantity}}</p>
       {% endif %}
     </div>
   </div>
