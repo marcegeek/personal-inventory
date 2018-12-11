@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<h1>{{ _('Error 404 - Page not found') }}</h1>
+<p class="lead">
+    {{ _('This is not the page you\'re looking for.
+    <a href="%(home)s">Move along.</a>', home=url_for('home')) }}
+</p>
+{% endblock %}
