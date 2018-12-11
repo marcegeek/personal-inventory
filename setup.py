@@ -17,9 +17,9 @@ setuptools.setup(
     zip_safe=False,
     install_requires=[
         'sqlalchemy',
-        'flask',
-        'flask-babel',
         'email_validator',
+        'flask-babel',
+        'flask',
         'gunicorn',
     ],
     classifiers=[
