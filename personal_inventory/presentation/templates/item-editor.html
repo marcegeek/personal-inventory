@@ -28,12 +28,12 @@
             <div class="modal-body">
               <div class="form-group">
                 <label
-                   for={% if item is none %} "item-description" {% else %} "item-description-{{item.id}}" {% endif %}
+                   for={% if item is none %} {% if default_location is not none %} "item-description-in-{{default_location.id}}" {% else %} "item-description" {% endif %} {% else %} "item-description-{{item.id}}" {% endif %}
                    class="sr-only">
                   {{ _('Description') }}
                 </label>
                 <input
-                   id={% if item is none %} "item-description" {% else %} "item-description-{{item.id}}" {% endif %}
+                   id={% if item is none %} {% if default_location is not none %} "item-description-in-{{default_location.id}}" {% else %} "item-description" {% endif %} {% else %} "item-description-{{item.id}}" {% endif %}
                    name="description" class="form-control" placeholder="{{ _('Description') }}" type="text" required
                    value={% if item is none %} "" {% else %} "{{item.description}}" {% endif %}>
               </div>

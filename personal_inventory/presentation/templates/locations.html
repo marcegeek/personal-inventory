@@ -54,6 +54,7 @@
   modal_focus('#new-location-modal', '#loc-description');
   {% for location in locations %}
   modal_focus('#edit-location-{{location.id}}-modal', '#loc-description-{{location.id}}');
+  modal_focus('#new-item-in-{{location.id}}-modal', '#item-description-in-{{location.id}}');
   {% endfor %}
 </script>
 {% endblock %}

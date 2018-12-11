@@ -61,7 +61,7 @@
     });
   }
   modal_focus('#edit-location-{{location.id}}-modal', '#loc-description-{{location.id}}');
-  modal_focus('#new-item-in-{{location.id}}-modal', '#item-description');
+  modal_focus('#new-item-in-{{location.id}}-modal', '#item-description-in-{{location.id}}');
   {% for item in location.items %}
   modal_focus('#edit-item-{{item.id}}-modal', '#item-description-{{item.id}}');
   {% endfor %}
