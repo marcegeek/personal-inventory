@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-12-11 01:52-0300\n"
-"PO-Revision-Date: 2018-12-11 01:54-0300\n"
+"POT-Creation-Date: 2018-12-11 14:44-0300\n"
+"PO-Revision-Date: 2018-12-11 14:45-0300\n"
 "Last-Translator: \n"
 "Language: es\n"
 "Language-Team: es <LL@li.org>\n"
@@ -74,6 +74,35 @@ msgstr "Nombre de ubicación repetido"
 msgid "%(field)s value is invalid"
 msgstr "El valor de %(field)s es inválido"
 
+#: templates/401.html:4
+msgid "Error 401 - Unauthorized resource"
+msgstr "Error 401 - Recurso no autorizado"
+
+#: templates/401.html:6
+msgid "You're trying to access a resource that you don't have permission to."
+msgstr "Usted está intentando acceder a un recurso para el que no tiene permiso."
+
+#: templates/404.html:4
+msgid "Error 404 - Page not found"
+msgstr "Error 404 - Página no encontrada"
+
+#: templates/404.html:6
+#, python-format
+msgid ""
+"This is not the page you're looking for.\n"
+"    <a href=\"%(home)s\">Move along.</a>"
+msgstr ""
+"Esta no es la página que está buscando.\n"
+"    <a href=\"%(home)s\">Muévase.</a>"
+
+#: templates/405.html:4
+msgid "Error 405 - Method not allowed"
+msgstr "Error 405 - Método no permitido"
+
+#: templates/405.html:6
+msgid "The method is not allowed for the requested URL."
+msgstr "El método no está permitido para la URL solicitada."
+
 #: templates/delete-item.html:8
 msgid "Delete item"
 msgstr "Eliminar ítem"
@@ -93,8 +122,8 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #: templates/delete-item.html:17 templates/delete-location.html:17
-#: templates/items.html:28 templates/location.html:15
-#: templates/location.html:44 templates/locations.html:36
+#: templates/items.html:31 templates/location.html:15 templates/location.html:44
+#: templates/locations.html:39
 msgid "Delete"
 msgstr "Eliminar"
 
@@ -107,29 +136,27 @@ msgstr "Eliminar ubicación"
 msgid "Do you really want to delete location \"%(name)s\"?"
 msgstr "¿Realmente quiere eliminar la ubicación \"%(name)s\"?"
 
-#: templates/home.html:6
+#: templates/home.html:8
 msgid ""
 "Web application written in Python with\n"
-"      <strong>Flask</strong> and <strong>SQLAlchemy</strong> for "
-"managing\n"
+"      <strong>Flask</strong> and <strong>SQLAlchemy</strong> for managing\n"
 "      an inventory of personal objects."
 msgstr ""
 "Aplicación web escrita en Python con\n"
-"      <strong>Flask</strong> y <strong>SQLAlchemy</strong> para "
-"administrar\n"
+"      <strong>Flask</strong> y <strong>SQLAlchemy</strong> para administrar\n"
 "      un inventario de objetos personales."
 
-#: templates/home.html:12
+#: templates/home.html:14
 #, python-format
 msgid ""
-"Please <a href=\"%(login)s\">login</a> or <a href=\"%(register)s"
-"\">register</a> to use the application."
+"Please <a href=\"%(login)s\">login</a> or <a href=\"%(register)s\">register</"
+"a> to use the application."
 msgstr ""
 "Por favor <a href=\"%(login)s\">ingrese</a> o <a href=\"%(register)s"
 "\">regístrese</a> para usar la aplicación."
 
-#: templates/item-editor.html:21 templates/items.html:10
-#: templates/location.html:23 templates/locations.html:42
+#: templates/item-editor.html:21 templates/items.html:13
+#: templates/location.html:23 templates/locations.html:45
 msgid "New item"
 msgstr "Nuevo ítem"
 
@@ -151,24 +178,24 @@ msgstr "Cantidad"
 msgid "Save"
 msgstr "Guardar"
 
-#: templates/items.html:7
+#: templates/items.html:10
 msgid "Managing items"
 msgstr "Administrando ítems"
 
-#: templates/items.html:17
+#: templates/items.html:20
 msgid "No items yet, try creating some item first."
 msgstr "Todavía no hay ítems, intente crear alguno."
 
-#: templates/items.html:27 templates/location.html:12
-#: templates/location.html:43 templates/locations.html:33
+#: templates/items.html:30 templates/location.html:12 templates/location.html:43
+#: templates/locations.html:36
 msgid "Edit"
 msgstr "Editar"
 
-#: templates/items.html:32
+#: templates/items.html:35
 msgid "Location:"
 msgstr "Ubicación:"
 
-#: templates/items.html:38 templates/location.html:48
+#: templates/items.html:41 templates/location.html:48
 msgid "Quantity:"
 msgstr "Cantidad:"
 
@@ -177,7 +204,7 @@ msgid "Home"
 msgstr "Inicio"
 
 #: templates/layout.html:46 templates/location.html:20
-#: templates/locations.html:40
+#: templates/locations.html:43
 msgid "Items"
 msgstr "Ítems"
 
@@ -197,7 +224,7 @@ msgstr "Editar perfil"
 msgid "Logout"
 msgstr "Cerrar sesión"
 
-#: templates/location-editor.html:17 templates/locations.html:11
+#: templates/location-editor.html:17 templates/locations.html:14
 msgid "New location"
 msgstr "Nueva ubicación"
 
@@ -214,34 +241,30 @@ msgstr "Ubicación: %(name)s"
 msgid "No items in this location yet, try creating some item first."
 msgstr "Todavía no hay ítems en esta ubicación, intente crear alguno."
 
-#: templates/locations.html:8
+#: templates/locations.html:11
 msgid "Managing locations"
 msgstr "Administrando ubicaciones"
 
-#: templates/locations.html:19
+#: templates/locations.html:22
 msgid "No locations yet, try creating some location first."
 msgstr "Todavía no hay ubicaciones, intente crear alguna."
 
-#: templates/locations.html:30
+#: templates/locations.html:33
 msgid "Explore"
 msgstr "Explorar"
 
-#: templates/login.html:10
-msgid "Please login"
-msgstr "Por favor inicie sesión"
+#: templates/login.html:10 templates/login.html:17
+msgid "Login"
+msgstr "Iniciar sesión"
 
 #: templates/login.html:11 templates/login.html:12
 msgid "Username or e-mail"
 msgstr "Nombre de usuario o e-mail"
 
-#: templates/login.html:14 templates/login.html:15
-#: templates/user-editor.html:39 templates/user-editor.html:45
+#: templates/login.html:14 templates/login.html:15 templates/user-editor.html:39
+#: templates/user-editor.html:45
 msgid "Password"
 msgstr "Contraseña"
-
-#: templates/login.html:17
-msgid "Login"
-msgstr "Iniciar sesión"
 
 #: templates/login.html:19
 msgid "Create account"
