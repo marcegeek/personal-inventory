@@ -4,9 +4,11 @@
 {% import 'delete-item.html' as it_del %}
 {% block main %}
 <div class="row mb-2">
-  <h1 class="col-sm-10">{{ _('Managing Items') }}</h1>
+  <h1 class="col-sm-10">{{ _('Managing items') }}</h1>
   <div class="col-sm-2 mt-2">
-    <a href="#new-item-modal" class="btn btn-success justify-content-sm-end" role="button" data-toggle="modal"><i class="fa fa-plus"></i> {{ _('New Item') }}</a>
+    <a href="#new-item-modal" class="btn btn-success justify-content-sm-end" role="button" data-toggle="modal">
+      <i class="fa fa-plus"></i> {{ _('New item') }}
+    </a>
   </div>
 </div>
 {{ it_ed.item_editor_modal(locations) }}

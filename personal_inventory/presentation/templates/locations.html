@@ -5,9 +5,11 @@
 {% import 'item-editor.html' as it_ed %}
 {% block main %}
 <div class="row mb-2">
-  <h1 class="col-sm-10">{{ _('Managing Locations') }}</h1>
+  <h1 class="col-sm-10">{{ _('Managing locations') }}</h1>
   <div class="col-sm-2 mt-2">
-    <a href="#new-location-modal" class="btn btn-success justify-content-sm-end" role="button" data-toggle="modal"><i class="fa fa-plus"></i> {{ _('New Location') }}</a>
+    <a href="#new-location-modal" class="btn btn-success justify-content-sm-end" role="button" data-toggle="modal">
+      <i class="fa fa-plus"></i> {{ _('New location') }}
+    </a>
   </div>
 </div>
 
@@ -24,13 +26,21 @@
         <h2 class="card-title"><strong>{{location.description}}</strong></h2>
       </div>
       <div class="col-sm-4">
-        <a href="{{ url_for('location', location_id=location.id) }}" class="btn btn-primary"><i class="far fa-eye"></i> {{ _('Explore') }}</a>
-        <a href="#edit-location-{{location.id}}-modal" class="btn btn-warning" role="button" data-toggle="modal"><i class="fas fa-edit"></i> {{ _('Edit') }}</a>
-        <a href="#delete-location-{{location.id}}-modal" class="btn btn-danger" role="button" data-toggle="modal"><i class="fas fa-trash-alt"></i> {{ _('Delete') }}</a>
+        <a href="{{ url_for('location', location_id=location.id) }}" class="btn btn-primary">
+          <i class="far fa-eye"></i> {{ _('Explore') }}
+        </a>
+        <a href="#edit-location-{{location.id}}-modal" class="btn btn-warning" role="button" data-toggle="modal">
+          <i class="fas fa-edit"></i> {{ _('Edit') }}
+        </a>
+        <a href="#delete-location-{{location.id}}-modal" class="btn btn-danger" role="button" data-toggle="modal">
+          <i class="fas fa-trash-alt"></i> {{ _('Delete') }}
+        </a>
       </div>
     </div>
     <p class="card-text"><strong>{{ _('Items') }}:</strong> {{location.items|length}}</p>
-    <a href="#new-item-in-{{location.id}}-modal" class="btn btn-success" role="button" data-toggle="modal"><i class="fas fa-plus"></i> {{ _('New Item') }}</a>
+    <a href="#new-item-in-{{location.id}}-modal" class="btn btn-success" role="button" data-toggle="modal">
+      <i class="fas fa-plus"></i> {{ _('New item') }}
+    </a>
   </div>
 </div>
 {{ loc_ed.location_editor_modal(location) }}

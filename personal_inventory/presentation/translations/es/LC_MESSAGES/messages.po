@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-12-10 22:01-0300\n"
-"PO-Revision-Date: 2018-12-10 22:01-0300\n"
+"POT-Creation-Date: 2018-12-11 01:52-0300\n"
+"PO-Revision-Date: 2018-12-11 01:54-0300\n"
 "Last-Translator: \n"
 "Language: es\n"
 "Language-Team: es <LL@li.org>\n"
@@ -75,8 +75,8 @@ msgid "%(field)s value is invalid"
 msgstr "El valor de %(field)s es inválido"
 
 #: templates/delete-item.html:8
-msgid "Delete Item"
-msgstr "Eliminar Ítem"
+msgid "Delete item"
+msgstr "Eliminar ítem"
 
 #: templates/delete-item.html:12
 #, python-format
@@ -93,14 +93,14 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #: templates/delete-item.html:17 templates/delete-location.html:17
-#: templates/items.html:29 templates/location.html:16
-#: templates/location.html:41 templates/locations.html:31
+#: templates/items.html:28 templates/location.html:15
+#: templates/location.html:44 templates/locations.html:36
 msgid "Delete"
 msgstr "Eliminar"
 
 #: templates/delete-location.html:8
-msgid "Delete Location"
-msgstr "Eliminar Ubicación"
+msgid "Delete location"
+msgstr "Eliminar ubicación"
 
 #: templates/delete-location.html:12
 #, python-format
@@ -128,14 +128,14 @@ msgstr ""
 "Por favor <a href=\"%(login)s\">ingrese</a> o <a href=\"%(register)s"
 "\">regístrese</a> para usar la aplicación."
 
-#: templates/item-editor.html:21 templates/items.html:13
-#: templates/location.html:22 templates/locations.html:35
-msgid "New Item"
-msgstr "Nuevo Ítem"
+#: templates/item-editor.html:21 templates/items.html:10
+#: templates/location.html:23 templates/locations.html:42
+msgid "New item"
+msgstr "Nuevo ítem"
 
 #: templates/item-editor.html:23
-msgid "Editing Item"
-msgstr "Editando Ítem"
+msgid "Editing item"
+msgstr "Editando ítem"
 
 #: templates/item-editor.html:33 templates/item-editor.html:37
 #: templates/location-editor.html:29 templates/location-editor.html:33
@@ -151,74 +151,78 @@ msgstr "Cantidad"
 msgid "Save"
 msgstr "Guardar"
 
-#: templates/items.html:11
-msgid "Managing Items"
-msgstr "Administrando Ítems"
+#: templates/items.html:7
+msgid "Managing items"
+msgstr "Administrando ítems"
 
-#: templates/items.html:18
+#: templates/items.html:17
 msgid "No items yet, try creating some item first."
 msgstr "Todavía no hay ítems, intente crear alguno."
 
-#: templates/items.html:28 templates/location.html:15
-#: templates/location.html:40 templates/locations.html:30
+#: templates/items.html:27 templates/location.html:12
+#: templates/location.html:43 templates/locations.html:33
 msgid "Edit"
 msgstr "Editar"
 
-#: templates/items.html:33
+#: templates/items.html:32
 msgid "Location:"
 msgstr "Ubicación:"
 
-#: templates/items.html:39 templates/location.html:45
+#: templates/items.html:38 templates/location.html:48
 msgid "Quantity:"
 msgstr "Cantidad:"
 
-#: templates/layout.html:39
+#: templates/layout.html:42
 msgid "Home"
 msgstr "Inicio"
 
-#: templates/layout.html:43 templates/location.html:20
-#: templates/locations.html:34
+#: templates/layout.html:46 templates/location.html:20
+#: templates/locations.html:40
 msgid "Items"
 msgstr "Ítems"
 
-#: templates/layout.html:46
+#: templates/layout.html:49
 msgid "Locations"
 msgstr "Ubicaciones"
 
-#: templates/layout.html:53
+#: templates/layout.html:58
+msgid "Profile"
+msgstr "Perfil"
+
+#: templates/layout.html:62
 msgid "Edit profile"
 msgstr "Editar perfil"
 
-#: templates/layout.html:56
+#: templates/layout.html:65
 msgid "Logout"
 msgstr "Cerrar sesión"
 
-#: templates/location-editor.html:17 templates/locations.html:14
-msgid "New Location"
-msgstr "Nueva Ubicación"
+#: templates/location-editor.html:17 templates/locations.html:11
+msgid "New location"
+msgstr "Nueva ubicación"
 
 #: templates/location-editor.html:19
-msgid "Editing Location"
-msgstr "Editando Ubicación"
+msgid "Editing location"
+msgstr "Editando ubicación"
 
-#: templates/location.html:13
+#: templates/location.html:9
 #, python-format
 msgid "Location: %(name)s"
 msgstr "Ubicación: %(name)s"
 
-#: templates/location.html:29
+#: templates/location.html:33
 msgid "No items in this location yet, try creating some item first."
 msgstr "Todavía no hay ítems en esta ubicación, intente crear alguno."
 
-#: templates/locations.html:12
-msgid "Managing Locations"
-msgstr "Administrando Ubicaciones"
+#: templates/locations.html:8
+msgid "Managing locations"
+msgstr "Administrando ubicaciones"
 
 #: templates/locations.html:19
 msgid "No locations yet, try creating some location first."
 msgstr "Todavía no hay ubicaciones, intente crear alguna."
 
-#: templates/locations.html:29
+#: templates/locations.html:30
 msgid "Explore"
 msgstr "Explorar"
 
@@ -248,8 +252,8 @@ msgid "User registration"
 msgstr "Registro de usuario"
 
 #: templates/user-editor.html:12
-msgid "Editing user profile"
-msgstr "Editando perfil de usuario"
+msgid "User profile"
+msgstr "Perfil de usuario"
 
 #: templates/user-editor.html:15 templates/user-editor.html:16
 msgid "First name"

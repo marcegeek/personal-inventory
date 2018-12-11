@@ -8,14 +8,20 @@
 <div class="row mb-3">
   <h1 class="col-sm-9">{{ _('Location: %(name)s', name=location.description) }}</h1>
   <div class="col-sm-3 mt-2">
-    <a href="#edit-location-{{location.id}}-modal" class="btn btn-warning" role="button" data-toggle="modal"><i class="fas fa-edit"></i> {{ _('Edit') }}</a>
-    <a href="#delete-location-{{location.id}}-modal" class="btn btn-danger" role="button" data-toggle="modal"><i class="fas fa-trash-alt"></i> {{ _('Delete') }}</a>
+    <a href="#edit-location-{{location.id}}-modal" class="btn btn-warning" role="button" data-toggle="modal">
+      <i class="fas fa-edit"></i> {{ _('Edit') }}
+    </a>
+    <a href="#delete-location-{{location.id}}-modal" class="btn btn-danger" role="button" data-toggle="modal">
+      <i class="fas fa-trash-alt"></i> {{ _('Delete') }}
+    </a>
   </div>
 </div>
 <div class="row mb-1">
   <h2 class="col-sm-9">{{ _('Items') }}</h2>
   <div class="col-sm-3">
-    <a href="#new-item-in-{{location.id}}-modal" class="btn btn-success" role="button" data-toggle="modal"><i class="fas fa-plus"></i> {{ _('New Item') }}</a>
+    <a href="#new-item-in-{{location.id}}-modal" class="btn btn-success" role="button" data-toggle="modal">
+      <i class="fas fa-plus"></i> {{ _('New item') }}
+    </a>
   </div>
 </div>
 
