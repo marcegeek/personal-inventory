@@ -1,8 +1,11 @@
 {% extends "layout.html" %}
 
+{% block nav_locations_active%}active{% endblock %}
+
 {% import 'location-editor.html' as loc_ed %}
 {% import 'delete-location.html' as loc_del %}
 {% import 'item-editor.html' as it_ed %}
+
 {% block main %}
 <div class="row mb-2">
   <h1 class="col-sm-10">{{ _('Managing locations') }}</h1>

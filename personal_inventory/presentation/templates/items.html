@@ -1,7 +1,10 @@
 {% extends "layout.html" %}
 
+{% block nav_items_active%}active{% endblock %}
+
 {% import 'item-editor.html' as it_ed %}
 {% import 'delete-item.html' as it_del %}
+
 {% block main %}
 <div class="row mb-2">
   <h1 class="col-sm-10">{{ _('Managing items') }}</h1>

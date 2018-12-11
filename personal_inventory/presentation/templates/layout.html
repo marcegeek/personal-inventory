@@ -38,14 +38,14 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarColor01">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
+          <li class="nav-item {% block nav_home_active %}{% endblock %}">
             <a class="nav-link" href="{{ url_for('home') }}">{{ _('Home') }}</a>
           </li>
           {% if 'user_id' in session %}
-          <li class="nav-item">
+          <li class="nav-item {% block nav_items_active %}{% endblock %}">
             <a class="nav-link" href="{{ url_for('items') }}">{{ _('Items') }}</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item {% block nav_locations_active %}{% endblock %}">
             <a class="nav-link" href="{{ url_for('locations') }}">{{ _('Locations') }}</a>
           </li>
           {% endif %}
