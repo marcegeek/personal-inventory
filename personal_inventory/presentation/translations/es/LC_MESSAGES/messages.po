@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-12-06 19:51-0300\n"
-"PO-Revision-Date: 2018-12-06 19:58-0300\n"
+"POT-Creation-Date: 2018-12-10 21:28-0300\n"
+"PO-Revision-Date: 2018-12-10 21:41-0300\n"
 "Last-Translator: \n"
 "Language: es\n"
 "Language-Team: es <LL@li.org>\n"
@@ -18,6 +18,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.6.0\n"
 "X-Generator: Poedit 2.0.4\n"
+
+#: __init__.py:74
+msgid "Wrong username/e-mail or password"
+msgstr "Nombre de usuario/e-mail o contraseña incorrectos"
+
+#: __init__.py:105 __init__.py:137
+msgid "Passwords don't match"
+msgstr "Las contraseñas no coinciden"
+
+#: __init__.py:152
+msgid "No locations yet, create one first"
+msgstr "Todavía no hay ubicaciones, cree una primero"
 
 #: error_handler.py:11
 #, python-format
@@ -120,8 +132,8 @@ msgstr "Nuevo Ítem"
 msgid "Editing Item"
 msgstr "Editando Ítem"
 
-#: templates/item-editor.html:33 templates/location-editor.html:29
-#: templates/location-editor.html:33
+#: templates/item-editor.html:33 templates/item-editor.html:37
+#: templates/location-editor.html:29 templates/location-editor.html:33
 msgid "Description"
 msgstr "Descripción"
 
@@ -130,7 +142,7 @@ msgid "Quantity"
 msgstr "Cantidad"
 
 #: templates/item-editor.html:72 templates/location-editor.html:39
-#: templates/user-editor.html:47
+#: templates/user-editor.html:57
 msgid "Save"
 msgstr "Guardar"
 
@@ -176,7 +188,7 @@ msgstr "Editar perfil"
 msgid "Logout"
 msgstr "Cerrar sesión"
 
-#: templates/location-editor.html:17
+#: templates/location-editor.html:17 templates/locations.html:14
 msgid "New Location"
 msgstr "Nueva Ubicación"
 
@@ -199,7 +211,7 @@ msgstr "Administrando Ubicaciones"
 
 #: templates/locations.html:19
 msgid "No locations yet, try creating some location first."
-msgstr "Todavía no hay ubicaciones, intente crear alguno."
+msgstr "Todavía no hay ubicaciones, intente crear alguna."
 
 #: templates/locations.html:29
 msgid "Explore"
@@ -214,7 +226,7 @@ msgid "Username or e-mail"
 msgstr "Nombre de usuario o e-mail"
 
 #: templates/login.html:14 templates/login.html:15
-#: templates/user-editor.html:29 templates/user-editor.html:35
+#: templates/user-editor.html:39 templates/user-editor.html:45
 msgid "Password"
 msgstr "Contraseña"
 
@@ -246,18 +258,22 @@ msgstr "Apellido"
 msgid "E-mail"
 msgstr "E-mail"
 
-#: templates/user-editor.html:24 templates/user-editor.html:25
+#: templates/user-editor.html:24 templates/user-editor.html:35
 msgid "Username"
 msgstr "Nombre de usuario"
 
-#: templates/user-editor.html:31 templates/user-editor.html:41
+#: templates/user-editor.html:26
+msgid "Language"
+msgstr "Idioma"
+
+#: templates/user-editor.html:41 templates/user-editor.html:51
 msgid "Password unchanged"
 msgstr "Contraseña sin cambios"
 
-#: templates/user-editor.html:35 templates/user-editor.html:45
+#: templates/user-editor.html:45 templates/user-editor.html:55
 msgid "(password unchanged)"
 msgstr "(contraseña sin cambios)"
 
-#: templates/user-editor.html:39 templates/user-editor.html:45
+#: templates/user-editor.html:49 templates/user-editor.html:55
 msgid "Confirm password"
 msgstr "Confirmar contraseña"

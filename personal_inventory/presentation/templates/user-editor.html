@@ -22,6 +22,16 @@
     <input type="email" id="txtEmail" name="email" class="form-control" placeholder="{{ _('E-mail') }}" required
      {% if user %} value="{{ user.email }}" {% endif %}>
     <label for="txtUsername" class="sr-only">{{ _('Username') }}</label>
+    <label for="cmbLanguage">
+      {{ _('Language') }}
+    </label>
+    <select id="cmbLanguage" name="locale">
+      {% for key in languages.keys() %}
+      <option value="{{ key }}"{% if default_language == key %} selected="true"{% endif %}>
+        {{ languages[key] }}
+      </option>
+      {% endfor %}
+    </select>
     <input type="text" id="txtUsername" name="username" class="form-control" placeholder="{{ _('Username') }}" required
      {% if user %} value="{{ user.username }}" {% endif %}>
     <label for="txtPassword" class="sr-only">

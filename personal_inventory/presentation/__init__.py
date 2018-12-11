@@ -2,7 +2,7 @@ import os
 
 from flask import Flask, url_for, render_template, request, redirect, session, \
     flash, abort
-from flask_babel import Babel
+import flask_babel as fl_babel
 
 import config
 from personal_inventory.business.entities.item import Item
@@ -25,7 +25,7 @@ if config.ENVIRONMENT == config.Environment.DEVELOPMENT:
 else:
     os.environ['FLASK_ENV'] = 'production'
 
-babel = Babel(app)
+babel = fl_babel.Babel(app)
 
 
 def get_user_from_session():
@@ -71,7 +71,7 @@ def login():
             set_user_in_session(ul.get_by_username_email(username_email))
             return redirect(url_for('home'))
         else:
-            flash('Wrong username/e-mail or password', 'error')
+            flash(fl_babel.gettext('Wrong username/e-mail or password'), 'error')
     return render_template('login.html')
 
 
@@ -90,9 +90,10 @@ def register():
         username = request.form['username']
         password = request.form['password']
         confirm_password = request.form['confirm_password']
+        locale = request.form['locale']
         if password == confirm_password:
             user = User(firstname=firstname, lastname=lastname, email=email,
-                        username=username, password=password)
+                        username=username, password=password, locale=locale)
             try:
                 UserLogic().insert(user)
                 set_user_in_session(user)
@@ -101,8 +102,9 @@ def register():
                 for err in ex.args:
                     flash(error_handler.error_str(err), 'error')
         else:
-            flash('Passwords don\'t match', 'error')
-    return render_template('user-editor.html', user=None)
+            flash(fl_babel.gettext('Passwords don\'t match'), 'error')
+    return render_template('user-editor.html', user=None, languages=config.LANGUAGES,
+                           default_language=get_locale())
 
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
@@ -116,11 +118,13 @@ def edit_profile():
             username = request.form['username']
             password = request.form['password']
             confirm_password = request.form['confirm_password']
+            locale = request.form['locale']
             if len(password) == 0 or password == confirm_password:
                 user.firstname = firstname
                 user.lastname = lastname
                 user.email = email
                 user.username = username
+                user.locale = locale
                 if len(password) != 0:  # si no se ingresa nada se deja sin modificar
                     user.password = password
                 try:
@@ -130,8 +134,9 @@ def edit_profile():
                     for err in ex.args:
                         flash(error_handler.error_str(err), 'error')
             else:
-                flash('Passwords don\'t match', 'error')
-        return render_template('user-editor.html', user=user)
+                flash(fl_babel.gettext('Passwords don\'t match'), 'error')
+        return render_template('user-editor.html', user=user, languages=config.LANGUAGES,
+                               default_language=get_locale())
     else:
         abort(401)
 
@@ -144,7 +149,7 @@ def items():
         if request.method == 'GET':
             user_locations = LocationLogic().get_all_by_user(user)
             if len(user_locations) == 0:
-                flash('No locations were present, create one first', 'error')
+                flash(fl_babel.gettext('No locations yet, create one first'), 'error')
                 return redirect(url_for('locations'))
             user_items = item_logic.get_all_by_user(user, fill_location=True)
             return render_template('items.html', items=user_items, locations=user_locations)
