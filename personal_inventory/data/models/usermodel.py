@@ -12,4 +12,4 @@ class UserModel(Base):
     email = Column(String(50), unique=True, nullable=False)
     username = Column(String(50), unique=True, nullable=False)
     password = Column(String(30), nullable=False)
-    locale = Column(String(5))
+    language = Column(String(5))

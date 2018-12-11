@@ -25,7 +25,7 @@
     <label for="cmbLanguage">
       {{ _('Language') }}
     </label>
-    <select id="cmbLanguage" name="locale">
+    <select id="cmbLanguage" name="language">
       {% for key in languages.keys() %}
       <option value="{{ key }}"{% if default_language == key %} selected="true"{% endif %}>
         {{ languages[key] }}

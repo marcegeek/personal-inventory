@@ -6,14 +6,14 @@ class User(BusinessEntity):
 
     def __init__(self, id=None, firstname=None, lastname=None,
                  email=None, username=None, password=None,
-                 locale=None):
+                 language=None):
         super().__init__(id)
         self.firstname = firstname
         self.lastname = lastname
         self.email = email
         self.username = username
         self.password = password
-        self.locale = locale
+        self.language = language
 
     @classmethod
     def make_from_model(cls, usermodel):
@@ -27,7 +27,7 @@ class User(BusinessEntity):
             return None
         user = cls(usermodel.id, usermodel.firstname, usermodel.lastname,
                    usermodel.email, usermodel.username, usermodel.password,
-                   usermodel.locale)
+                   usermodel.language)
         return user
 
     def to_model(self):
@@ -54,4 +54,4 @@ class User(BusinessEntity):
         usermodel.email = self.email
         usermodel.username = self.username
         usermodel.password = self.password
-        usermodel.locale = self.locale
+        usermodel.language = self.language

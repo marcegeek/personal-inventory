@@ -45,12 +45,12 @@ def set_user_in_session(user):
 
 
 @babel.localeselector
-def get_locale():
+def get_language():
     # si hay un usuario logueado, tomar la localización
     # de la configuración del usuario
     user = get_user_from_session()
-    if user and user.locale:
-        return user.locale
+    if user and user.language:
+        return user.language
     # si no, tomarla de la request que envía el navegador
     return request.accept_languages.best_match(config.LANGUAGES.keys())
 
@@ -90,10 +90,10 @@ def register():
         username = request.form['username']
         password = request.form['password']
         confirm_password = request.form['confirm_password']
-        locale = request.form['locale']
+        language = request.form['language']
         if password == confirm_password:
             user = User(firstname=firstname, lastname=lastname, email=email,
-                        username=username, password=password, locale=locale)
+                        username=username, password=password, language=language)
             try:
                 UserLogic().insert(user)
                 set_user_in_session(user)
@@ -104,7 +104,7 @@ def register():
         else:
             flash(fl_babel.gettext('Passwords don\'t match'), 'error')
     return render_template('user-editor.html', user=None, languages=config.LANGUAGES,
-                           default_language=get_locale())
+                           default_language=get_language())
 
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
@@ -118,13 +118,13 @@ def edit_profile():
             username = request.form['username']
             password = request.form['password']
             confirm_password = request.form['confirm_password']
-            locale = request.form['locale']
+            language = request.form['language']
             if len(password) == 0 or password == confirm_password:
                 user.firstname = firstname
                 user.lastname = lastname
                 user.email = email
                 user.username = username
-                user.locale = locale
+                user.language = language
                 if len(password) != 0:  # si no se ingresa nada se deja sin modificar
                     user.password = password
                 try:
@@ -136,7 +136,7 @@ def edit_profile():
             else:
                 flash(fl_babel.gettext('Passwords don\'t match'), 'error')
         return render_template('user-editor.html', user=user, languages=config.LANGUAGES,
-                               default_language=get_locale())
+                               default_language=get_language())
     else:
         abort(401)
 
