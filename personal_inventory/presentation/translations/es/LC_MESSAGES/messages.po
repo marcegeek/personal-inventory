@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-12-10 21:28-0300\n"
-"PO-Revision-Date: 2018-12-10 21:41-0300\n"
+"POT-Creation-Date: 2018-12-10 22:01-0300\n"
+"PO-Revision-Date: 2018-12-10 22:01-0300\n"
 "Last-Translator: \n"
 "Language: es\n"
 "Language-Team: es <LL@li.org>\n"
@@ -78,7 +78,7 @@ msgstr "El valor de %(field)s es inválido"
 msgid "Delete Item"
 msgstr "Eliminar Ítem"
 
-#: templates/delete-item.html:12 templates/delete-location.html:12
+#: templates/delete-item.html:12
 #, python-format
 msgid "Do you really want to delete item \"%(name)s\"?"
 msgstr "¿Realmente quiere eliminar el ítem \"%(name)s\"?"
@@ -101,6 +101,11 @@ msgstr "Eliminar"
 #: templates/delete-location.html:8
 msgid "Delete Location"
 msgstr "Eliminar Ubicación"
+
+#: templates/delete-location.html:12
+#, python-format
+msgid "Do you really want to delete location \"%(name)s\"?"
+msgstr "¿Realmente quiere eliminar la ubicación \"%(name)s\"?"
 
 #: templates/home.html:6
 msgid ""
