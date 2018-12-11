@@ -9,38 +9,37 @@
     <a href="#new-item-modal" class="btn btn-success justify-content-sm-end" role="button" data-toggle="modal"><i class="fa fa-plus"></i> {{ _('New Item') }}</a>
   </div>
 </div>
-<div class="pb-1">
-  {% if not items %}
-  <p class="lead">{{ _('No items yet, try creating some item first.') }}</p>
-  {% endif %}
-  {% for item in items %}
-  <div class="card mb-2">
-    <div class="card-body">
-      <div class="row">
-        <div class="col-sm-9">
-          <h2 class="card-title"><strong>{{item.description}}</strong></h2>
-        </div>
-        <div class="col-sm-3">
-          <a href="#edit-item-{{item.id}}-modal" class="btn btn-warning" role="button" data-toggle="modal"><i class="fas fa-edit"></i> {{ _('Edit') }}</a>
-          <a href="#delete-item-{{item.id}}-modal" class="btn btn-danger" role="button" data-toggle="modal"><i class="fas fa-trash-alt"></i> {{ _('Delete') }}</a>
-        </div>
-      </div>
-      <p class="card-text">
-        <strong>{{ _('Location:') }}</strong>
-        <a href="{{url_for('location', location_id=item.location.id)}}">
-        {{item.location.description}}
-      </a>
-      </p>
-      {% if item.quantity is not none %}
-      <p class="card-text"><strong>{{ _('Quantity:') }}</strong> {{item.quantity}}</p>
-      {% endif %}
-    </div>
-  </div>
-  {{ it_ed.item_editor_modal(locations, item) }}
-  {{ it_del.delete_item_modal(item) }}
-  {% endfor %}
-</div>
 {{ it_ed.item_editor_modal(locations) }}
+
+{% if not items %}
+<p class="lead">{{ _('No items yet, try creating some item first.') }}</p>
+{% endif %}
+{% for item in items %}
+<div class="card mb-2">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-sm-9">
+        <h2 class="card-title"><strong>{{item.description}}</strong></h2>
+      </div>
+      <div class="col-sm-3">
+        <a href="#edit-item-{{item.id}}-modal" class="btn btn-warning" role="button" data-toggle="modal"><i class="fas fa-edit"></i> {{ _('Edit') }}</a>
+        <a href="#delete-item-{{item.id}}-modal" class="btn btn-danger" role="button" data-toggle="modal"><i class="fas fa-trash-alt"></i> {{ _('Delete') }}</a>
+      </div>
+    </div>
+    <p class="card-text">
+      <strong>{{ _('Location:') }}</strong>
+      <a href="{{url_for('location', location_id=item.location.id)}}">
+      {{item.location.description}}
+    </a>
+  </p>
+    {% if item.quantity is not none %}
+    <p class="card-text"><strong>{{ _('Quantity:') }}</strong> {{item.quantity}}</p>
+    {% endif %}
+  </div>
+</div>
+{{ it_ed.item_editor_modal(locations, item) }}
+{{ it_del.delete_item_modal(item) }}
+{% endfor %}
 {% endblock %}
 
 {% block scripts %}
