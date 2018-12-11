@@ -10,6 +10,9 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://bootswatch.com/4/flatly/bootstrap.min.css">
 
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
+
     <!-- Sticky footer style -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sticky-footer.css') }}">
 
@@ -50,10 +53,19 @@
         {% if 'user_id' in session %}
         <ul class="navbar-nav mr-2">
           <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('edit_profile') }}">{{ _('Edit profile') }}</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('logout') }}">{{ _('Logout') }}</a>
+            <div class="dropdown">
+              <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-user"></i> {{ _('Profile') }}
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="{{ url_for('logout') }}">
+                  {{ _('Edit profile') }}
+                </a>
+                <a class="dropdown-item" href="{{ url_for('logout') }}">
+                  {{ _('Logout') }}
+                </a>
+              </div>
+            </div>
           </li>
         </ul>
         {% endif %}
