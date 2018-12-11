@@ -28,7 +28,7 @@ else:
 babel = fl_babel.Babel(app)
 
 
-def get_user_from_session():
+def get_logged_in_user():
     user = None
     if 'user_id' in session:
         user_id = session['user_id']
@@ -37,7 +37,7 @@ def get_user_from_session():
     return user
 
 
-def set_user_in_session(user):
+def set_logged_in_user(user):
     if user is not None:
         session['user_id'] = user.id
     else:
@@ -48,7 +48,7 @@ def set_user_in_session(user):
 def get_language():
     # si hay un usuario logueado, tomar la localización
     # de la configuración del usuario
-    user = get_user_from_session()
+    user = get_logged_in_user()
     if user and user.language:
         return user.language
     # si no, tomarla de la request que envía el navegador
@@ -57,7 +57,7 @@ def get_language():
 
 @app.route('/')
 def home():
-    user = get_user_from_session()
+    user = get_logged_in_user()
     return render_template('home.html', user=user)
 
 
@@ -68,7 +68,7 @@ def login():
         password = request.form['password']
         ul = UserLogic()
         if ul.validate_login(username_email, password):
-            set_user_in_session(ul.get_by_username_email(username_email))
+            set_logged_in_user(ul.get_by_username_email(username_email))
             return redirect(url_for('home'))
         else:
             flash(fl_babel.gettext('Wrong username/e-mail or password'), 'error')
@@ -77,7 +77,7 @@ def login():
 
 @app.route('/logout')
 def logout():
-    set_user_in_session(None)
+    set_logged_in_user(None)
     return redirect(url_for('home'))
 
 
@@ -96,7 +96,7 @@ def register():
                         username=username, password=password, language=language)
             try:
                 UserLogic().insert(user)
-                set_user_in_session(user)
+                set_logged_in_user(user)
                 return redirect(url_for('home'))
             except ValidationException as ex:
                 for err in ex.args:
@@ -107,9 +107,9 @@ def register():
                            default_language=get_language())
 
 
-@app.route('/edit_profile', methods=['GET', 'POST'])
+@app.route('/profile', methods=['GET', 'POST'])
 def edit_profile():
-    user = get_user_from_session()
+    user = get_logged_in_user()
     if user is not None:
         if request.method == 'POST':
             firstname = request.form['firstname']
@@ -143,7 +143,7 @@ def edit_profile():
 
 @app.route('/items', methods=['GET', 'POST'])
 def items():
-    user = get_user_from_session()
+    user = get_logged_in_user()
     if user is not None:
         item_logic = ItemLogic()
         if request.method == 'GET':
@@ -172,7 +172,7 @@ def items():
 
 @app.route('/items/<int:item_id>', methods=['POST'])
 def item(item_id):
-    user = get_user_from_session()
+    user = get_logged_in_user()
     if user is not None:
         item_logic = ItemLogic()
         current_item = item_logic.get_by_id(item_id)
@@ -209,7 +209,7 @@ def item(item_id):
 
 @app.route('/locations', methods=['GET', 'POST'])
 def locations():
-    user = get_user_from_session()
+    user = get_logged_in_user()
     if user is not None:
         if request.method == 'GET':
             user_locations = LocationLogic().get_all_by_user(user)
@@ -230,7 +230,7 @@ def locations():
 
 @app.route('/locations/<int:location_id>', methods=['GET', 'POST'])
 def location(location_id):
-    user = get_user_from_session()
+    user = get_logged_in_user()
     if user is not None:
         location_logic = LocationLogic()
         current_location = location_logic.get_by_id(location_id)
