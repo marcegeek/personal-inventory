@@ -1,60 +1,19 @@
 {% extends "layout.html" %}
+
 {% block head %}
-  {{ super() }}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/create-item.css') }}">
+{{ super() }}
+<link rel="stylesheet" href="{{url_for('static', filename='css/simple-form.css')}}">
 {% endblock %}
 
+{% from "_formhelpers.html" import make_form %}
+
 {% block main %}
-<div class="text-center">
-  {% if not user %}
-  <h1>{{ _('User registration') }}</h1>
-  {% else %}
-  <h1>{{ _('User profile') }}</h1>
-  {% endif %}
-  <form class="form-item" method="post">
-    <label for="txtFirstname" class="sr-only">{{ _('First name') }}</label>
-    <input type="text" id="txtFirstname" name="firstname" class="form-control" placeholder="{{ _('First name') }}" required autofocus
-     {% if user %} value="{{ user.firstname }}" {% endif %}>
-    <label for="txtLastname" class="sr-only">{{ _('Last name') }}</label>
-    <input type="text" id="txtLastname" name="lastname" class="form-control" placeholder="{{ _('Last name') }}" required
-     {% if user %} value="{{ user.lastname }}" {% endif %}>
-    <label for="txtEmail" class="sr-only">{{ _('E-mail') }}</label>
-    <input type="email" id="txtEmail" name="email" class="form-control" placeholder="{{ _('E-mail') }}" required
-     {% if user %} value="{{ user.email }}" {% endif %}>
-    <label for="txtUsername" class="sr-only">{{ _('Username') }}</label>
-    <label for="cmbLanguage">
-      {{ _('Language') }}
-    </label>
-    <select id="cmbLanguage" name="language">
-      {% for key in languages.keys() %}
-      <option value="{{ key }}"{% if default_language == key %} selected="true"{% endif %}>
-        {{ languages[key] }}
-      </option>
-      {% endfor %}
-    </select>
-    <input type="text" id="txtUsername" name="username" class="form-control" placeholder="{{ _('Username') }}" required
-     {% if user %} value="{{ user.username }}" {% endif %}>
-    <label for="txtPassword" class="sr-only">
-       {% if not user %}
-      {{ _('Password') }}
-       {% else %}
-      {{ _('Password unchanged') }}
-       {% endif %}
-    </label>
-    <input type="password" id="txtPassword" name="password" class="form-control"
-           placeholder={% if not user %} "{{ _('Password') }}" required {% else %} "{{ _('(password unchanged)') }}" {% endif %}>
-    <div class="mb-3">
-      <label for="txtConfirmPassword" class="sr-only">
-         {% if not user %}
-        {{ _('Confirm password') }}
-         {% else %}
-        {{ _('Password unchanged') }}
-         {% endif %}
-      </label>
-      <input type="password" id="txtConfirmPassword" name="confirm_password" class="form-control"
-             placeholder={% if not user %} "{{ _('Confirm password') }}" required {% else %}  "{{ _('(password unchanged)') }}" {% endif %}>
-    </div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">{{ _('Save') }}</button>
-  </form>
-</div>
+{% if not user %}
+{% set title = _('User registration') %}
+{% else %}
+{% set title = _('User profile') %}
+{% endif %}
+{% set form_fields = [form.firstname, form.lastname, form.email, form.language,
+                      form.username, form.password, form.confirm_password] %}
+{{ make_form(title, form, form_fields, autofocus=form.firstname, save=_('Register')) }}
 {% endblock %}

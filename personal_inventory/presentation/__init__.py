@@ -5,6 +5,7 @@ from flask import Flask, url_for, render_template, request, redirect, session, \
 import flask_babel as fl_babel
 
 import config
+from personal_inventory.presentation.views import users as user_views
 from personal_inventory.business.entities.item import Item
 from personal_inventory.business.entities.location import Location
 from personal_inventory.business.entities.user import User
@@ -83,62 +84,12 @@ def logout():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if request.method == 'POST':
-        firstname = request.form['firstname']
-        lastname = request.form['lastname']
-        email = request.form['email']
-        username = request.form['username']
-        password = request.form['password']
-        confirm_password = request.form['confirm_password']
-        language = request.form['language']
-        if password == confirm_password:
-            user = User(firstname=firstname, lastname=lastname, email=email,
-                        username=username, password=password, language=language)
-            try:
-                UserLogic().insert(user)
-                set_logged_in_user(user)
-                return redirect(url_for('home'))
-            except ValidationException as ex:
-                for err in ex.args:
-                    flash(error_handler.error_str(err), 'error')
-        else:
-            flash(fl_babel.gettext('Passwords don\'t match'), 'error')
-    return render_template('user-editor.html', user=None, languages=config.LANGUAGES,
-                           default_language=get_language())
+    return user_views.register(config.LANGUAGES, get_language())
 
 
 @app.route('/profile', methods=['GET', 'POST'])
 def edit_profile():
-    user = get_logged_in_user()
-    if user is not None:
-        if request.method == 'POST':
-            firstname = request.form['firstname']
-            lastname = request.form['lastname']
-            email = request.form['email']
-            username = request.form['username']
-            password = request.form['password']
-            confirm_password = request.form['confirm_password']
-            language = request.form['language']
-            if len(password) == 0 or password == confirm_password:
-                user.firstname = firstname
-                user.lastname = lastname
-                user.email = email
-                user.username = username
-                user.language = language
-                if len(password) != 0:  # si no se ingresa nada se deja sin modificar
-                    user.password = password
-                try:
-                    UserLogic().update(user)
-                    return redirect(url_for('home'))
-                except ValidationException as ex:
-                    for err in ex.args:
-                        flash(error_handler.error_str(err), 'error')
-            else:
-                flash(fl_babel.gettext('Passwords don\'t match'), 'error')
-        return render_template('user-editor.html', user=user, languages=config.LANGUAGES,
-                               default_language=get_language())
-    else:
-        abort(401)
+    return user_views.profile(get_logged_in_user(), config.LANGUAGES)
 
 
 @app.route('/items', methods=['GET', 'POST'])

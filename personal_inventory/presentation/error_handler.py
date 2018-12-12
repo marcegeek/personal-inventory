@@ -14,7 +14,7 @@ def error_str(error):
     elif isinstance(error, DeleteForeingKeyError):
         return flask_babel.gettext('Still some %(field)s referencing object', field=error.field)  # FIXME too generic
     elif isinstance(error, InvalidLength):
-        return flask_babel.gettext('%{field}s length must be between %(min)d and %(max)d',
+        return flask_babel.gettext('%(field)s length must be between %(min)d and %(max)d',
                                    field=error.field, min=error.range[0], max=error.range[1])
     elif isinstance(error, InvalidEmailError):
         return flask_babel.gettext('Invalid e-mail address')
