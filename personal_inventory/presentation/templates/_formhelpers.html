@@ -17,17 +17,18 @@
       {{ field.description }}
     </small>
     {% endif %}
+    {% if field.errors %}
     <div class="invalid-feedback">
       {% for error in field.errors %}
       <p class="mb-0">{{ error }}</p>
       {% endfor %}
     </div>
-
+    {% endif %}
   </div>
 {% endmacro %}
 
 {% macro make_form(title, form, fields, title_level="1", autofocus=None, action=None, method="post", save=_('Save')) %}
-  <form class="form-item" {% if action %}action="{{action}}"{% endif %} method="{{method}}">
+  <form class="simple-form" {% if action %}action="{{action}}"{% endif %} method="{{method}}">
     <h{{title_level}} class="text-center">{{title}}</h{{title_level}}>
     {% for error in form.global_errors %}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
