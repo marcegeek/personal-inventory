@@ -4,6 +4,7 @@ from personal_inventory.business.entities.user import User
 from personal_inventory.business.logic import ValidationException
 from personal_inventory.business.logic.user_logic import UserLogic
 from personal_inventory.presentation import error_handler
+from personal_inventory.presentation.views import business_exception_handler
 from personal_inventory.presentation.forms.users import UserEditForm
 
 
@@ -20,16 +21,15 @@ def register(languages, default_language):
         language = form.language.data
         user = User(firstname=firstname, lastname=lastname, email=email,
                     username=username, password=password, language=language)
-        try:
+
+        @business_exception_handler(form)
+        def make_changes():
             UserLogic().insert(user)
             return fl.redirect(fl.url_for('login'))
-        except ValidationException as ex:
-            for err in ex.args:
-                msg = error_handler.error_str(err)
-                if err.field in form:
-                    form[err.field].errors.append(msg)
-                else:
-                    form.global_errors.append(msg)
+
+        redir = make_changes()
+        if redir:
+            return redir
     return fl.render_template('user-editor.html', form=form)
 
 
@@ -60,16 +60,15 @@ def profile(user, languages):
             user.language = language
             if len(password) != 0:  # si no se ingresa nada se deja sin modificar
                 user.password = password
-            try:
+
+            @business_exception_handler(form)
+            def make_changes():
                 UserLogic().update(user)
                 return fl.redirect(fl.url_for('home'))
-            except ValidationException as ex:
-                for err in ex.args:
-                    msg = error_handler.error_str(err)
-                    if err.field in form:
-                        form[err.field].errors.append(msg)
-                    else:
-                        form.global_errors.append(msg)
+
+            redir = make_changes()
+            if redir:
+                return redir
         return fl.render_template('user-editor.html', user=user, form=form)
     else:
         fl.abort(401)
