@@ -23,16 +23,17 @@ class BaseForm(Form):
                 self.errors['_global'] = self.global_errors
         return self._errors
 
-    @property
-    def field_errors(self):
-        return super().errors
-
-    def set_errors(self, errors):
+    @errors.setter
+    def errors(self, errors):
         for field, err in zip(errors.keys(), errors.values()):
             if field != '_global':
                 self[field].errors = err
             else:
                 self.global_errors = err
+
+    @property
+    def field_errors(self):
+        return super().errors
 
 
 def _strip_filter(value):

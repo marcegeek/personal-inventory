@@ -14,7 +14,7 @@ def locations(user):
     location_form = LocationForm(fl.request.form)
     if 'errors' in fl.session:
         errors = fl.session.pop('errors')
-        location_form.set_errors(errors)
+        location_form.errors = errors
         if 'form_data' in fl.session:
             form_data = fl.session.pop('form_data')
     if fl.request.method == 'POST' and location_form.validate():
@@ -55,7 +55,7 @@ def location(user, location_id):
         fl.abort(401)
     if 'errors' in fl.session:
         errors = fl.session.pop('errors')
-        edit_form.set_errors(errors)
+        edit_form.errors = errors
         if 'form_data' in fl.session:
             form_data = fl.session.pop('form_data')
     if fl.request.method == 'GET':
