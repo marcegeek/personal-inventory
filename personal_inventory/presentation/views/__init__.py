@@ -13,7 +13,7 @@ def business_exception_handler(form):
             except ValidationException as ex:
                 for err in ex.args:
                     msg = error_handler.error_str(err)
-                    if err.field in form:
+                    if hasattr(err, 'field') and err.field in form:
                         form[err.field].errors.append(msg)
                     else:
                         form.global_errors.append(msg)

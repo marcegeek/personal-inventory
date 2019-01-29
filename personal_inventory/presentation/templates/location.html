@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 
+{% from "_formhelpers.html" import make_modal_form %}
+
 {% import 'location-editor.html' as loc_ed %}
 {% import 'delete-location.html' as loc_del %}
 {% import 'item-editor.html' as it_ed %}
@@ -25,7 +27,7 @@
   </div>
 </div>
 
-{{ loc_ed.location_editor_modal(location) }}
+{{ loc_ed.location_modal_form(form, location) }}
 {{ loc_del.delete_location_modal(location) }}
 {{ it_ed.item_editor_modal(locations=locations, default_location=location) }}
 

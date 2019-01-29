@@ -2,7 +2,7 @@
 
 {% block nav_locations_active%}active{% endblock %}
 
-{% import 'location-editor.html' as loc_ed %}
+{% from 'location-editor.html' import location_modal_form %}
 {% import 'delete-location.html' as loc_del %}
 {% import 'item-editor.html' as it_ed %}
 
@@ -15,8 +15,7 @@
     </a>
   </div>
 </div>
-
-{{ loc_ed.location_editor_modal() }}
+{{ location_modal_form(location_form) }}
 
 {% if not locations %}
 <p class="lead">{{ _('No locations yet, try creating some location first.') }}</p>
@@ -25,15 +24,12 @@
 <div class="card mb-2">
   <div class="card-body">
     <div class="row">
-      <div class="col-sm-8">
+      <div class="col-sm-9">
         <h2 class="card-title"><strong>{{location.description}}</strong></h2>
       </div>
-      <div class="col-sm-4">
+      <div class="col-sm-3">
         <a href="{{ url_for('location', location_id=location.id) }}" class="btn btn-primary">
-          <i class="far fa-eye"></i> {{ _('Explore') }}
-        </a>
-        <a href="#edit-location-{{location.id}}-modal" class="btn btn-warning" role="button" data-toggle="modal">
-          <i class="fas fa-edit"></i> {{ _('Edit') }}
+          <i class="far fa-eye"></i> {{ _('View') }}
         </a>
         <a href="#delete-location-{{location.id}}-modal" class="btn btn-danger" role="button" data-toggle="modal">
           <i class="fas fa-trash-alt"></i> {{ _('Delete') }}
@@ -46,24 +42,5 @@
     </a>
   </div>
 </div>
-{{ loc_ed.location_editor_modal(location) }}
-{{ loc_del.delete_location_modal(location) }}
-{{ it_ed.item_editor_modal(locations=locations, default_location=location) }}
 {% endfor %}
-{% endblock %}
-
-{% block scripts %}
-{{ super() }}
-<script type="text/javascript">
-  modal_focus = function(modal_id, input_id) {
-    $(modal_id).on('shown.bs.modal', function () {
-      $(input_id).trigger('focus');
-    });
-  }
-  modal_focus('#new-location-modal', '#loc-description');
-  {% for location in locations %}
-  modal_focus('#edit-location-{{location.id}}-modal', '#loc-description-{{location.id}}');
-  modal_focus('#new-item-in-{{location.id}}-modal', '#item-description-in-{{location.id}}');
-  {% endfor %}
-</script>
 {% endblock %}

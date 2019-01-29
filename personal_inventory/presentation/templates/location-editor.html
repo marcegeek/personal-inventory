@@ -1,45 +1,13 @@
-{% macro location_editor_modal(loc=None) %}
-    <div id={% if loc is none %}
-            "new-location-modal"
-            {% else %}
-            "edit-location-{{loc.id}}-modal"
-            {% endif %} class="modal fade">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <form action={% if loc is none %}
-                       "{{ url_for('locations') }}"
-                       {% else %}
-                       "{{ url_for('location', location_id=loc.id) }}"
-                       {% endif %} method="post">
-            <div class="modal-header">
-              <h3 class="modal-title">
-                {% if loc is none %}
-                {{ _('New location') }}
-                {% else %}
-                {{ _('Editing location') }}
-                {% endif %}
-              </h3>
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            </div>
-            <div class="modal-body">
-              <div class="form-group">
-                <label
-                   for={% if loc is none %} "loc-description" {% else %} "loc-description-{{loc.id}}" {% endif %}
-                   class="sr-only">
-                  {{ _('Description') }}
-                </label>
-                <input
-                   id={% if loc is none %} "loc-description" {% else %} "loc-description-{{loc.id}}" {% endif %}
-                   name="description" class="form-control" placeholder="{{ _('Description') }}" type="text" required
-                   value={% if loc is not none %} "{{loc.description}}" {% endif %}>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ _('Cancel') }}">
-              <input type="submit" class="btn btn-success" value="{{ _('Save') }}">
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+{% from "_formhelpers.html" import make_modal_form %}
+
+{% macro location_modal_form(form, location=None) %}
+  {% if not location %}
+    {% set id = 'new-location-modal' %}
+    {% set title = _('New location') %}
+  {% else %}
+    {% set id = 'edit-location-{}-modal'.format(location.id) %}
+    {% set title = _('Editing location') %}
+  {% endif %}
+  {% set form_fields = [form.description] %}
+  {{ make_modal_form(id, title, form, form_fields, autofocus=form.description) }}
 {% endmacro %}

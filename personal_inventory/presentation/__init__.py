@@ -6,9 +6,8 @@ import flask_babel as fl_babel
 
 import config
 from personal_inventory.presentation.views import users as user_views
+from personal_inventory.presentation.views import locations as location_views
 from personal_inventory.business.entities.item import Item
-from personal_inventory.business.entities.location import Location
-from personal_inventory.business.entities.user import User
 from personal_inventory.business.logic import ValidationException
 from personal_inventory.business.logic.item_logic import ItemLogic
 from personal_inventory.business.logic.location_logic import LocationLogic
@@ -160,62 +159,12 @@ def item(item_id):
 
 @app.route('/locations', methods=['GET', 'POST'])
 def locations():
-    user = get_logged_in_user()
-    if user is not None:
-        if request.method == 'GET':
-            user_locations = LocationLogic().get_all_by_user(user)
-            for loc in user_locations:
-                loc.items = ItemLogic().get_all_by_location(loc)
-            return render_template('locations.html', locations=user_locations)
-        else:
-            description = request.form['description'].strip()
-            new_loc = Location(owner_id=user.id, description=description)
-            try:
-                LocationLogic().insert(new_loc)
-            except ValidationException as ex:
-                for err in ex.args:
-                    flash(error_handler.error_str(err), 'error')
-            return redirect(url_for('locations'))
-    return redirect(url_for('home'))
+    return location_views.locations(get_logged_in_user())
 
 
 @app.route('/locations/<int:location_id>', methods=['GET', 'POST'])
 def location(location_id):
-    user = get_logged_in_user()
-    if user is not None:
-        location_logic = LocationLogic()
-        current_location = location_logic.get_by_id(location_id)
-        if current_location is not None:
-            if current_location.owner_id == user.id:
-                if request.method == 'GET':
-                    all_locations = location_logic.get_all_by_user(user)
-                    current_location.items = ItemLogic().get_all_by_location(current_location)
-                    return render_template('location.html',
-                                           location=current_location, locations=all_locations)
-                else:
-                    delete = request.form.get('delete')
-                    if not delete:
-                        description = request.form['description'].strip()
-                        current_location.description = description
-                        try:
-                            location_logic.update(current_location)
-                            return redirect(request.referrer)
-                        except ValidationException as ex:
-                            for err in ex.args:
-                                flash(error_handler.error_str(err), 'error')
-                        return redirect(request.referrer)
-                    else:
-                        try:
-                            location_logic.delete(location_id)
-                        except ValidationException as ex:
-                            for err in ex.args:
-                                flash(error_handler.error_str(err), 'error')
-                        return redirect(request.referrer)
-            else:
-                abort(401)
-        else:
-            abort(404)
-    return redirect(url_for('home'))
+    return location_views.location(get_logged_in_user(), location_id)
 
 
 @app.errorhandler(404)
