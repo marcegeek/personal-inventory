@@ -44,3 +44,8 @@
 </div>
 {% endfor %}
 {% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{url_for('static', filename='js/modal-helper.js')}}"></script>
+{% endblock %}

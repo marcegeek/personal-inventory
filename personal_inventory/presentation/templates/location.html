@@ -58,16 +58,5 @@
 
 {% block scripts %}
 {{ super() }}
-<script type="text/javascript">
-  modal_focus = function(modal_id, input_id) {
-    $(modal_id).on('shown.bs.modal', function () {
-      $(input_id).trigger('focus');
-    });
-  }
-  modal_focus('#edit-location-{{location.id}}-modal', '#loc-description-{{location.id}}');
-  modal_focus('#new-item-in-{{location.id}}-modal', '#item-description-in-{{location.id}}');
-  {% for item in location.items %}
-  modal_focus('#edit-item-{{item.id}}-modal', '#item-description-{{item.id}}');
-  {% endfor %}
-</script>
+<script src="{{url_for('static', filename='js/modal-helper.js')}}"></script>
 {% endblock %}
