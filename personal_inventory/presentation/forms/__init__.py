@@ -12,16 +12,13 @@ class BaseForm(Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.global_errors = []
-        self._errors = None
-        self._field_errors = None
 
     @property
     def errors(self):
-        if self._errors is None:
-            self._errors = super().errors.copy()
-            if self.global_errors:
-                self.errors['_global'] = self.global_errors
-        return self._errors
+        errors = super().errors.copy()
+        if self.global_errors:
+            errors['_global'] = self.global_errors
+        return errors
 
     @errors.setter
     def errors(self, errors):
