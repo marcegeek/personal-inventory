@@ -12,6 +12,7 @@ def locations(user):
         fl.flash('Please login to use the application', category='info')
         return fl.redirect(fl.url_for('login'))
     location_form = LocationForm(fl.request.form)
+    form_data = {}
     if 'errors' in fl.session:
         errors = fl.session.pop('errors')
         location_form.errors = errors
@@ -49,6 +50,7 @@ def location(user, location_id):
     location_logic = LocationLogic()
     current_location = location_logic.get_by_id(location_id)
     edit_form = LocationForm(fl.request.form)
+    form_data = {}
     if current_location is None:
         fl.abort(404)
     if current_location.owner_id != user.id:
