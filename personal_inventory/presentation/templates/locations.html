@@ -15,7 +15,7 @@
     </a>
   </div>
 </div>
-{{ location_modal_form(location_form) }}
+{{ location_modal_form(forms['new_location']) }}
 
 {% if not locations %}
 <p class="lead">{{ _('No locations yet, try creating some location first.') }}</p>
@@ -42,6 +42,7 @@
     </a>
   </div>
 </div>
+{{ loc_del.delete_location_modal(location, forms['delete_location_{}'.format(location.id)]) }}
 {% endfor %}
 {% endblock %}
 

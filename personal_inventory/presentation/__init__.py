@@ -167,6 +167,11 @@ def location(location_id):
     return location_views.location(get_logged_in_user(), location_id)
 
 
+@app.route('/locations/<int:location_id>/delete', methods=['POST'])
+def location_delete(location_id):
+    return location_views.location_delete(get_logged_in_user(), location_id)
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404

@@ -1,23 +1,8 @@
-{% macro delete_location_modal(loc) %}
-<div id="delete-location-{{loc.id}}-modal" class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form action="{{ url_for('location', location_id=loc.id) }}" method="post">
-        <input type="hidden" name="delete" value="true">
-        <div class="modal-header">
-          <h3 class="modal-title">{{ _('Delete location') }}</h3>
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        </div>
-        <div class="modal-body">
-          <p class="lead">{{ _('Do you really want to delete location "%(name)s"?', name=loc.description) }}</p>
-          <p class="text-warning">{{ _('This action cannot be undone.') }}</p>
-        </div>
-        <div class="modal-footer">
-          <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ _('Cancel') }}">
-          <input type="submit" class="btn btn-danger" value="{{ _('Delete') }}">
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
+{% from '_formhelpers.html' import make_delete_modal_form %}
+
+{% macro delete_location_modal(loc, form) %}
+  {% set id='delete-location-{}-modal'.format(loc.id) %}
+  {% set title=_('Delete location') %}
+  {% set element=loc.description %}
+  {{ make_delete_modal_form(id, title, form, element, title_level="3", action=url_for('location_delete', location_id=loc.id)) }}
 {% endmacro %}
