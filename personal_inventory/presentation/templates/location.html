@@ -27,8 +27,8 @@
   </div>
 </div>
 
-{{ loc_ed.location_modal_form(form, location) }}
-{{ loc_del.delete_location_modal(location) }}
+{{ loc_ed.location_modal_form(forms['edit_location_{}'.format(location.id)], location) }}
+{{ loc_del.delete_location_modal(location, forms['delete_location_{}'.format(location.id)]) }}
 {{ it_ed.item_editor_modal(locations=locations, default_location=location) }}
 
 {% if not location.items %}
