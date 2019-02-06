@@ -27,17 +27,19 @@
   </div>
 {% endmacro %}
 
-{% macro make_form(title, form, fields_values, title_level="1", autofocus=None, action=None, method="post", save=_('Save')) %}
-  <form class="simple-form" {% if action %}action="{{action}}"{% endif %} method="{{method}}">
-    <h{{title_level}} class="text-center">{{title}}</h{{title_level}}>
-    {% for error in form.global_errors %}
+{% macro _render_global_errors(global_errors) %}
+  {% for error in global_errors %}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
       {{ error }}
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    {% endfor %}
+  {% endfor %}
+{% endmacro %}
+
+{% macro _render_fields(fields_values, autofocus) %}
+  {% if fields_values %}
     {% for fv in fields_values %}
       {% if fv is sequence and fv is not string %}
         {% set field = fv[0] %}
@@ -61,51 +63,36 @@
         {% endif %}
       {% endif %}
     {% endfor %}
+  {% endif %}
+{% endmacro %}
+
+{% macro _render_form_body(form, fields_values, autofocus, caller=None) %}
+  {{ _render_global_errors(form.global_errors) }}
+  {% if caller %}
+    {{ caller() }}
+  {% endif %}
+  {{ _render_fields(fields_values, autofocus) }}
+{% endmacro %}
+
+{% macro make_form(title, form, fields_values=None, title_level="1", autofocus=None, action=None, method="post", save=_('Save')) %}
+  <form class="simple-form" {% if action %}action="{{action}}"{% endif %} method="{{method}}">
+    <h{{title_level}} class="text-center">{{title}}</h{{title_level}}>
+    {{ _render_form_body(form, fields_values, autofocus, caller) }}
     <button type="submit" class="btn btn-lg btn-primary btn-block">{{ save }}</button>
   </form>
 {% endmacro %}
 
-{% macro make_modal_form(id, title, form, fields_values, title_level="2", autofocus=None, action=None, method="post", save=_('Save')) %}
+{% macro make_modal_form(id, title, form, fields_values=None, title_level="2", autofocus=None, action=None, method="post", save=_('Save')) %}
   <div id="{{id}}" class="modal fade">
     <div class="modal-dialog">
       <div class="modal-content">
         <form {% if action %}action="{{action}}"{% endif %} method="{{method}}">
           <div class="modal-header">
-           <h2 class="modal-title">{{title}}</h2>
+           <h{{title_level}} class="modal-title">{{title}}</h{{title_level}}>
            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           </div>
           <div class="modal-body">
-            {% for error in form.global_errors %}
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-              {{ error }}
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            {% endfor %}
-            {% for fv in fields_values %}
-              {% if fv is sequence and fv is not string %}
-                {% set field = fv[0] %}
-                {% if fv|length == 2 %}
-                  {% set value = fv[1] %}
-                {% endif %}
-              {% else %}
-                {% set field = fv %}
-              {% endif %}
-              {% if not autofocus or autofocus != field %}
-                {% if value is defined %}
-                  {{ render_field(field, value=value) }}
-                {% else %}
-                  {{ render_field(field) }}
-                {% endif %}
-              {% else %}
-                {% if value is defined %}
-                  {{ render_field(field, value=value, autofocus=true) }}
-                {% else %}
-                  {{ render_field(field, autofocus=true) }}
-                {% endif %}
-              {% endif %}
-            {% endfor %}
+            {{ _render_form_body(form, fields_values, autofocus, caller) }}
           </div>
           <div class="modal-footer">
             <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ _('Cancel') }}">
@@ -124,4 +111,21 @@
     });
   </script>
   {% endif %}
+{% endmacro %}
+
+{% macro _delete_body_content(element) %}
+  <p class="lead">{{ _('Do you really want to delete "%(element)s"?', element=element) }}</p>
+  <p class="text-warning">{{ _('This action cannot be undone.') }}</p>
+{% endmacro %}
+
+{% macro make_delete_form(id, title, form, element, title_level="2", action=None) %}
+  {% call make_form(id, title, form, title_level=title_level, action=action, save=_('Delete')) %}
+    {{ _delete_body_content(element) }}
+  {% endcall %}
+{% endmacro %}
+
+{% macro make_delete_modal_form(id, title, form, element, title_level="2", action=None) %}
+  {% call make_modal_form(id, title, form, title_level=title_level, action=action, save=_('Delete')) %}
+    {{ _delete_body_content(element) }}
+  {% endcall %}
 {% endmacro %}
