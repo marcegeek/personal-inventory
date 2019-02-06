@@ -33,6 +33,10 @@ class BaseForm(Form):
         return super().errors
 
 
+class DeleteForm(BaseForm):
+    pass
+
+
 def _strip_filter(value):
     if value is not None and hasattr(value, 'strip'):
         return value.strip()
