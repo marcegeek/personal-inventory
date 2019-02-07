@@ -2,6 +2,7 @@ import flask as fl
 from flask_babel import gettext as _
 
 from personal_inventory.business.entities.item import Item
+
 from personal_inventory.business.logic.item_logic import ItemLogic
 from personal_inventory.business.logic.location_logic import LocationLogic
 from personal_inventory.presentation.views import _retrieve_last_form, business_exception_handler, _save_last_form
@@ -16,6 +17,8 @@ def items(user=None):
     forms = {new_item_key: ItemForm(fl.request.form, meta={'locales': [user.language]})}
 
     user_locations = LocationLogic().get_all_by_user(user)
+    user_locations.sort(key=lambda l: l.description)
+    user_locations_dic = dict([(l.id, l.description) for l in user_locations])
     forms[new_item_key].location.choices = [(str(loc.id), loc.description) for loc in user_locations]
 
     if fl.request.method == 'GET':
@@ -23,6 +26,7 @@ def items(user=None):
             fl.flash(_('No locations yet, create one first'), 'error')
             return fl.redirect(fl.url_for('locations'))
         user_items = ItemLogic().get_all_by_user(user, fill_location=True)
+        user_items.sort(key=lambda i: (user_locations_dic[i.location_id], i.description))
 
         for it in user_items:
             edit_form_key = 'edit_item_{}'.format(it.id)

@@ -1,7 +1,6 @@
 import flask as fl
 
 from personal_inventory.business.entities.location import Location
-from personal_inventory.business.logic.item_logic import ItemLogic
 from personal_inventory.business.logic.location_logic import LocationLogic
 from personal_inventory.presentation.views.forms import DeleteForm
 from personal_inventory.presentation.views import business_exception_handler, _retrieve_last_form, _save_last_form
@@ -16,12 +15,8 @@ def locations(user=None):
     forms = {new_location_key: LocationForm(fl.request.form)}
 
     if fl.request.method == 'GET':
-        user_locations = LocationLogic().get_all_by_user(user)
+        user_locations = LocationLogic().get_all_by_user(user, fill_items=True)
         for loc in user_locations:
-            # FIXME intimidad inapropiada?
-            # TODO esto lo tiene que hacer la capa de negocio
-            loc.items = ItemLogic().get_all_by_location(loc)
-
             edit_form_key = 'edit_location_{}'.format(loc.id)
             forms[edit_form_key] = LocationForm()
             forms[edit_form_key].description.data = loc.description
@@ -50,7 +45,7 @@ def locations(user=None):
 @login_required
 def location(location_id, user=None):
     location_logic = LocationLogic()
-    current_location = location_logic.get_by_id(location_id)
+    current_location = location_logic.get_by_id(location_id, fill_items=True)
     if current_location is None:
         fl.abort(404)
     if current_location.owner_id != user.id:
@@ -64,7 +59,6 @@ def location(location_id, user=None):
 
     if fl.request.method == 'GET':
         forms[edit_form_key].description.data = current_location.description
-        current_location.items = ItemLogic().get_all_by_location(current_location)
 
         new_item_key = 'new_item_in_{}'.format(current_location.id)
         forms[new_item_key] = ItemForm()
@@ -117,7 +111,10 @@ def location_delete(location_id, user=None):
     @business_exception_handler(delete_form)
     def make_changes():
         location_logic.delete(location_id)
+        return fl.redirect(fl.url_for('locations'))
 
-    make_changes()
+    redir = make_changes()
     _save_last_form(delete_form, 'delete_location_{}'.format(location_id))
+    if redir:
+        return redir
     return fl.redirect(fl.request.referrer)
