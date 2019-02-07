@@ -4,12 +4,12 @@ import email_validator
 
 from personal_inventory.business.entities.user import User
 from personal_inventory.business.logic import RequiredFieldError, RepeatedUniqueField, \
-    DeleteForeingKeyError, InvalidLength, EntityLogic
+    DeleteForeingKeyError, InvalidLength, EntityLogic, FieldValidationError
 from personal_inventory.business.logic import ValidationError
 from personal_inventory.data.data import UserData
 
 
-class InvalidEmailError(ValidationError):
+class InvalidEmailError(FieldValidationError):
 
     def __init__(self):
         super().__init__('email')
@@ -36,7 +36,7 @@ class RepeatedUsernameError(RepeatedUniqueField):
         return 'Username is repeated'
 
 
-class InvalidUsernameError(ValidationError):
+class InvalidUsernameError(FieldValidationError):
 
     def __init__(self):
         super().__init__('username')

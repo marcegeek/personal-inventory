@@ -1,13 +1,10 @@
-import datetime
-
 from personal_inventory.business.entities.item import Item
-from personal_inventory.business.logic import RequiredFieldError, ForeignKeyError, InvalidLength, EntityLogic, \
-    ValidationException, DeleteForeingKeyError, RepeatedUniqueField
+from personal_inventory.business.logic import RequiredFieldError, ForeignKeyError, InvalidLength, EntityLogic, FieldValidationError
 from personal_inventory.business.logic import ValidationError
 from personal_inventory.data.data import ItemData
 
 
-class InvalidValue(ValidationError):
+class InvalidValue(FieldValidationError):
 
     def __str__(self):
         return '{0} value is invalid'.format(self.field)

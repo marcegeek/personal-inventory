@@ -5,12 +5,16 @@ from personal_inventory.data.data import ObjectData
 
 
 class ValidationError:
+    pass
+
+
+class FieldValidationError(ValidationError):
 
     def __init__(self, field):
         self.field = field
 
 
-class RequiredFieldError(ValidationError):
+class RequiredFieldError(FieldValidationError):
 
     def __init__(self, field):
         super().__init__(field)
@@ -19,7 +23,7 @@ class RequiredFieldError(ValidationError):
         return '{0} is required'.format(self.field)
 
 
-class RepeatedUniqueField(ValidationError):
+class RepeatedUniqueField(FieldValidationError):
 
     def __str__(self):
         return '{0} is repeated'.format(self.field)
@@ -27,17 +31,20 @@ class RepeatedUniqueField(ValidationError):
 
 class ForeignKeyError(ValidationError):
 
+    def __init__(self, foreign_entity):
+        self.foreign_entity = foreign_entity
+
     def __str__(self):
-        return "{0} foreign key doesn't exist".format(self.field)
+        return "{0} foreign key doesn't exist".format(self.foreign_entity)
 
 
 class DeleteForeingKeyError(ValidationError):
 
     def __str__(self):
-        return "Still some {0} referencing object".format(self.field)
+        return "There's still some object referencing this"
 
 
-class InvalidLength(ValidationError):
+class InvalidLength(FieldValidationError):
 
     def __init__(self, field, len_range):
         super().__init__(field)
