@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2019-02-07 15:21-0300\n"
-"PO-Revision-Date: 2019-02-07 15:22-0300\n"
+"PO-Revision-Date: 2019-02-07 16:01-0300\n"
 "Last-Translator: \n"
 "Language: es\n"
 "Language-Team: es <LL@li.org>\n"
@@ -204,7 +204,7 @@ msgstr "Campo requerido"
 
 #: views/error_handler.py:13
 msgid "There's still some object referencing this"
-msgstr "Todavía existen objetos haciendo referencia a esto"
+msgstr "Todavía existen objetos haciendo referencia"
 
 #: views/error_handler.py:15
 msgid "Invalid field length"
