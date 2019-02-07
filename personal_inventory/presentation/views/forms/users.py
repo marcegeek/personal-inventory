@@ -12,19 +12,25 @@ class LoginForm(BaseForm):
 
 class UserEditForm(BaseForm):
     firstname = StringField(_('First name'),
-                            description=_('Field length must be between %(min)d and %(max)d', min=UserLogic.NAME_LEN[0],
-                                          max=UserLogic.NAME_LEN[1]),
+                            description=_('Field length must be between %(min)d and %(max)d',
+                                          min=UserLogic.NAME_LEN[0], max=UserLogic.NAME_LEN[1]),
                             render_kw={'aria-describedby': 'firstname-description'})
     lastname = StringField(_('Last name'),
-                           description=_('Field length must be between %(min)d and %(max)d', min=UserLogic.NAME_LEN[0],
-                                         max=UserLogic.NAME_LEN[1]),
+                           description=_('Field length must be between %(min)d and %(max)d',
+                                         min=UserLogic.NAME_LEN[0], max=UserLogic.NAME_LEN[1]),
                            render_kw={'aria-describedby': 'lastname-description'})
     email = StringField(_('E-mail'),
-                        description=_('Field length must be between %(min)d and %(max)d', min=UserLogic.EMAIL_LEN[0],
-                                      max=UserLogic.EMAIL_LEN[1]),
+                        udescription=_('Field must be a valid e-mail adress and its length must be between %(min)d and %(max)d',
+                                      min=UserLogic.EMAIL_LEN[0], max=UserLogic.EMAIL_LEN[1]),
                         render_kw={'aria-describedby': 'email-description'})
-    username = StringField(_('Username'))
+    username = StringField(_('Username'),
+                           description=_('Field must be made of lowercase letters, digits and underscores and its length must be between %(min)d and %(max)d',
+                                         min=UserLogic.USERNAME_LEN[0], max=UserLogic.USERNAME_LEN[1]),
+                           render_kw={'aria-describedby': 'username-description'})
     language = SelectField(_('Language'))
     password = PasswordField(_('New password'),
+                             description=_('Field length must be between %(min)d and %(max)d',
+                                           min=UserLogic.PASSWORD_LEN[0], max=UserLogic.PASSWORD_LEN[1]),
+                             render_kw={'aria-describedby': 'password-description'},
                              validators=[validators.EqualTo('confirm_password', message=_('Passwords must match'))])
     confirm_password = PasswordField(_('Confirm password'))

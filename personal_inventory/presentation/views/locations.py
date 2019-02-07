@@ -30,7 +30,8 @@ def locations(user=None):
 
         _retrieve_last_form(forms)
         return fl.render_template('locations.html', forms=forms, locations=user_locations)
-    elif forms[new_location_key].validate():  # POST
+    else:  # POST
+        forms[new_location_key].validate()
         description = forms[new_location_key].description.data
         new_loc = Location(owner_id=user.id, description=description)
 
@@ -84,7 +85,8 @@ def location(location_id, user=None):
 
         _retrieve_last_form(forms)
         return fl.render_template('location.html', forms=forms, location=current_location)
-    elif forms[edit_form_key].validate():
+    else:
+        forms[edit_form_key].validate()
         description = forms[edit_form_key].description.data
         current_location.description = description
 
@@ -107,11 +109,11 @@ def location_delete(location_id, user=None):
         fl.abort(401)
 
     delete_form = DeleteForm(fl.request.form)
-    if delete_form.validate():
-        @business_exception_handler(delete_form)
-        def make_changes():
-            location_logic.delete(location_id)
+    delete_form.validate()
+    @business_exception_handler(delete_form)
+    def make_changes():
+        location_logic.delete(location_id)
 
-        make_changes()
-        _save_last_form(delete_form, 'delete_location_{}'.format(location_id))
+    make_changes()
+    _save_last_form(delete_form, 'delete_location_{}'.format(location_id))
     return fl.redirect(fl.request.referrer)

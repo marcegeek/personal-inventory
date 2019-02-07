@@ -62,7 +62,8 @@ def register(languages, default_language):
     form = UserEditForm(fl.request.form)
     form.language.choices = [(key, languages[key]) for key in languages]
     form.language.data = default_language
-    if fl.request.method == 'POST' and form.validate():
+    if fl.request.method == 'POST':
+        form.validate()
         firstname = form.firstname.data
         lastname = form.lastname.data
         email = form.email.data
@@ -95,7 +96,8 @@ def profile(languages, user=None):
         form.email.data = user.email
         form.language.data = user.language
         form.username.data = user.username
-    elif fl.request.method == 'POST' and form.validate():
+    elif fl.request.method == 'POST':
+        form.validate()
         firstname = form.firstname.data
         lastname = form.lastname.data
         email = form.email.data
