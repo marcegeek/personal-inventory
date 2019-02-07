@@ -1,78 +1,19 @@
-{% macro item_editor_modal(locations, item=None, default_location=None) %}
-    <div id={% if item is none %}
-            {% if default_location is none %}
-            "new-item-modal"
-            {% else %}
-            "new-item-in-{{default_location.id}}-modal"
-            {% endif %}
-            {% else %}
-            "edit-item-{{item.id}}-modal"
-            {% endif %} class="modal fade">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <form action={% if item is none %}
-                       "{{ url_for('items') }}"
-                       {% else %}
-                       "{{ url_for('item', item_id=item.id) }}"
-                       {% endif %} method="post">
-            <div class="modal-header">
-              <h3 class="modal-title">
-                {% if item is none %}
-                {{ _('New item') }}
-                {% else %}
-                {{ _('Editing item') }}
-                {% endif %}
-              </h3>
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            </div>
-            <div class="modal-body">
-              <div class="form-group">
-                <label
-                   for={% if item is none %} {% if default_location is not none %} "item-description-in-{{default_location.id}}" {% else %} "item-description" {% endif %} {% else %} "item-description-{{item.id}}" {% endif %}
-                   class="sr-only">
-                  {{ _('Description') }}
-                </label>
-                <input
-                   id={% if item is none %} {% if default_location is not none %} "item-description-in-{{default_location.id}}" {% else %} "item-description" {% endif %} {% else %} "item-description-{{item.id}}" {% endif %}
-                   name="description" class="form-control" placeholder="{{ _('Description') }}" type="text" required
-                   value={% if item is none %} "" {% else %} "{{item.description}}" {% endif %}>
-              </div>
-              <div class="form-group">
-                <select name="location">
-                  {% for loc in locations %}
-                  <option value="{{loc.id}}"
-                     {% if default_location is not none %}
-                       {% if default_location.id == loc.id %}
-                       selected = "true"
-                       {% endif %}
-                     {% else %}
-                       {% if item is not none and item.location_id == loc.id %}
-                       selected = "true"
-                       {% endif %}
-                     {% endif %}>
-                    {{loc.description}}
-                  </option>
-                  {% endfor %}
-                </select>
-              </div>
-              <div class="form-group">
-                <label
-                   for={% if item is none %} "quantity" {% else %} "quantity-{{item.id}}" {% endif %}
-                   class="sr-only">
-                  {{ _('Quantity') }}
-                </label>
-                <input
-                   id={% if item is none %} "quantity" {% else %} "quantity-{{item.id}}" {% endif %}
-                   name="quantity" class="form-control" placeholder="{{ _('Quantity') }}" type="number"
-                   value={% if item is none %} "" {% else %} "{{item.quantity}}" {% endif %}>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ _('Cancel') }}">
-              <input type="submit" class="btn btn-success" value="{{ _('Save') }}">
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+{% from "_formhelpers.html" import make_modal_form %}
+
+{% macro item_modal_form(form, item=None, location=None) %}
+  {% if not item %}
+    {% if not location %}
+      {% set id = 'new-item-modal' %}
+    {% else %}
+      {% set id = 'new-item-in-{}-modal'.format(location.id) %}
+    {% endif %}
+    {% set title = _('New item') %}
+    {% set action = url_for('items') %}
+  {% else %}
+    {% set id = 'edit-item-{}-modal'.format(item.id) %}
+    {% set title = _('Editing item') %}
+    {% set action = url_for('item', item_id=item.id) %}
+  {% endif %}
+  {% set form_fields = [form.description, form.location, form.quantity] %}
+  {{ make_modal_form(id, title, form, form_fields, autofocus=form.description, action=action) }}
 {% endmacro %}

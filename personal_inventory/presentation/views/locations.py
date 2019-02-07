@@ -5,6 +5,7 @@ from personal_inventory.business.logic.item_logic import ItemLogic
 from personal_inventory.business.logic.location_logic import LocationLogic
 from personal_inventory.presentation.views.forms import DeleteForm
 from personal_inventory.presentation.views import business_exception_handler, _retrieve_last_form, _save_last_form
+from personal_inventory.presentation.views.forms.items import ItemForm
 from personal_inventory.presentation.views.forms.locations import LocationForm
 
 
@@ -22,8 +23,11 @@ def locations(user):
             # TODO esto lo tiene que hacer la capa de negocio
             loc.items = ItemLogic().get_all_by_location(loc)
 
-            delete_location_key = 'delete_location_{}'.format(loc.id)
-            forms[delete_location_key] = DeleteForm()
+            forms['delete_location_{}'.format(loc.id)] = DeleteForm()
+            item_form_key = 'new_item_in_{}'.format(loc.id)
+            forms[item_form_key] = ItemForm()
+            forms[item_form_key].location.choices = [(l.id, l.description) for l in user_locations]
+            forms[item_form_key].location.data = str(loc.id)
 
         _retrieve_last_form(forms)
         return fl.render_template('locations.html', forms=forms, locations=user_locations)
@@ -59,11 +63,30 @@ def location(user, location_id):
 
     if fl.request.method == 'GET':
         forms[edit_form_key].description.data = current_location.description
-        all_locations = location_logic.get_all_by_user(user)
         current_location.items = ItemLogic().get_all_by_location(current_location)
+
+        new_item_key = 'new_item_in_{}'.format(current_location.id)
+        forms[new_item_key] = ItemForm()
+        forms[new_item_key].location.choices = [
+            (str(loc.id), loc.description)
+            for loc in location_logic.get_all_by_user(user)
+        ]
+        forms[new_item_key].location.data = str(current_location.id)
+
+        for item in current_location.items:
+            edit_item_key = 'edit_item_{}'.format(item.id)
+            forms[edit_item_key] = ItemForm()
+            forms[edit_item_key].description.data = item.description
+            forms[edit_item_key].location.choices = [
+                (str(loc.id), loc.description)
+                for loc in location_logic.get_all_by_user(user)
+            ]
+            forms[edit_item_key].location.data = str(item.location_id)
+            forms[edit_item_key].quantity.data = item.quantity
+            forms['delete_item_{}'.format(item.id)] = DeleteForm()
+
         _retrieve_last_form(forms)
-        return fl.render_template('location.html', forms=forms,
-                                  location=current_location, locations=all_locations)
+        return fl.render_template('location.html', forms=forms, location=current_location)
     elif forms[edit_form_key].validate():
         description = forms[edit_form_key].description.data
         current_location.description = description
@@ -87,7 +110,7 @@ def location_delete(user, location_id):
         fl.abort(404)
     if current_location.owner_id != user.id:
         fl.abort(401)
-    delete_form_key = 'delete_location_{}'.format(location_id)
+
     delete_form = DeleteForm(fl.request.form)
     if delete_form.validate():
         @business_exception_handler(delete_form)
@@ -95,5 +118,5 @@ def location_delete(user, location_id):
             location_logic.delete(location_id)
 
         make_changes()
-        _save_last_form(delete_form, delete_form_key)
+        _save_last_form(delete_form, 'delete_location_{}'.format(location_id))
     return fl.redirect(fl.request.referrer)

@@ -43,6 +43,7 @@
   </div>
 </div>
 {{ loc_del.delete_location_modal(location, forms['delete_location_{}'.format(location.id)]) }}
+{{ it_ed.item_modal_form(forms['new_item_in_{}'.format(location.id)], location=location) }}
 {% endfor %}
 {% endblock %}
 

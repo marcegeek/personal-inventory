@@ -14,7 +14,7 @@
     </a>
   </div>
 </div>
-{{ it_ed.item_editor_modal(locations) }}
+{{ it_ed.item_modal_form(forms['new_item']) }}
 
 {% if not items %}
 <p class="lead">{{ _('No items yet, try creating some item first.') }}</p>
@@ -42,22 +42,12 @@
     {% endif %}
   </div>
 </div>
-{{ it_ed.item_editor_modal(locations, item) }}
-{{ it_del.delete_item_modal(item) }}
+{{ it_ed.item_modal_form(forms['edit_item_{}'.format(item.id)], item) }}
+{{ it_del.delete_item_modal(item, forms['delete_item_{}'.format(item.id)]) }}
 {% endfor %}
 {% endblock %}
 
 {% block scripts %}
 {{ super() }}
-<script type="text/javascript">
-  modal_focus = function(modal_id, input_id) {
-    $(modal_id).on('shown.bs.modal', function () {
-      $(input_id).trigger('focus');
-    });
-  }
-  modal_focus('#new-item-modal', '#item-description');
-  {% for item in items %}
-  modal_focus('#edit-item-{{item.id}}-modal', '#item-description-{{item.id}}');
-  {% endfor %}
-</script>
+<script src="{{url_for('static', filename='js/modal-helper.js')}}"></script>
 {% endblock %}

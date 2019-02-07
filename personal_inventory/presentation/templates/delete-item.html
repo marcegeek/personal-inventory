@@ -1,23 +1,8 @@
-{% macro delete_item_modal(item) %}
-<div id="delete-item-{{item.id}}-modal" class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form action="{{ url_for('item', item_id=item.id) }}" method="post">
-        <input type="hidden" name="delete" value="true">
-        <div class="modal-header">
-          <h3 class="modal-title">{{ _('Delete item') }}</h3>
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        </div>
-        <div class="modal-body">
-          <p class="lead">{{ _('Do you really want to delete item "%(name)s"?', name=item.description) }}</p>
-          <p class="text-warning">{{ _('This action cannot be undone.') }}</p>
-        </div>
-        <div class="modal-footer">
-          <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ _('Cancel') }}">
-          <input type="submit" class="btn btn-danger" value="{{ _('Delete') }}">
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
+{% from '_formhelpers.html' import make_delete_modal_form %}
+
+{% macro delete_item_modal(item, form) %}
+  {% set id='delete-item-{}-modal'.format(item.id) %}
+  {% set title=_('Delete item') %}
+  {% set element=item.description %}
+  {{ make_delete_modal_form(id, title, form, element, title_level="3", action=url_for('item_delete', item_id=item.id)) }}
 {% endmacro %}

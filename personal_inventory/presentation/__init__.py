@@ -7,6 +7,7 @@ import flask_babel as fl_babel
 import config
 from personal_inventory.presentation.views import users as user_views
 from personal_inventory.presentation.views import locations as location_views
+from personal_inventory.presentation.views import items as item_views
 from personal_inventory.business.entities.item import Item
 from personal_inventory.business.logic import ValidationException
 from personal_inventory.business.logic.item_logic import ItemLogic
@@ -93,68 +94,17 @@ def edit_profile():
 
 @app.route('/items', methods=['GET', 'POST'])
 def items():
-    user = get_logged_in_user()
-    if user is not None:
-        item_logic = ItemLogic()
-        if request.method == 'GET':
-            user_locations = LocationLogic().get_all_by_user(user)
-            if len(user_locations) == 0:
-                flash(fl_babel.gettext('No locations yet, create one first'), 'error')
-                return redirect(url_for('locations'))
-            user_items = item_logic.get_all_by_user(user, fill_location=True)
-            return render_template('items.html', items=user_items, locations=user_locations)
-        else:
-            description = request.form['description'].strip()
-            location_id = request.form['location'].strip()
-            quantity = request.form['quantity'].strip()
-            if len(quantity) == 0:
-                quantity = None
-            new_item = Item(owner_id=user.id, location_id=location_id,
-                            description=description, quantity=quantity)
-            try:
-                ItemLogic().insert(new_item)
-            except ValidationException as ex:
-                for err in ex.args:
-                    flash(error_handler.error_str(err), 'error')
-            return redirect(request.referrer)
-    return redirect(url_for('home'))
+    return item_views.items(get_logged_in_user())
 
 
 @app.route('/items/<int:item_id>', methods=['POST'])
 def item(item_id):
-    user = get_logged_in_user()
-    if user is not None:
-        item_logic = ItemLogic()
-        current_item = item_logic.get_by_id(item_id)
-        if current_item is not None:
-            if current_item.owner_id == user.id:
-                delete = request.form.get('delete')
-                if not delete:
-                    description = request.form['description'].strip()
-                    location_id = request.form['location'].strip()
-                    quantity = request.form['quantity'].strip()
-                    if len(quantity) == 0:
-                        quantity = None
-                    current_item.description = description
-                    current_item.location_id = location_id
-                    current_item.quantity = quantity
-                    try:
-                        item_logic.update(current_item)
-                    except ValidationException as ex:
-                        for err in ex.args:
-                            flash(error_handler.error_str(err), 'error')
-                else:
-                    try:
-                        item_logic.delete(item_id)
-                    except ValidationException as ex:
-                        for err in ex.args:
-                            flash(error_handler.error_str(err), 'error')
-                return redirect(request.referrer)
-            else:
-                abort(401)
-        else:
-            abort(404)
-    return redirect(url_for('home'))
+    return item_views.item(get_logged_in_user(), item_id)
+
+
+@app.route('/items/<int:item_id>/delete', methods=['POST'])
+def item_delete(item_id):
+    return item_views.item_delete(get_logged_in_user(), item_id)
 
 
 @app.route('/locations', methods=['GET', 'POST'])

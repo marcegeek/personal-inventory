@@ -1,0 +1,114 @@
+import flask as fl
+import flask_babel as fl_babel
+
+from personal_inventory.business.entities.item import Item
+from personal_inventory.business.logic.item_logic import ItemLogic
+from personal_inventory.business.logic.location_logic import LocationLogic
+from personal_inventory.presentation.views import _retrieve_last_form, business_exception_handler, _save_last_form
+from personal_inventory.presentation.views.forms import DeleteForm
+from personal_inventory.presentation.views.forms.items import ItemForm
+
+
+def items(user):
+    if user is None:
+        fl.flash('Please login to use the application', category='info')
+        return fl.redirect(fl.url_for('login'))
+    new_item_key = 'new_item'
+    forms = {new_item_key: ItemForm(fl.request.form, meta={'locales': [user.language]})}
+
+    user_locations = LocationLogic().get_all_by_user(user)
+    forms[new_item_key].location.choices = [(str(loc.id), loc.description) for loc in user_locations]
+
+    if fl.request.method == 'GET':
+        if len(user_locations) == 0:
+            fl.flash(fl_babel.gettext('No locations yet, create one first'), 'error')
+            return fl.redirect(fl.url_for('locations'))
+        user_items = ItemLogic().get_all_by_user(user, fill_location=True)
+
+        for it in user_items:
+            edit_form_key = 'edit_item_{}'.format(it.id)
+            delete_form_key = 'delete_item_{}'.format(it.id)
+            forms[edit_form_key] = ItemForm(meta={'locales': [user.language]})
+            forms[edit_form_key].description.data = it.description
+            forms[edit_form_key].location.choices = forms[new_item_key].location.choices
+            forms[edit_form_key].location.data = str(it.location_id)
+            forms[edit_form_key].quantity.data = it.quantity
+            forms[delete_form_key] = DeleteForm()
+
+        _retrieve_last_form(forms)
+        return fl.render_template('items.html', forms=forms, items=user_items, locations=user_locations)
+    else:  # POST
+        forms[new_item_key].validate()
+        description = forms[new_item_key].description.data
+        location_id = forms[new_item_key].location.data
+        quantity = forms[new_item_key].quantity.data
+        new_item = Item(owner_id=user.id, location_id=location_id,
+                        description=description, quantity=quantity)
+
+        @business_exception_handler(forms[new_item_key])
+        def make_changes():
+            ItemLogic().insert(new_item)
+
+        make_changes()
+        if 'location' in fl.request.referrer:
+            form = forms.pop(new_item_key)
+            new_item_key = 'new_item_in_{}'.format(location_id)
+            forms[new_item_key] = form
+        _save_last_form(forms[new_item_key], new_item_key)
+        return fl.redirect(fl.request.referrer)
+
+
+def item(user, item_id):
+    if user is None:
+        fl.flash('Please login to use the application', category='info')
+        return fl.redirect(fl.url_for('login'))
+    item_logic = ItemLogic()
+    current_item = item_logic.get_by_id(item_id)
+    if current_item is None:
+        fl.abort(404)
+    if current_item.owner_id != user.id:
+        fl.abort(401)
+
+    edit_form = ItemForm(fl.request.form)
+    edit_form.location.choices = [
+        (str(loc.id), loc.description) for loc in LocationLogic().get_all_by_user(user)
+    ]
+    edit_form.validate()
+    description = edit_form.description.data
+    location_id = edit_form.location.data
+    quantity = edit_form.quantity.data
+    current_item.description = description
+    current_item.location_id = location_id
+    current_item.quantity = quantity
+
+    @business_exception_handler(edit_form)
+    def make_changes():
+        item_logic.update(current_item)
+
+    make_changes()
+
+    _save_last_form(edit_form, 'edit_item_{}'.format(item_id))
+    return fl.redirect(fl.request.referrer)
+
+
+def item_delete(user, item_id):
+    if user is None:
+        fl.flash('Please login to use the application', category='info')
+        return fl.redirect(fl.url_for('login'))
+    item_logic = ItemLogic()
+    current_item = item_logic.get_by_id(item_id)
+    if current_item is None:
+        fl.abort(404)
+    if current_item.owner_id != user.id:
+        fl.abort(401)
+
+    delete_form = DeleteForm(fl.request.form)
+    delete_form.validate()
+
+    @business_exception_handler(delete_form)
+    def make_changes():
+        item_logic.delete(item_id)
+
+    make_changes()
+    _save_last_form(delete_form, 'delete_item_{}'.format(item_id))
+    return fl.redirect(fl.request.referrer)
