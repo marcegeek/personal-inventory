@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-12-11 14:44-0300\n"
-"PO-Revision-Date: 2018-12-11 14:45-0300\n"
+"POT-Creation-Date: 2019-02-07 10:58-0300\n"
+"PO-Revision-Date: 2019-02-07 10:59-0300\n"
 "Last-Translator: \n"
 "Language: es\n"
 "Language-Team: es <LL@li.org>\n"
@@ -19,60 +19,43 @@ msgstr ""
 "Generated-By: Babel 2.6.0\n"
 "X-Generator: Poedit 2.0.4\n"
 
-#: __init__.py:74
+#: __init__.py:71
 msgid "Wrong username/e-mail or password"
 msgstr "Nombre de usuario/e-mail o contraseña incorrectos"
 
-#: __init__.py:105 __init__.py:137
-msgid "Passwords don't match"
-msgstr "Las contraseñas no coinciden"
-
-#: __init__.py:152
-msgid "No locations yet, create one first"
-msgstr "Todavía no hay ubicaciones, cree una primero"
-
 #: error_handler.py:11
-#, python-format
-msgid "%(field)s is required"
-msgstr "%(field)s es requerido"
+msgid "Required field"
+msgstr "Campo requerido"
 
 #: error_handler.py:13
-#, python-format
-msgid "%(field)s foreign key doesn't exist"
-msgstr "La clave foránea de %(field)s no existe"
+msgid "There's still some object referencing this"
+msgstr "Todavía existen objetos haciendo referencia a esto"
 
 #: error_handler.py:15
-#, python-format
-msgid "Still some %(field)s referencing object"
-msgstr "Aun algún %(field)s referenciando al objeto"
+msgid "Invalid field length"
+msgstr "Longitud de campo inválida"
 
 #: error_handler.py:17
-#, python-format
-msgid "%{field}s length must be between %(min)d and %(max)d"
-msgstr "La longitud de %{field}s debe estrar entre %(min)d y %(max)d"
-
-#: error_handler.py:20
 msgid "Invalid e-mail address"
 msgstr "Dirección de e-mail inválida"
 
-#: error_handler.py:22
+#: error_handler.py:19
 msgid "Username is repeated"
 msgstr "Nombre de usuario repetido"
 
-#: error_handler.py:24
+#: error_handler.py:21
 msgid "Username must be made of lowercase letters, digits and underscores"
 msgstr ""
 "El nombre de usuario debe estar formado por letras minúsculas, dígitos y "
 "guiones bajos"
 
-#: error_handler.py:26
+#: error_handler.py:23
 msgid "Location name repeated"
 msgstr "Nombre de ubicación repetido"
 
-#: error_handler.py:28
-#, python-format
-msgid "%(field)s value is invalid"
-msgstr "El valor de %(field)s es inválido"
+#: error_handler.py:25
+msgid "Invalid value"
+msgstr "Valor inválido"
 
 #: templates/401.html:4
 msgid "Error 401 - Unauthorized resource"
@@ -103,38 +86,37 @@ msgstr "Error 405 - Método no permitido"
 msgid "The method is not allowed for the requested URL."
 msgstr "El método no está permitido para la URL solicitada."
 
-#: templates/delete-item.html:8
-msgid "Delete item"
-msgstr "Eliminar ítem"
+#: templates/_formhelpers.html:77 templates/_formhelpers.html:85
+#: templates/user-editor.html:16
+msgid "Save"
+msgstr "Guardar"
 
-#: templates/delete-item.html:12
-#, python-format
-msgid "Do you really want to delete item \"%(name)s\"?"
-msgstr "¿Realmente quiere eliminar el ítem \"%(name)s\"?"
-
-#: templates/delete-item.html:13 templates/delete-location.html:13
-msgid "This action cannot be undone."
-msgstr "Esta acción no se puede deshacer."
-
-#: templates/delete-item.html:16 templates/delete-location.html:16
-#: templates/item-editor.html:71 templates/location-editor.html:38
+#: templates/_formhelpers.html:98
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: templates/delete-item.html:17 templates/delete-location.html:17
-#: templates/items.html:31 templates/location.html:15 templates/location.html:44
-#: templates/locations.html:39
+#: templates/_formhelpers.html:117
+#, python-format
+msgid "Do you really want to delete \"%(element)s\"?"
+msgstr "¿Realmente quiere eliminar \"%(element)s\"?"
+
+#: templates/_formhelpers.html:118
+msgid "This action cannot be undone."
+msgstr "Esta acción no se puede deshacer."
+
+#: templates/_formhelpers.html:122 templates/_formhelpers.html:128
+#: templates/items.html:31 templates/location.html:17 templates/location.html:46
+#: templates/locations.html:35
 msgid "Delete"
 msgstr "Eliminar"
 
-#: templates/delete-location.html:8
+#: templates/delete-item.html:5
+msgid "Delete item"
+msgstr "Eliminar ítem"
+
+#: templates/delete-location.html:5
 msgid "Delete location"
 msgstr "Eliminar ubicación"
-
-#: templates/delete-location.html:12
-#, python-format
-msgid "Do you really want to delete location \"%(name)s\"?"
-msgstr "¿Realmente quiere eliminar la ubicación \"%(name)s\"?"
 
 #: templates/home.html:8
 msgid ""
@@ -155,28 +137,14 @@ msgstr ""
 "Por favor <a href=\"%(login)s\">ingrese</a> o <a href=\"%(register)s"
 "\">regístrese</a> para usar la aplicación."
 
-#: templates/item-editor.html:21 templates/items.html:13
-#: templates/location.html:23 templates/locations.html:45
+#: templates/item-editor.html:10 templates/items.html:13
+#: templates/location.html:25 templates/locations.html:41
 msgid "New item"
 msgstr "Nuevo ítem"
 
-#: templates/item-editor.html:23
+#: templates/item-editor.html:14
 msgid "Editing item"
 msgstr "Editando ítem"
-
-#: templates/item-editor.html:33 templates/item-editor.html:37
-#: templates/location-editor.html:29 templates/location-editor.html:33
-msgid "Description"
-msgstr "Descripción"
-
-#: templates/item-editor.html:62 templates/item-editor.html:66
-msgid "Quantity"
-msgstr "Cantidad"
-
-#: templates/item-editor.html:72 templates/location-editor.html:39
-#: templates/user-editor.html:57
-msgid "Save"
-msgstr "Guardar"
 
 #: templates/items.html:10
 msgid "Managing items"
@@ -186,8 +154,7 @@ msgstr "Administrando ítems"
 msgid "No items yet, try creating some item first."
 msgstr "Todavía no hay ítems, intente crear alguno."
 
-#: templates/items.html:30 templates/location.html:12 templates/location.html:43
-#: templates/locations.html:36
+#: templates/items.html:30 templates/location.html:14 templates/location.html:45
 msgid "Edit"
 msgstr "Editar"
 
@@ -195,49 +162,49 @@ msgstr "Editar"
 msgid "Location:"
 msgstr "Ubicación:"
 
-#: templates/items.html:41 templates/location.html:48
+#: templates/items.html:41 templates/location.html:50
 msgid "Quantity:"
 msgstr "Cantidad:"
 
-#: templates/layout.html:42
+#: templates/layout.html:45
 msgid "Home"
 msgstr "Inicio"
 
-#: templates/layout.html:46 templates/location.html:20
-#: templates/locations.html:43
+#: templates/layout.html:49 templates/location.html:22
+#: templates/locations.html:39
 msgid "Items"
 msgstr "Ítems"
 
-#: templates/layout.html:49
+#: templates/layout.html:52
 msgid "Locations"
 msgstr "Ubicaciones"
 
-#: templates/layout.html:58
+#: templates/layout.html:61
 msgid "Profile"
 msgstr "Perfil"
 
-#: templates/layout.html:62
+#: templates/layout.html:65
 msgid "Edit profile"
 msgstr "Editar perfil"
 
-#: templates/layout.html:65
+#: templates/layout.html:68
 msgid "Logout"
 msgstr "Cerrar sesión"
 
-#: templates/location-editor.html:17 templates/locations.html:14
+#: templates/location-editor.html:6 templates/locations.html:14
 msgid "New location"
 msgstr "Nueva ubicación"
 
-#: templates/location-editor.html:19
+#: templates/location-editor.html:9
 msgid "Editing location"
 msgstr "Editando ubicación"
 
-#: templates/location.html:9
+#: templates/location.html:11
 #, python-format
 msgid "Location: %(name)s"
 msgstr "Ubicación: %(name)s"
 
-#: templates/location.html:33
+#: templates/location.html:35
 msgid "No items in this location yet, try creating some item first."
 msgstr "Todavía no hay ítems en esta ubicación, intente crear alguno."
 
@@ -245,13 +212,13 @@ msgstr "Todavía no hay ítems en esta ubicación, intente crear alguno."
 msgid "Managing locations"
 msgstr "Administrando ubicaciones"
 
-#: templates/locations.html:22
+#: templates/locations.html:21
 msgid "No locations yet, try creating some location first."
 msgstr "Todavía no hay ubicaciones, intente crear alguna."
 
-#: templates/locations.html:33
-msgid "Explore"
-msgstr "Explorar"
+#: templates/locations.html:32
+msgid "View"
+msgstr "Ver"
 
 #: templates/login.html:10 templates/login.html:17
 msgid "Login"
@@ -261,8 +228,7 @@ msgstr "Iniciar sesión"
 msgid "Username or e-mail"
 msgstr "Nombre de usuario o e-mail"
 
-#: templates/login.html:14 templates/login.html:15 templates/user-editor.html:39
-#: templates/user-editor.html:45
+#: templates/login.html:14 templates/login.html:15
 msgid "Password"
 msgstr "Contraseña"
 
@@ -270,42 +236,120 @@ msgstr "Contraseña"
 msgid "Create account"
 msgstr "Crear cuenta"
 
-#: templates/user-editor.html:10
+#: templates/user-editor.html:12
 msgid "User registration"
 msgstr "Registro de usuario"
 
-#: templates/user-editor.html:12
+#: templates/user-editor.html:13
+msgid "Register"
+msgstr "Registro"
+
+#: templates/user-editor.html:15
 msgid "User profile"
 msgstr "Perfil de usuario"
 
-#: templates/user-editor.html:15 templates/user-editor.html:16
+#: views/items.py:14 views/items.py:63 views/items.py:96 views/locations.py:15
+#: views/locations.py:50 views/locations.py:106 views/users.py:73
+msgid "Please login to use the application"
+msgstr "Por favor inicie sesión para usar la aplicación"
+
+#: views/items.py:24
+msgid "No locations yet, create one first"
+msgstr "Todavía no hay ubicaciones, cree una primero"
+
+#: views/users.py:38
+msgid "Leave it blank to keep the current password"
+msgstr "Deje en blanco para mantener la contraseña actual"
+
+#: views/forms/items.py:11 views/forms/locations.py:9
+msgid "Description"
+msgstr "Descripción"
+
+#: views/forms/items.py:11 views/forms/locations.py:9 views/forms/users.py:9
+#: views/forms/users.py:11 views/forms/users.py:13
+#, python-format
+msgid "Field length must be between %(min)d and %(max)d"
+msgstr "La longitud del campo debe estrar entre %(min)d y %(max)d"
+
+#: views/forms/items.py:13
+msgid "Location"
+msgstr "Ubicación"
+
+#: views/forms/items.py:14
+msgid "Quantity"
+msgstr "Cantidad"
+
+#: views/forms/items.py:14
+msgid "Optional field, must be a non-negative integer number"
+msgstr "Campo opcional, debe ser un número entero no negativo"
+
+#: views/forms/users.py:9
 msgid "First name"
 msgstr "Nombre"
 
-#: templates/user-editor.html:18 templates/user-editor.html:19
+#: views/forms/users.py:11
 msgid "Last name"
 msgstr "Apellido"
 
-#: templates/user-editor.html:21 templates/user-editor.html:22
+#: views/forms/users.py:13
 msgid "E-mail"
 msgstr "E-mail"
 
-#: templates/user-editor.html:24 templates/user-editor.html:35
+#: views/forms/users.py:15
 msgid "Username"
 msgstr "Nombre de usuario"
 
-#: templates/user-editor.html:26
+#: views/forms/users.py:16
 msgid "Language"
 msgstr "Idioma"
 
-#: templates/user-editor.html:41 templates/user-editor.html:51
-msgid "Password unchanged"
-msgstr "Contraseña sin cambios"
+#: views/forms/users.py:17
+msgid "New password"
+msgstr "Nueva contraseña"
 
-#: templates/user-editor.html:45 templates/user-editor.html:55
-msgid "(password unchanged)"
-msgstr "(contraseña sin cambios)"
+#: views/forms/users.py:17
+msgid "Passwords must match"
+msgstr "Las contraseñas deben coincidir"
 
-#: templates/user-editor.html:49 templates/user-editor.html:55
+#: views/forms/users.py:18
 msgid "Confirm password"
 msgstr "Confirmar contraseña"
+
+#~ msgid "Passwords don't match"
+#~ msgstr "Las contraseñas no coinciden"
+
+#~ msgid "%{field}s length must be between %(min)d and %(max)d"
+#~ msgstr "La longitud de %{field}s debe estrar entre %(min)d y %(max)d"
+
+#~ msgid "Do you really want to delete item \"%(name)s\"?"
+#~ msgstr "¿Realmente quiere eliminar el ítem \"%(name)s\"?"
+
+#~ msgid "Do you really want to delete location \"%(name)s\"?"
+#~ msgstr "¿Realmente quiere eliminar la ubicación \"%(name)s\"?"
+
+#~ msgid "Explore"
+#~ msgstr "Explorar"
+
+#~ msgid "Password unchanged"
+#~ msgstr "Contraseña sin cambios"
+
+#~ msgid "(password unchanged)"
+#~ msgstr "(contraseña sin cambios)"
+
+#~ msgid "%(field)s is required"
+#~ msgstr "%(field)s es requerido"
+
+#~ msgid "%(field)s foreign key doesn't exist"
+#~ msgstr "La clave foránea de %(field)s no existe"
+
+#~ msgid "Still some %(field)s referencing object"
+#~ msgstr "Aun algún %(field)s referenciando al objeto"
+
+#~ msgid "%(field)s length must be between %(min)d and %(max)d"
+#~ msgstr "La longitud de %(field)s debe estrar entre %(min)d y %(max)d"
+
+#~ msgid "%(field)s value is invalid"
+#~ msgstr "El valor de %(field)s es inválido"
+
+#~ msgid "Must be between %(min)d and %(max)d"
+#~ msgstr "Debe estar entre %(min)d y %(max)d"
