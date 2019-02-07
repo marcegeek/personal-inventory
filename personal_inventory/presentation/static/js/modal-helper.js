@@ -15,7 +15,3 @@ $(document).on('shown.bs.modal', '.modal', function() {
      e[0].setSelectionRange(strLength, strLength);
   }
 });
-
-var show_modal = function(modal_id) {
-  $(modal_id).modal('show');
-}
