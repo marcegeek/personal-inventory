@@ -1,3 +1,5 @@
+import functools
+
 import flask as fl
 from flask_babel import gettext as _
 
@@ -42,6 +44,18 @@ def logout():
     return fl.redirect(fl.url_for('home'))
 
 
+def login_required(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        user = get_logged_in_user()
+        if user is None:
+            fl.flash(_('Please login to use the application'), category='info')
+            return fl.redirect(fl.url_for('login'))
+        return func(user=user, *args, **kwargs)
+
+    return wrapper
+
+
 def register(languages, default_language):
     form = UserEditForm(fl.request.form)
     form.language.choices = [(key, languages[key]) for key in languages]
@@ -67,10 +81,8 @@ def register(languages, default_language):
     return fl.render_template('user-editor.html', form=form)
 
 
-def profile(user, languages):
-    if user is None:
-        fl.flash(_('Please login to use the application'), category='info')
-        return fl.redirect(fl.url_for('login'))
+@login_required
+def profile(languages, user=None):
     form = UserEditForm(fl.request.form)
     form.password.description = _('Leave it blank to keep the current password')
     form.language.choices = [(key, languages[key]) for key in languages]

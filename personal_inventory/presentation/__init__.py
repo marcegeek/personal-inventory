@@ -56,37 +56,37 @@ def register():
 
 @app.route('/profile', methods=['GET', 'POST'])
 def edit_profile():
-    return user_views.profile(user_views.get_logged_in_user(), config.LANGUAGES)
+    return user_views.profile(config.LANGUAGES)
 
 
 @app.route('/items', methods=['GET', 'POST'])
 def items():
-    return item_views.items(user_views.get_logged_in_user())
+    return item_views.items()
 
 
 @app.route('/items/<int:item_id>', methods=['POST'])
 def item(item_id):
-    return item_views.item(user_views.get_logged_in_user(), item_id)
+    return item_views.item(item_id)
 
 
 @app.route('/items/<int:item_id>/delete', methods=['POST'])
 def item_delete(item_id):
-    return item_views.item_delete(user_views.get_logged_in_user(), item_id)
+    return item_views.item_delete(item_id)
 
 
 @app.route('/locations', methods=['GET', 'POST'])
 def locations():
-    return location_views.locations(user_views.get_logged_in_user())
+    return location_views.locations()
 
 
 @app.route('/locations/<int:location_id>', methods=['GET', 'POST'])
 def location(location_id):
-    return location_views.location(user_views.get_logged_in_user(), location_id)
+    return location_views.location(location_id)
 
 
 @app.route('/locations/<int:location_id>/delete', methods=['POST'])
 def location_delete(location_id):
-    return location_views.location_delete(user_views.get_logged_in_user(), location_id)
+    return location_views.location_delete(location_id)
 
 
 @app.errorhandler(404)

@@ -1,5 +1,4 @@
 import flask as fl
-from flask_babel import gettext as _
 
 from personal_inventory.business.entities.location import Location
 from personal_inventory.business.logic.item_logic import ItemLogic
@@ -8,12 +7,11 @@ from personal_inventory.presentation.views.forms import DeleteForm
 from personal_inventory.presentation.views import business_exception_handler, _retrieve_last_form, _save_last_form
 from personal_inventory.presentation.views.forms.items import ItemForm
 from personal_inventory.presentation.views.forms.locations import LocationForm
+from personal_inventory.presentation.views.users import login_required
 
 
-def locations(user):
-    if user is None:
-        fl.flash(_('Please login to use the application'), category='info')
-        return fl.redirect(fl.url_for('login'))
+@login_required
+def locations(user=None):
     new_location_key = 'new_location'
     forms = {new_location_key: LocationForm(fl.request.form)}
 
@@ -45,10 +43,8 @@ def locations(user):
         return fl.redirect(fl.request.referrer)
 
 
-def location(user, location_id):
-    if user is None:
-        fl.flash(_('Please login to use the application'), category='info')
-        return fl.redirect(fl.url_for('login'))
+@login_required
+def location(location_id, user=None):
     location_logic = LocationLogic()
     current_location = location_logic.get_by_id(location_id)
     if current_location is None:
@@ -101,10 +97,8 @@ def location(user, location_id):
         return fl.redirect(fl.request.referrer)
 
 
-def location_delete(user, location_id):
-    if user is None:
-        fl.flash(_('Please login to use the application'), category='info')
-        return fl.redirect(fl.url_for('login'))
+@login_required
+def location_delete(location_id, user=None):
     location_logic = LocationLogic()
     current_location = location_logic.get_by_id(location_id)
     if current_location is None:

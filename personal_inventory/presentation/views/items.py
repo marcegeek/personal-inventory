@@ -7,12 +7,11 @@ from personal_inventory.business.logic.location_logic import LocationLogic
 from personal_inventory.presentation.views import _retrieve_last_form, business_exception_handler, _save_last_form
 from personal_inventory.presentation.views.forms import DeleteForm
 from personal_inventory.presentation.views.forms.items import ItemForm
+from personal_inventory.presentation.views.users import login_required
 
 
-def items(user):
-    if user is None:
-        fl.flash(_('Please login to use the application'), category='info')
-        return fl.redirect(fl.url_for('login'))
+@login_required
+def items(user=None):
     new_item_key = 'new_item'
     forms = {new_item_key: ItemForm(fl.request.form, meta={'locales': [user.language]})}
 
@@ -58,10 +57,8 @@ def items(user):
         return fl.redirect(fl.request.referrer)
 
 
-def item(user, item_id):
-    if user is None:
-        fl.flash(_('Please login to use the application'), category='info')
-        return fl.redirect(fl.url_for('login'))
+@login_required
+def item(item_id, user=None):
     item_logic = ItemLogic()
     current_item = item_logic.get_by_id(item_id)
     if current_item is None:
@@ -91,10 +88,8 @@ def item(user, item_id):
     return fl.redirect(fl.request.referrer)
 
 
-def item_delete(user, item_id):
-    if user is None:
-        fl.flash(_('Please login to use the application'), category='info')
-        return fl.redirect(fl.url_for('login'))
+@login_required
+def item_delete(item_id, user=None):
     item_logic = ItemLogic()
     current_item = item_logic.get_by_id(item_id)
     if current_item is None:
