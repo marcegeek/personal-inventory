@@ -1,23 +1,11 @@
 {% extends "layout.html" %}
 {% block head %}
   {{ super() }}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+  <link rel="stylesheet" href="{{url_for('static', filename='css/simple-form.css')}}">
 {% endblock %}
 
+{% from '_formhelpers.html' import make_form %}
+
 {% block main %}
-  <div class="text-center">
-    <form class="form-login" method="post">
-      <h1 class="h3 mb-3 font-weight-normal">{{ _('Login') }}</h1>
-      <label for="inputUsernameEmail" class="sr-only">{{ _('Username or e-mail') }}</label>
-      <input type="text" id="inputUsernameEmail" name="username_email" class="form-control" placeholder="{{ _('Username or e-mail') }}" required autofocus>
-      <div class="mb-3">
-        <label for="inputPassword" class="sr-only">{{ _('Password') }}</label>
-        <input type="password" id="inputPassword" name="password" class="form-control" placeholder="{{ _('Password') }}" required>
-      </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">{{ _('Login') }}</button>
-      <div class="mt-2">
-        <a href="{{ url_for('register') }}">{{ _('Create account') }}</a>
-      </div>
-    </form>
-  </div>
+  {{ make_form(_('Login'), form, [form.username_email, form.password], autofocus=form.username_email, save=_('Login')) }}
 {% endblock %}

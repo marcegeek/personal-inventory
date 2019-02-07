@@ -3,7 +3,7 @@ import functools
 import flask as fl
 
 from personal_inventory.business.logic import ValidationException
-from personal_inventory.presentation import error_handler
+from personal_inventory.presentation.views import error_handler
 
 
 def business_exception_handler(form):

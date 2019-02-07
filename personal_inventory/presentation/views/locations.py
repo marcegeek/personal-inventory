@@ -1,4 +1,5 @@
 import flask as fl
+from flask_babel import gettext as _
 
 from personal_inventory.business.entities.location import Location
 from personal_inventory.business.logic.item_logic import ItemLogic
@@ -11,7 +12,7 @@ from personal_inventory.presentation.views.forms.locations import LocationForm
 
 def locations(user):
     if user is None:
-        fl.flash('Please login to use the application', category='info')
+        fl.flash(_('Please login to use the application'), category='info')
         return fl.redirect(fl.url_for('login'))
     new_location_key = 'new_location'
     forms = {new_location_key: LocationForm(fl.request.form)}
@@ -46,7 +47,7 @@ def locations(user):
 
 def location(user, location_id):
     if user is None:
-        fl.flash('Please login to use the application', category='info')
+        fl.flash(_('Please login to use the application'), category='info')
         return fl.redirect(fl.url_for('login'))
     location_logic = LocationLogic()
     current_location = location_logic.get_by_id(location_id)
@@ -102,7 +103,7 @@ def location(user, location_id):
 
 def location_delete(user, location_id):
     if user is None:
-        fl.flash('Please login to use the application', category='info')
+        fl.flash(_('Please login to use the application'), category='info')
         return fl.redirect(fl.url_for('login'))
     location_logic = LocationLogic()
     current_location = location_logic.get_by_id(location_id)

@@ -1,5 +1,5 @@
 import flask as fl
-import flask_babel as fl_babel
+from flask_babel import gettext as _
 
 from personal_inventory.business.entities.item import Item
 from personal_inventory.business.logic.item_logic import ItemLogic
@@ -11,7 +11,7 @@ from personal_inventory.presentation.views.forms.items import ItemForm
 
 def items(user):
     if user is None:
-        fl.flash('Please login to use the application', category='info')
+        fl.flash(_('Please login to use the application'), category='info')
         return fl.redirect(fl.url_for('login'))
     new_item_key = 'new_item'
     forms = {new_item_key: ItemForm(fl.request.form, meta={'locales': [user.language]})}
@@ -21,7 +21,7 @@ def items(user):
 
     if fl.request.method == 'GET':
         if len(user_locations) == 0:
-            fl.flash(fl_babel.gettext('No locations yet, create one first'), 'error')
+            fl.flash(_('No locations yet, create one first'), 'error')
             return fl.redirect(fl.url_for('locations'))
         user_items = ItemLogic().get_all_by_user(user, fill_location=True)
 
@@ -60,7 +60,7 @@ def items(user):
 
 def item(user, item_id):
     if user is None:
-        fl.flash('Please login to use the application', category='info')
+        fl.flash(_('Please login to use the application'), category='info')
         return fl.redirect(fl.url_for('login'))
     item_logic = ItemLogic()
     current_item = item_logic.get_by_id(item_id)
@@ -93,7 +93,7 @@ def item(user, item_id):
 
 def item_delete(user, item_id):
     if user is None:
-        fl.flash('Please login to use the application', category='info')
+        fl.flash(_('Please login to use the application'), category='info')
         return fl.redirect(fl.url_for('login'))
     item_logic = ItemLogic()
     current_item = item_logic.get_by_id(item_id)
