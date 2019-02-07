@@ -2,19 +2,19 @@
 
 {% block nav_items_active%}active{% endblock %}
 
-{% import 'item-editor.html' as it_ed %}
-{% import 'delete-item.html' as it_del %}
+{% from 'item-editor.html' import item_modal_form %}
+{% from 'delete-item.html' import delete_item_modal %}
 
 {% block main %}
 <div class="row mb-2">
   <h1 class="col-sm-10">{{ _('Managing items') }}</h1>
-  <div class="col-sm-2 mt-2">
+  <div class="col-sm-2 mt-1">
     <a href="#new-item-modal" class="btn btn-success justify-content-sm-end" role="button" data-toggle="modal">
       <i class="fa fa-plus"></i> {{ _('New item') }}
     </a>
   </div>
 </div>
-{{ it_ed.item_modal_form(forms['new_item']) }}
+{{ item_modal_form(forms['new_item']) }}
 
 {% if not items %}
 <p class="lead">{{ _('No items yet, try creating some item first.') }}</p>
@@ -26,7 +26,7 @@
       <div class="col-sm-9">
         <h2 class="card-title"><strong>{{item.description}}</strong></h2>
       </div>
-      <div class="col-sm-3">
+      <div class="col-sm-3 mt-1">
         <a href="#edit-item-{{item.id}}-modal" class="btn btn-warning" role="button" data-toggle="modal"><i class="fas fa-edit"></i> {{ _('Edit') }}</a>
         <a href="#delete-item-{{item.id}}-modal" class="btn btn-danger" role="button" data-toggle="modal"><i class="fas fa-trash-alt"></i> {{ _('Delete') }}</a>
       </div>
@@ -42,8 +42,8 @@
     {% endif %}
   </div>
 </div>
-{{ it_ed.item_modal_form(forms['edit_item_{}'.format(item.id)], item) }}
-{{ it_del.delete_item_modal(item, forms['delete_item_{}'.format(item.id)]) }}
+{{ item_modal_form(forms['edit_item_{}'.format(item.id)], item) }}
+{{ delete_item_modal(forms['delete_item_{}'.format(item.id)], item) }}
 {% endfor %}
 {% endblock %}
 

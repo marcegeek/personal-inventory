@@ -22,6 +22,9 @@ def locations(user=None):
             # TODO esto lo tiene que hacer la capa de negocio
             loc.items = ItemLogic().get_all_by_location(loc)
 
+            edit_form_key = 'edit_location_{}'.format(loc.id)
+            forms[edit_form_key] = LocationForm()
+            forms[edit_form_key].description.data = loc.description
             forms['delete_location_{}'.format(loc.id)] = DeleteForm()
             item_form_key = 'new_item_in_{}'.format(loc.id)
             forms[item_form_key] = ItemForm()
@@ -110,6 +113,7 @@ def location_delete(location_id, user=None):
 
     delete_form = DeleteForm(fl.request.form)
     delete_form.validate()
+
     @business_exception_handler(delete_form)
     def make_changes():
         location_logic.delete(location_id)

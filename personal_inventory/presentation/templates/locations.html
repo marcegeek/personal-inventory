@@ -3,8 +3,8 @@
 {% block nav_locations_active%}active{% endblock %}
 
 {% from 'location-editor.html' import location_modal_form %}
-{% import 'delete-location.html' as loc_del %}
-{% import 'item-editor.html' as it_ed %}
+{% from 'delete-location.html' import delete_location_modal %}
+{% from 'item-editor.html' import item_modal_form %}
 
 {% block main %}
 <div class="row mb-2">
@@ -27,9 +27,12 @@
       <div class="col-sm-9">
         <h2 class="card-title"><strong>{{location.description}}</strong></h2>
       </div>
-      <div class="col-sm-3">
+      <div class="col-sm-3  mt-1">
         <a href="{{ url_for('location', location_id=location.id) }}" class="btn btn-primary">
           <i class="far fa-eye"></i> {{ _('View') }}
+        </a>
+        <a href="#edit-location-{{location.id}}-modal" class="btn btn-warning" role="button" data-toggle="modal">
+          <i class="fas fa-edit"></i> {{ _('Edit') }}
         </a>
         <a href="#delete-location-{{location.id}}-modal" class="btn btn-danger" role="button" data-toggle="modal">
           <i class="fas fa-trash-alt"></i> {{ _('Delete') }}
@@ -42,8 +45,9 @@
     </a>
   </div>
 </div>
-{{ loc_del.delete_location_modal(location, forms['delete_location_{}'.format(location.id)]) }}
-{{ it_ed.item_modal_form(forms['new_item_in_{}'.format(location.id)], location=location) }}
+{{ location_modal_form(forms['edit_location_{}'.format(location.id)], location) }}
+{{ delete_location_modal(forms['delete_location_{}'.format(location.id)], location) }}
+{{ item_modal_form(forms['new_item_in_{}'.format(location.id)], location=location) }}
 {% endfor %}
 {% endblock %}
 
