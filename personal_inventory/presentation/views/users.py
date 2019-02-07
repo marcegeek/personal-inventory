@@ -33,7 +33,8 @@ def login():
         ul = UserLogic()
         if ul.validate_login(username_email, password):
             set_logged_in_user(ul.get_by_username_email(username_email))
-            return fl.redirect(fl.url_for('home'))
+            redir = fl.session.pop('redirect', fl.url_for('home'))
+            return fl.redirect(redir)
         else:
             form.global_errors.append(_('Wrong username/e-mail or password'))
     return fl.render_template('login.html', form=form)
@@ -50,6 +51,7 @@ def login_required(func):
         user = get_logged_in_user()
         if user is None:
             fl.flash(_('Please login to use the application'), category='info')
+            fl.session['redirect'] = fl.request.url
             return fl.redirect(fl.url_for('login'))
         return func(user=user, *args, **kwargs)
 
