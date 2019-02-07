@@ -112,7 +112,7 @@ class EntityLogic(abc.ABC):
             if model_object is None:
                 return False
             obj.update_model(model_object)
-            self.dao.update(obj)
+            self.dao.update(model_object)
             return True
         raise ValidationException(*errors)
 
