@@ -8,9 +8,9 @@ class UserEditForm(BaseForm):
     firstname = StringField('First name', description='Must be between {} and {}'.format(*UserLogic.NAME_LEN),
                             render_kw={'aria-describedby': 'firstname-description'})
     lastname = StringField('Last name', description='Must be between {} and {}'.format(*UserLogic.NAME_LEN),
-                           render_kw={'aria-describedby': 'firstname-description'})
+                           render_kw={'aria-describedby': 'lastname-description'})
     email = StringField('E-mail', description='Must be between {} and {}'.format(*UserLogic.EMAIL_LEN),
-                        render_kw={'aria-describedby': 'firstname-description'})
+                        render_kw={'aria-describedby': 'email-description'})
     username = StringField('Username')
     language = SelectField("Language")
     password = PasswordField('New password', validators=[validators.EqualTo('confirm_password', message='Passwords must match')])
