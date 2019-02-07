@@ -74,8 +74,8 @@
   {{ _render_fields(fields_values, autofocus) }}
 {% endmacro %}
 
-{% macro make_form(title, form, fields_values=None, title_level="1", autofocus=None, action=None, method="post", save=_('Save')) %}
-  <form class="simple-form" {% if action %}action="{{action}}"{% endif %} method="{{method}}">
+{% macro make_form(title, form, fields_values=None, title_level="1", autofocus=None, action=None, method="post", save=_('Save'), class="simple-form") %}
+  <form class="{{ class }}" {% if action %}action="{{action}}"{% endif %} method="{{method}}">
     <h{{title_level}} class="text-center">{{title}}</h{{title_level}}>
     {{ _render_form_body(form, fields_values, autofocus, caller) }}
     <button type="submit" class="btn btn-lg btn-primary btn-block">{{ save }}</button>
