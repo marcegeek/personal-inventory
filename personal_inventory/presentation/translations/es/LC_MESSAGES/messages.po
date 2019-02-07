@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-02-07 10:58-0300\n"
-"PO-Revision-Date: 2019-02-07 12:11-0300\n"
+"POT-Creation-Date: 2019-02-07 13:55-0300\n"
+"PO-Revision-Date: 2019-02-07 13:57-0300\n"
 "Last-Translator: \n"
 "Language: es\n"
 "Language-Team: es <LL@li.org>\n"
@@ -18,44 +18,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.6.0\n"
 "X-Generator: Poedit 2.0.4\n"
-
-#: __init__.py:71
-msgid "Wrong username/e-mail or password"
-msgstr "Nombre de usuario/e-mail o contraseña incorrectos"
-
-#: error_handler.py:11
-msgid "Required field"
-msgstr "Campo requerido"
-
-#: error_handler.py:13
-msgid "There's still some object referencing this"
-msgstr "Todavía existen objetos haciendo referencia a esto"
-
-#: error_handler.py:15
-msgid "Invalid field length"
-msgstr "Longitud de campo inválida"
-
-#: error_handler.py:17
-msgid "Invalid e-mail address"
-msgstr "Dirección de e-mail inválida"
-
-#: error_handler.py:19
-msgid "Username is repeated"
-msgstr "Nombre de usuario repetido"
-
-#: error_handler.py:21
-msgid "Username must be made of lowercase letters, digits and underscores"
-msgstr ""
-"El nombre de usuario debe estar formado por letras minúsculas, dígitos y "
-"guiones bajos"
-
-#: error_handler.py:23
-msgid "Location name repeated"
-msgstr "Nombre de ubicación repetido"
-
-#: error_handler.py:25
-msgid "Invalid value"
-msgstr "Valor inválido"
 
 #: templates/401.html:4
 msgid "Error 401 - Unauthorized resource"
@@ -220,21 +182,9 @@ msgstr "Todavía no hay ubicaciones, intente crear alguna."
 msgid "View"
 msgstr "Ver"
 
-#: templates/login.html:10 templates/login.html:17
+#: templates/login.html:10
 msgid "Login"
 msgstr "Iniciar sesión"
-
-#: templates/login.html:11 templates/login.html:12
-msgid "Username or e-mail"
-msgstr "Nombre de usuario o e-mail"
-
-#: templates/login.html:14 templates/login.html:15
-msgid "Password"
-msgstr "Contraseña"
-
-#: templates/login.html:19
-msgid "Create account"
-msgstr "Crear cuenta"
 
 #: templates/user-editor.html:12
 msgid "User registration"
@@ -248,16 +198,53 @@ msgstr "Registro"
 msgid "User profile"
 msgstr "Perfil de usuario"
 
-#: views/items.py:14 views/items.py:63 views/items.py:96 views/locations.py:15
-#: views/locations.py:50 views/locations.py:106 views/users.py:73
-msgid "Please login to use the application"
-msgstr "Por favor inicie sesión para usar la aplicación"
+#: views/error_handler.py:11
+msgid "Required field"
+msgstr "Campo requerido"
 
-#: views/items.py:24
+#: views/error_handler.py:13
+msgid "There's still some object referencing this"
+msgstr "Todavía existen objetos haciendo referencia a esto"
+
+#: views/error_handler.py:15
+msgid "Invalid field length"
+msgstr "Longitud de campo inválida"
+
+#: views/error_handler.py:17
+msgid "Invalid e-mail address"
+msgstr "Dirección de e-mail inválida"
+
+#: views/error_handler.py:19
+msgid "Username is repeated"
+msgstr "Nombre de usuario repetido"
+
+#: views/error_handler.py:21
+msgid "Username must be made of lowercase letters, digits and underscores"
+msgstr ""
+"El nombre de usuario debe estar formado por letras minúsculas, dígitos y "
+"guiones bajos"
+
+#: views/error_handler.py:23
+msgid "Location name repeated"
+msgstr "Nombre de ubicación repetido"
+
+#: views/error_handler.py:25
+msgid "Invalid value"
+msgstr "Valor inválido"
+
+#: views/items.py:23
 msgid "No locations yet, create one first"
 msgstr "Todavía no hay ubicaciones, cree una primero"
 
 #: views/users.py:38
+msgid "Wrong username/e-mail or password"
+msgstr "Nombre de usuario/e-mail o contraseña incorrectos"
+
+#: views/users.py:52
+msgid "Please login to use the application"
+msgstr "Por favor inicie sesión para usar la aplicación"
+
+#: views/users.py:87
 msgid "Leave it blank to keep the current password"
 msgstr "Deje en blanco para mantener la contraseña actual"
 
@@ -265,8 +252,8 @@ msgstr "Deje en blanco para mantener la contraseña actual"
 msgid "Description"
 msgstr "Descripción"
 
-#: views/forms/items.py:11 views/forms/locations.py:9 views/forms/users.py:9
-#: views/forms/users.py:11 views/forms/users.py:13
+#: views/forms/items.py:11 views/forms/locations.py:9 views/forms/users.py:15
+#: views/forms/users.py:19 views/forms/users.py:23
 #, python-format
 msgid "Field length must be between %(min)d and %(max)d"
 msgstr "La longitud del campo debe estrar entre %(min)d y %(max)d"
@@ -284,33 +271,41 @@ msgid "Optional field, must be a non-negative integer number"
 msgstr "Campo opcional, debe ser un número entero no negativo"
 
 #: views/forms/users.py:9
+msgid "Username or e-mail"
+msgstr "Nombre de usuario o e-mail"
+
+#: views/forms/users.py:10
+msgid "Password"
+msgstr "Contraseña"
+
+#: views/forms/users.py:14
 msgid "First name"
 msgstr "Nombre"
 
-#: views/forms/users.py:11
+#: views/forms/users.py:18
 msgid "Last name"
 msgstr "Apellido"
 
-#: views/forms/users.py:13
+#: views/forms/users.py:22
 msgid "E-mail"
 msgstr "E-mail"
 
-#: views/forms/users.py:15
+#: views/forms/users.py:26
 msgid "Username"
 msgstr "Nombre de usuario"
 
-#: views/forms/users.py:16
+#: views/forms/users.py:27
 msgid "Language"
 msgstr "Idioma"
 
-#: views/forms/users.py:17
+#: views/forms/users.py:28
 msgid "New password"
 msgstr "Nueva contraseña"
 
-#: views/forms/users.py:17
+#: views/forms/users.py:29
 msgid "Passwords must match"
 msgstr "Las contraseñas deben coincidir"
 
-#: views/forms/users.py:18
+#: views/forms/users.py:30
 msgid "Confirm password"
 msgstr "Confirmar contraseña"

@@ -8,20 +8,20 @@ body {
   padding: 15px;
   margin: auto;
 }
-.form-item .checkbox {
+.simple-form .checkbox {
   font-weight: 400;
 }
-.form-item .form-control {
+.simple-form .form-control {
   position: relative;
   box-sizing: border-box;
   height: auto;
   padding: 10px;
   font-size: 16px;
 }
-.form-item .form-control:focus {
+.simple-form .form-control:focus {
   z-index: 2;
 }
-.form-item input[type="text"] {
+.simple-form input[type="text"] {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;

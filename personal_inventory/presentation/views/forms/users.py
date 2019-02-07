@@ -1,5 +1,5 @@
 from flask_babel import lazy_gettext as _
-from wtforms import StringField, PasswordField, validators, SelectField
+from wtforms import StringField, PasswordField, SelectField, validators
 
 from personal_inventory.business.logic.user_logic import UserLogic
 from personal_inventory.presentation.views.forms import BaseForm
