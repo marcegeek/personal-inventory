@@ -21,14 +21,15 @@ class LocationLogic(EntityLogic):
         self.dao = LocationData()
         self.plain_object_factory = Location
 
-    def get_all_by_user(self, user):
+    def get_all_by_user(self, user, **fill_relations):
         """
         Recuperar todas las ubicaciones pertenecientes a un usuario.
 
         :type user: User
+        :type fill_relations: dict of bool
         :rtype: list of Location
         """
-        return [Location.make_from_model(lm) for lm in self.dao.get_all_by_user(user)]
+        return Location.make_from_model(self.dao.get_all_by_user(user), **fill_relations)
 
     def validate_deletion_fk_rules(self, location_id, errors):
         """

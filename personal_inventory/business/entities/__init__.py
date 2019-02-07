@@ -9,7 +9,7 @@ class BusinessEntity(abc.ABC):
 
     @classmethod
     @abc.abstractmethod
-    def make_from_model(cls, modelobject):
+    def make_from_model(cls, modelobject, **fill_relations):
         pass
 
     @abc.abstractmethod

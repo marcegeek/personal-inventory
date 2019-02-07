@@ -65,22 +65,24 @@ class EntityLogic(abc.ABC):
         self.dao = ObjectData()  # reemplazar en las subclases
         self.plain_object_factory = BusinessEntity  # reemplazar en las subclases
 
-    def get_by_id(self, object_id):
+    def get_by_id(self, object_id, **fill_relations):
         """
         Recuperar un objeto del modelo dado su id.
 
         :type object_id: int
+        :type fill_relations: dict of bool
         :rtype: BusinessEntity | None
         """
-        return self.plain_object_factory.make_from_model(self.dao.get_by_id(object_id))
+        return self.plain_object_factory.make_from_model(self.dao.get_by_id(object_id), **fill_relations)
 
-    def get_all(self):
+    def get_all(self, **fill_relations):
         """
         Recuperar todos los objetos del modelo.
 
         :rtype: list of BusinessEntity
+        :type fill_relations: dict of bool
         """
-        return [self.plain_object_factory.make_from_model(om) for om in self.dao.get_all()]
+        return self.plain_object_factory.make_from_model(self.dao.get_all(), **fill_relations)
 
     def insert(self, obj):
         """

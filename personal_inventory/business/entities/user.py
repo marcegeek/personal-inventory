@@ -14,20 +14,30 @@ class User(BusinessEntity):
         self.username = username
         self.password = password
         self.language = language
+        self.locations = None
+        self.items = None
 
     @classmethod
-    def make_from_model(cls, usermodel):
+    def make_from_model(cls, usermodel, **fill_relations):
         """
         Generar un objeto usuario de negocio a partir del modelo.
 
-        :type usermodel: UserModel
-        :rtype: User
+        :type usermodel: UserModel | list of UserModel
+        :rtype: User | list of User
         """
+        if isinstance(usermodel, list):
+            return [cls.make_from_model(um, **fill_relations) for um in usermodel]
         if usermodel is None:
             return None
         user = cls(usermodel.id, usermodel.firstname, usermodel.lastname,
                    usermodel.email, usermodel.username, usermodel.password,
                    usermodel.language)
+        if 'fill_locations' in fill_relations:
+            from personal_inventory.business.entities.location import Location
+            user.locations = Location.make_from_model(usermodel.locations)
+        if 'fill_items' in fill_relations:
+            from personal_inventory.business.entities.item import Item
+            user.items = Item.make_from_model(usermodel.items)
         return user
 
     def to_model(self):

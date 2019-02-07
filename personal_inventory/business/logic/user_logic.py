@@ -57,32 +57,35 @@ class UserLogic(EntityLogic):
         self.dao = UserData()
         self.plain_object_factory = User
 
-    def get_by_email(self, email):
+    def get_by_email(self, email, **fill_relations):
         """
         Recuperar un usuario dado su email.
 
         :type email: str
+        :type fill_relations: dict of bool
         :rtype: User | None
         """
-        return User.make_from_model(self.dao.get_by_email(email))
+        return User.make_from_model(self.dao.get_by_email(email), **fill_relations)
 
-    def get_by_username(self, username):
+    def get_by_username(self, username, **fill_relations):
         """
         Recuperar un usuario dado su nombre de usuario.
 
         :type username: str
+        :type fill_relations: dict of bool
         :rtype: User | None
         """
-        return User.make_from_model(self.dao.get_by_username(username))
+        return User.make_from_model(self.dao.get_by_username(username), **fill_relations)
 
-    def get_by_username_email(self, username_email):
+    def get_by_username_email(self, username_email, **fill_relations):
         """
         Recuperar un usuario dado su nombre de usuario o e-mail.
 
         :type username_email: str
+        :type fill_relations: dict of bool
         :rtype: User | None
         """
-        return User.make_from_model(self.dao.get_by_username_email(username_email))
+        return User.make_from_model(self.dao.get_by_username_email(username_email), **fill_relations)
 
     def validate_login(self, username_email, password):
         """

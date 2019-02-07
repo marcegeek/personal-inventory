@@ -10,19 +10,30 @@ class Item(BusinessEntity):
         self.description = description
         self.location_id = location_id
         self.quantity = quantity
+        self.owner = None
+        self.location = None
 
     @classmethod
-    def make_from_model(cls, itemmodel):
+    def make_from_model(cls, itemmodel, **fill_relations):
         """
         Generar un objeto ítem de negocio a partir del modelo.
 
-        :type itemmodel: ItemModel
-        :rtype: Item
+        :type itemmodel: ItemModel | list of Item
+        :type fill_relations: dict of bool
+        :rtype: Item | list of Item
         """
         if itemmodel is None:
             return None
+        if isinstance(itemmodel, list):
+            return [cls.make_from_model(im, **fill_relations) for im in itemmodel]
         item = cls(itemmodel.id, itemmodel.owner_id, itemmodel.description,
                    itemmodel.location_id, itemmodel.quantity)
+        if 'fill_owner' in fill_relations:
+            from personal_inventory.business.entities.user import User
+            item.owner = User.make_from_model(itemmodel.owner)
+        if 'fill_location' in fill_relations:
+            from personal_inventory.business.entities.location import Location
+            item.location = Location.make_from_model(itemmodel.location)
         return item
 
     def to_model(self):

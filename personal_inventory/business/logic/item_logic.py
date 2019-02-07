@@ -18,34 +18,25 @@ class ItemLogic(EntityLogic):
         self.dao = ItemData()
         self.plain_object_factory = Item
 
-    def get_all_by_user(self, user, fill_location=False):
+    def get_all_by_user(self, user, **fill_relations):
         """
         Recuperar todos los ítems pertenecientes a un usuario.
 
         :type user: User
-        :type fill_location: bool
+        :type fill_relations: dict of bool
         :rtype: list of Item
         """
-        item_list = [Item.make_from_model(im) for im in self.dao.get_all_by_user(user)]
-        if fill_location:
-            from personal_inventory.business.logic.location_logic import LocationLogic
-            for item in item_list:
-                item.location = LocationLogic().get_by_id(item.location_id)
-        return item_list
+        return Item.make_from_model(self.dao.get_all_by_user(user), **fill_relations)
 
-    def get_all_by_location(self, location, fill_location=False):
+    def get_all_by_location(self, location, **fill_relations):
         """
         Recuperar todos los ítems que están en una ubicación.
 
         :type location: Location
-        :type fill_location: bool
+        :type fill_relations: dict of bool
         :rtype: list of Item
         """
-        item_list = [Item.make_from_model(im) for im in self.dao.get_all_by_location(location)]
-        if fill_location:
-            for item in item_list:
-                item.location = location
-        return item_list
+        return Item.make_from_model(self.dao.get_all_by_location(location), **fill_relations)
 
     def validate_deletion_fk_rules(self, item_id, errors):
         """
