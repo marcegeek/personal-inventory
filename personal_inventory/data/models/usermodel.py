@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
 
 from personal_inventory.data.models import Base
 
@@ -13,3 +14,5 @@ class UserModel(Base):
     username = Column(String(50), unique=True, nullable=False)
     password = Column(String(30), nullable=False)
     language = Column(String(5))
+    items = relationship('ItemModel', backref='owner', viewonly=True, bake_queries=False)
+    locations = relationship('LocationModel', backref='owner', viewonly=True, bake_queries=False)
