@@ -42,7 +42,7 @@ class LocationLogic(EntityLogic):
         if location is not None:
             from personal_inventory.business.logic.item_logic import ItemLogic
             if len(ItemLogic().get_all_by_location(location)):
-                errors.append(DeleteForeingKeyError('item'))  # FIXME mejorar esto
+                errors.append(DeleteForeingKeyError())
                 return False
         return True  # no importa si la ubicación no existe
 

@@ -112,10 +112,10 @@ class UserLogic(EntityLogic):
             from personal_inventory.business.logic.location_logic import LocationLogic
 
             if len(ItemLogic().get_all_by_user(user)):
-                errors.append(DeleteForeingKeyError('item'))
+                errors.append(DeleteForeingKeyError())
                 return False
             if len(LocationLogic().get_all_by_user(user)):
-                errors.append(DeleteForeingKeyError('location'))
+                errors.append(DeleteForeingKeyError())
                 return False
         return True  # no importa si el usuario no existe
 
