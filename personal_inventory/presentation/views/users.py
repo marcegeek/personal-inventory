@@ -1,11 +1,9 @@
 import flask as fl
 
 from personal_inventory.business.entities.user import User
-from personal_inventory.business.logic import ValidationException
 from personal_inventory.business.logic.user_logic import UserLogic
-from personal_inventory.presentation import error_handler
 from personal_inventory.presentation.views import business_exception_handler
-from personal_inventory.presentation.forms.users import UserEditForm
+from personal_inventory.presentation.views.forms.users import UserEditForm
 
 
 def register(languages, default_language):

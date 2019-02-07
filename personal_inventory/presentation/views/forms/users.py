@@ -1,7 +1,7 @@
 from wtforms import StringField, PasswordField, validators, SelectField
 
 from personal_inventory.business.logic.user_logic import UserLogic
-from personal_inventory.presentation.forms import BaseForm
+from personal_inventory.presentation.views.forms import BaseForm
 
 
 class UserEditForm(BaseForm):

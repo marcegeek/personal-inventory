@@ -3,9 +3,9 @@ import flask as fl
 from personal_inventory.business.entities.location import Location
 from personal_inventory.business.logic.item_logic import ItemLogic
 from personal_inventory.business.logic.location_logic import LocationLogic
-from personal_inventory.presentation.forms import DeleteForm
+from personal_inventory.presentation.views.forms import DeleteForm
 from personal_inventory.presentation.views import business_exception_handler, _retrieve_last_form, _save_last_form
-from personal_inventory.presentation.forms.locations import LocationForm
+from personal_inventory.presentation.views.forms.locations import LocationForm
 
 
 def locations(user):
