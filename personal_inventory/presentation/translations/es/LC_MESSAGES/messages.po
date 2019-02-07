@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2019-02-07 10:58-0300\n"
-"PO-Revision-Date: 2019-02-07 10:59-0300\n"
+"PO-Revision-Date: 2019-02-07 12:11-0300\n"
 "Last-Translator: \n"
 "Language: es\n"
 "Language-Team: es <LL@li.org>\n"
@@ -314,42 +314,3 @@ msgstr "Las contraseñas deben coincidir"
 #: views/forms/users.py:18
 msgid "Confirm password"
 msgstr "Confirmar contraseña"
-
-#~ msgid "Passwords don't match"
-#~ msgstr "Las contraseñas no coinciden"
-
-#~ msgid "%{field}s length must be between %(min)d and %(max)d"
-#~ msgstr "La longitud de %{field}s debe estrar entre %(min)d y %(max)d"
-
-#~ msgid "Do you really want to delete item \"%(name)s\"?"
-#~ msgstr "¿Realmente quiere eliminar el ítem \"%(name)s\"?"
-
-#~ msgid "Do you really want to delete location \"%(name)s\"?"
-#~ msgstr "¿Realmente quiere eliminar la ubicación \"%(name)s\"?"
-
-#~ msgid "Explore"
-#~ msgstr "Explorar"
-
-#~ msgid "Password unchanged"
-#~ msgstr "Contraseña sin cambios"
-
-#~ msgid "(password unchanged)"
-#~ msgstr "(contraseña sin cambios)"
-
-#~ msgid "%(field)s is required"
-#~ msgstr "%(field)s es requerido"
-
-#~ msgid "%(field)s foreign key doesn't exist"
-#~ msgstr "La clave foránea de %(field)s no existe"
-
-#~ msgid "Still some %(field)s referencing object"
-#~ msgstr "Aun algún %(field)s referenciando al objeto"
-
-#~ msgid "%(field)s length must be between %(min)d and %(max)d"
-#~ msgstr "La longitud de %(field)s debe estrar entre %(min)d y %(max)d"
-
-#~ msgid "%(field)s value is invalid"
-#~ msgstr "El valor de %(field)s es inválido"
-
-#~ msgid "Must be between %(min)d and %(max)d"
-#~ msgstr "Debe estar entre %(min)d y %(max)d"
