@@ -32,10 +32,10 @@ class User(BusinessEntity):
         user = cls(usermodel.id, usermodel.firstname, usermodel.lastname,
                    usermodel.email, usermodel.username, usermodel.password,
                    usermodel.language)
-        if 'fill_locations' in fill_relations:
+        if fill_relations.get('fill_locations', False):
             from personal_inventory.business.entities.location import Location
             user.locations = Location.make_from_model(usermodel.locations)
-        if 'fill_items' in fill_relations:
+        if fill_relations.get('fill_items', False):
             from personal_inventory.business.entities.item import Item
             user.items = Item.make_from_model(usermodel.items)
         return user

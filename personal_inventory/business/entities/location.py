@@ -25,10 +25,10 @@ class Location(BusinessEntity):
         if isinstance(locationmodel, list):
             return [cls.make_from_model(lm, **fill_relations) for lm in locationmodel]
         location = cls(locationmodel.id, locationmodel.owner_id, locationmodel.description)
-        if 'fill_owner' in fill_relations:
+        if fill_relations.get('fill_owner', False):
             from personal_inventory.business.entities.user import User
             location.owner = User.make_from_model(locationmodel.owner)
-        if 'fill_items' in fill_relations:
+        if fill_relations.get('fill_items', False):
             from personal_inventory.business.entities.item import Item
             location.items = Item.make_from_model(locationmodel.items)
         return location

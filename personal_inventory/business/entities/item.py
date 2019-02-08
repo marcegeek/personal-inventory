@@ -28,10 +28,10 @@ class Item(BusinessEntity):
             return [cls.make_from_model(im, **fill_relations) for im in itemmodel]
         item = cls(itemmodel.id, itemmodel.owner_id, itemmodel.description,
                    itemmodel.location_id, itemmodel.quantity)
-        if 'fill_owner' in fill_relations:
+        if fill_relations.get('fill_owner', False):
             from personal_inventory.business.entities.user import User
             item.owner = User.make_from_model(itemmodel.owner)
-        if 'fill_location' in fill_relations:
+        if fill_relations.get('fill_location', False):
             from personal_inventory.business.entities.location import Location
             item.location = Location.make_from_model(itemmodel.location)
         return item
