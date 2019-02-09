@@ -18,6 +18,7 @@ setuptools.setup(
     install_requires=[
         'sqlalchemy',
         'email_validator',
+        'wtforms',
         'flask-babel',
         'flask',
         'gunicorn',
