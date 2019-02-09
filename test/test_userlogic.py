@@ -232,15 +232,15 @@ class TestUserLogic(Test):
         self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'firstname')
 
-    def test_rule_firstname_len_greater_than_15(self):
+    def test_rule_firstname_len_greater_than_40(self):
         # valida regla
-        valido = User(firstname='María Antonieta')
+        valido = User(firstname='Johann Sebastian Aaaaaaaaaaaaaaaaaaaaaaa')
         errors = []
         self.assertTrue(self.ul.rule_firstname_len(valido, errors))
         self.assertEqual(len(errors), 0)
 
-        # nombre mayor que 15 caracteres
-        invalido = User(firstname='María Antonietaa')
+        # nombre mayor que 40 caracteres
+        invalido = User(firstname='Johann Sebastian Aaaaaaaaaaaaaaaaaaaaaaas')
         self.assertFalse(self.ul.rule_firstname_len(invalido, errors))
         self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'firstname')
@@ -258,15 +258,15 @@ class TestUserLogic(Test):
         self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'lastname')
 
-    def test_rule_lastname_len_greater_than_15(self):
+    def test_rule_lastname_len_greater_than_40(self):
         # valida regla
-        valido = User(lastname='Cenarruzabeitia')
+        valido = User(lastname='Mastropieroooooooooooooooooooooooooooooo')
         errors = []
         self.assertTrue(self.ul.rule_lastname_len(valido, errors))
         self.assertEqual(len(errors), 0)
 
         # apellido mayor que 15 caracteres
-        invalido = User(lastname='Cenarruzabeitias')
+        invalido = User(lastname='Mastropieroooooooooooooooooooooooooooooos')
         self.assertFalse(self.ul.rule_lastname_len(invalido, errors))
         self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'lastname')
