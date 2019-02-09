@@ -6,7 +6,7 @@ from personal_inventory.business.entities.user import User
 from personal_inventory.business.logic import RequiredFieldError, RepeatedUniqueField, \
     DeleteForeingKeyError, InvalidLength, EntityLogic, FieldValidationError
 from personal_inventory.business.logic import ValidationError
-from personal_inventory.data.data import UserData
+from personal_inventory.data import UserData
 
 
 class InvalidEmailError(FieldValidationError):

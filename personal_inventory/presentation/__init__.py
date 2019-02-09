@@ -4,7 +4,7 @@ import flask as fl
 import flask_babel
 
 import config
-from personal_inventory.data import data as dal
+import personal_inventory.data as dal
 from personal_inventory.presentation.views import users as user_views
 from personal_inventory.presentation.views import locations as location_views
 from personal_inventory.presentation.views import items as item_views

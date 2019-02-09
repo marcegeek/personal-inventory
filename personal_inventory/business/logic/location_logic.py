@@ -1,7 +1,7 @@
 from personal_inventory.business.entities.location import Location
 from personal_inventory.business.logic import RequiredFieldError, ForeignKeyError, \
     DeleteForeingKeyError, InvalidLength, EntityLogic, RepeatedUniqueField
-from personal_inventory.data.data import LocationData
+from personal_inventory.data import LocationData
 
 
 class RepeatedLocationNameError(RepeatedUniqueField):

@@ -1,7 +1,7 @@
 import abc
 
 from personal_inventory.business.entities import BusinessEntity
-from personal_inventory.data.data import ObjectData
+from personal_inventory.data import ObjectData
 
 
 class ValidationError:

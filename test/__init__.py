@@ -1,6 +1,6 @@
 import unittest
 
-import personal_inventory.data.data as dal
+import personal_inventory.data as dal
 import personal_inventory.defaultconfigs as config
 
 

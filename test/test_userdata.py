@@ -1,4 +1,4 @@
-import personal_inventory.data.data as dal
+import personal_inventory.data as dal
 from personal_inventory.data.models.usermodel import UserModel
 from test import Test
 
