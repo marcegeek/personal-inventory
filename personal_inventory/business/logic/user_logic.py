@@ -47,7 +47,7 @@ class InvalidUsernameError(ValidationError):
 
 
 class UserLogic(EntityLogic):
-    NAME_LEN = (2, 15)
+    NAME_LEN = (2, 40)
     EMAIL_LEN = (3, 50)
     USERNAME_LEN = (5, 50)
     PASSWORD_LEN = (6, 30)
