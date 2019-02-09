@@ -3,7 +3,6 @@ import functools
 import flask as fl
 from flask_babel import gettext as _
 
-from personal_inventory.business.entities.user import User
 from personal_inventory.business.logic.user_logic import UserLogic
 from personal_inventory.presentation.views import business_exception_handler
 from personal_inventory.presentation.views.forms.users import UserEditForm, LoginForm
