@@ -1,6 +1,5 @@
 import flask as fl
 
-from personal_inventory.business.entities.location import Location
 from personal_inventory.business.logic.location_logic import LocationLogic
 from personal_inventory.presentation.views.forms import DeleteForm
 from personal_inventory.presentation.views import business_exception_handler, _retrieve_last_form, _save_last_form
@@ -19,19 +18,19 @@ def locations(user=None):
         for loc in user_locations:
             edit_form_key = 'edit_location_{}'.format(loc.id)
             forms[edit_form_key] = LocationForm()
-            forms[edit_form_key].description.data = loc.description
+            forms[edit_form_key].fill_form(loc)
             forms['delete_location_{}'.format(loc.id)] = DeleteForm()
             item_form_key = 'new_item_in_{}'.format(loc.id)
             forms[item_form_key] = ItemForm()
-            forms[item_form_key].location.choices = [(l.id, l.description) for l in user_locations]
-            forms[item_form_key].location.data = str(loc.id)
+            forms[item_form_key].ensure_form_ready(locations=user_locations)
+            forms[item_form_key].location.data = loc.id
 
         _retrieve_last_form(forms)
         return fl.render_template('locations.html', forms=forms, locations=user_locations)
     else:  # POST
         forms[new_location_key].validate()
-        description = forms[new_location_key].description.data
-        new_loc = Location(owner_id=user.id, description=description)
+        new_loc = forms[new_location_key].make_object()
+        new_loc.owner_id = user.id
 
         @business_exception_handler(forms[new_location_key])
         def make_changes():
@@ -58,34 +57,25 @@ def location(location_id, user=None):
     }
 
     if fl.request.method == 'GET':
-        forms[edit_form_key].description.data = current_location.description
+        user_locations = location_logic.get_all_by_user(user)
+        forms[edit_form_key].fill_form(current_location)
 
         new_item_key = 'new_item_in_{}'.format(current_location.id)
         forms[new_item_key] = ItemForm()
-        forms[new_item_key].location.choices = [
-            (str(loc.id), loc.description)
-            for loc in location_logic.get_all_by_user(user)
-        ]
-        forms[new_item_key].location.data = str(current_location.id)
+        forms[new_item_key].ensure_form_ready(locations=user_locations)
+        forms[new_item_key].location.data = current_location.id
 
         for item in current_location.items:
             edit_item_key = 'edit_item_{}'.format(item.id)
             forms[edit_item_key] = ItemForm()
-            forms[edit_item_key].description.data = item.description
-            forms[edit_item_key].location.choices = [
-                (str(loc.id), loc.description)
-                for loc in location_logic.get_all_by_user(user)
-            ]
-            forms[edit_item_key].location.data = str(item.location_id)
-            forms[edit_item_key].quantity.data = item.quantity
+            forms[edit_item_key].fill_form(item, locations=user_locations)
             forms['delete_item_{}'.format(item.id)] = DeleteForm()
 
         _retrieve_last_form(forms)
         return fl.render_template('location.html', forms=forms, location=current_location)
     else:
         forms[edit_form_key].validate()
-        description = forms[edit_form_key].description.data
-        current_location.description = description
+        forms[edit_form_key].update_object(current_location)
 
         @business_exception_handler(forms[edit_form_key])
         def make_changes():

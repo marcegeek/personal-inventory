@@ -1,4 +1,22 @@
+import abc
+import functools
+
 from wtforms import Form
+
+
+def safe_form(func):
+    @functools.wraps(func)
+    def wrapper(self, *args, **kwargs):
+        self._ensure_from_ready(**kwargs)
+        return func(self, *args, **kwargs)
+
+    return wrapper
+
+
+def _strip_filter(value):
+    if value is not None and hasattr(value, 'strip'):
+        return value.strip()
+    return value
 
 
 class BaseForm(Form):
@@ -12,6 +30,23 @@ class BaseForm(Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.global_errors = []
+
+    @abc.abstractmethod
+    def ensure_form_ready(self, **kwargs):
+        pass
+
+    @safe_form
+    @abc.abstractmethod
+    def fill_form(self, obj, **kwargs):
+        pass
+
+    @abc.abstractmethod
+    def make_object(self):
+        pass
+
+    @abc.abstractmethod
+    def update_object(self, obj):
+        pass
 
     @property
     def errors(self):
@@ -34,10 +69,14 @@ class BaseForm(Form):
 
 
 class DeleteForm(BaseForm):
-    pass
+    def ensure_form_ready(self, **kwargs):
+        pass
 
+    def fill_form(self, obj, **kwargs):
+        pass
 
-def _strip_filter(value):
-    if value is not None and hasattr(value, 'strip'):
-        return value.strip()
-    return value
+    def make_object(self):
+        pass
+
+    def update_object(self, obj):
+        pass

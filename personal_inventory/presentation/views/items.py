@@ -1,8 +1,6 @@
 import flask as fl
 from flask_babel import gettext as _
 
-from personal_inventory.business.entities.item import Item
-
 from personal_inventory.business.logic.item_logic import ItemLogic
 from personal_inventory.business.logic.location_logic import LocationLogic
 from personal_inventory.presentation.views import _retrieve_last_form, business_exception_handler, _save_last_form
@@ -19,7 +17,7 @@ def items(user=None):
     user_locations = LocationLogic().get_all_by_user(user)
     user_locations.sort(key=lambda l: l.description)
     user_locations_dic = dict([(l.id, l.description) for l in user_locations])
-    forms[new_item_key].location.choices = [(str(loc.id), loc.description) for loc in user_locations]
+    forms[new_item_key].ensure_form_ready(locations=user_locations)
 
     if fl.request.method == 'GET':
         if len(user_locations) == 0:
@@ -32,21 +30,15 @@ def items(user=None):
             edit_form_key = 'edit_item_{}'.format(it.id)
             delete_form_key = 'delete_item_{}'.format(it.id)
             forms[edit_form_key] = ItemForm(meta={'locales': [user.language]})
-            forms[edit_form_key].description.data = it.description
-            forms[edit_form_key].location.choices = forms[new_item_key].location.choices
-            forms[edit_form_key].location.data = str(it.location_id)
-            forms[edit_form_key].quantity.data = it.quantity
+            forms[edit_form_key].fill_form(it, locations=user_locations)
             forms[delete_form_key] = DeleteForm()
 
         _retrieve_last_form(forms)
         return fl.render_template('items.html', forms=forms, items=user_items, locations=user_locations)
     else:  # POST
         forms[new_item_key].validate()
-        description = forms[new_item_key].description.data
-        location_id = forms[new_item_key].location.data
-        quantity = forms[new_item_key].quantity.data
-        new_item = Item(owner_id=user.id, location_id=location_id,
-                        description=description, quantity=quantity)
+        new_item = forms[new_item_key].make_object()
+        new_item.owner_id = user.id
 
         @business_exception_handler(forms[new_item_key])
         def make_changes():
@@ -55,7 +47,7 @@ def items(user=None):
         make_changes()
         if 'location' in fl.request.referrer:
             form = forms.pop(new_item_key)
-            new_item_key = 'new_item_in_{}'.format(location_id)
+            new_item_key = 'new_item_in_{}'.format(form.location.data)
             forms[new_item_key] = form
         _save_last_form(forms[new_item_key], new_item_key)
         return fl.redirect(fl.request.referrer)
@@ -71,16 +63,9 @@ def item(item_id, user=None):
         fl.abort(401)
 
     edit_form = ItemForm(fl.request.form)
-    edit_form.location.choices = [
-        (str(loc.id), loc.description) for loc in LocationLogic().get_all_by_user(user)
-    ]
+    edit_form.ensure_form_ready(locations=LocationLogic().get_all_by_user(user))
     edit_form.validate()
-    description = edit_form.description.data
-    location_id = edit_form.location.data
-    quantity = edit_form.quantity.data
-    current_item.description = description
-    current_item.location_id = location_id
-    current_item.quantity = quantity
+    edit_form.update_object(current_item)
 
     @business_exception_handler(edit_form)
     def make_changes():

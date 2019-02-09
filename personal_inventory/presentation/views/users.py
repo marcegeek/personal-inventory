@@ -60,18 +60,10 @@ def login_required(func):
 
 def register(languages, default_language):
     form = UserEditForm(fl.request.form)
-    form.language.choices = [(key, languages[key]) for key in languages]
-    form.language.data = default_language
+    form.ensure_form_ready(languages=languages, default=default_language)
     if fl.request.method == 'POST':
         form.validate()
-        firstname = form.firstname.data
-        lastname = form.lastname.data
-        email = form.email.data
-        username = form.username.data
-        password = form.password.data
-        language = form.language.data
-        user = User(firstname=firstname, lastname=lastname, email=email,
-                    username=username, password=password, language=language)
+        user = form.make_object()
 
         @business_exception_handler(form)
         def make_changes():
@@ -88,30 +80,13 @@ def register(languages, default_language):
 def profile(languages, user=None):
     form = UserEditForm(fl.request.form)
     form.password.description = _('Leave it blank to keep the current password')
-    form.language.choices = [(key, languages[key]) for key in languages]
+    form.ensure_form_ready(languages=languages)
 
     if fl.request.method == 'GET':
-        form.firstname.data = user.firstname
-        form.lastname.data = user.lastname
-        form.email.data = user.email
-        form.language.data = user.language
-        form.username.data = user.username
+        form.fill_form(user)
     elif fl.request.method == 'POST':
         form.validate()
-        firstname = form.firstname.data
-        lastname = form.lastname.data
-        email = form.email.data
-        username = form.username.data
-        password = form.password.data
-        language = form.language.data
-
-        user.firstname = firstname
-        user.lastname = lastname
-        user.email = email
-        user.username = username
-        user.language = language
-        if len(password) != 0:  # si no se ingresa nada se deja sin modificar
-            user.password = password
+        form.update_object(user)
 
         @business_exception_handler(form)
         def make_changes():
