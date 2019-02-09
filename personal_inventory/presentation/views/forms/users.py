@@ -33,7 +33,7 @@ class UserEditForm(BaseForm):
                                          min=UserLogic.NAME_LEN[0], max=UserLogic.NAME_LEN[1]),
                            render_kw={'aria-describedby': 'lastname-description'})
     email = StringField(_('E-mail'),
-                        udescription=_('Field must be a valid e-mail adress and its length must be between %(min)d and %(max)d',
+                        description=_('Field must be a valid e-mail adress and its length must be between %(min)d and %(max)d',
                                        min=UserLogic.EMAIL_LEN[0], max=UserLogic.EMAIL_LEN[1]),
                         render_kw={'aria-describedby': 'email-description'})
     username = StringField(_('Username'),
