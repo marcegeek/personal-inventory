@@ -11,13 +11,12 @@ from personal_inventory.presentation.views.users import login_required
 
 @login_required
 def items(user=None):
-    new_item_key = 'new_item'
-    forms = {new_item_key: ItemForm(fl.request.form, meta={'locales': [user.language]})}
-
     user_locations = LocationLogic().get_all_by_user(user)
     user_locations.sort(key=lambda l: l.description)
     user_locations_dic = dict([(l.id, l.description) for l in user_locations])
-    forms[new_item_key].ensure_form_ready(locations=user_locations)
+
+    new_item_key = 'new_item'
+    forms = {new_item_key: ItemForm(fl.request.form, locations=user_locations)}
 
     if fl.request.method == 'GET':
         if len(user_locations) == 0:
@@ -29,16 +28,15 @@ def items(user=None):
         for it in user_items:
             edit_form_key = 'edit_item_{}'.format(it.id)
             delete_form_key = 'delete_item_{}'.format(it.id)
-            forms[edit_form_key] = ItemForm(meta={'locales': [user.language]})
-            forms[edit_form_key].fill_form(it, locations=user_locations)
+            forms[edit_form_key] = ItemForm(locations=user_locations)
+            forms[edit_form_key].fill_form(it)
             forms[delete_form_key] = DeleteForm()
 
         _retrieve_last_form(forms)
         return fl.render_template('items.html', forms=forms, items=user_items, locations=user_locations)
     else:  # POST
         forms[new_item_key].validate()
-        new_item = forms[new_item_key].make_object()
-        new_item.owner_id = user.id
+        new_item = forms[new_item_key].make_object(owner_id=user.id)
 
         @business_exception_handler(forms[new_item_key])
         def make_changes():
@@ -62,8 +60,8 @@ def item(item_id, user=None):
     if current_item.owner_id != user.id:
         fl.abort(401)
 
-    edit_form = ItemForm(fl.request.form)
-    edit_form.ensure_form_ready(locations=LocationLogic().get_all_by_user(user))
+    edit_form = ItemForm(fl.request.form,
+                         locations=LocationLogic().get_all_by_user(user))
     edit_form.validate()
     edit_form.update_object(current_item)
 

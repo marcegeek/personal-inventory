@@ -12,14 +12,12 @@ class LocationForm(BaseForm):
                                             min=LocationLogic.DESCRIPTION_LEN[0], max=LocationLogic.DESCRIPTION_LEN[1]),
                               render_kw={'aria-describedby': 'description-description'})
 
-    def ensure_form_ready(self, **kwargs):
-        pass
-
-    def fill_form(self, location, **kwargs):
+    def fill_form(self, location):
         self.description.data = location.description
 
-    def make_object(self):
-        return Location(description=self.description.data)
+    def make_object(self, **kwargs):
+        return Location(owner_id=kwargs.get('owner_id', None),
+                        description=self.description.data)
 
     def update_object(self, location):
         location.description = self.description.data

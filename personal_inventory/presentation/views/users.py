@@ -3,6 +3,7 @@ import functools
 import flask as fl
 from flask_babel import gettext as _
 
+import config
 from personal_inventory.business.logic.user_logic import UserLogic
 from personal_inventory.presentation.views import business_exception_handler
 from personal_inventory.presentation.views.forms.users import UserEditForm, LoginForm
@@ -57,9 +58,9 @@ def login_required(func):
     return wrapper
 
 
-def register(languages, default_language):
-    form = UserEditForm(fl.request.form)
-    form.ensure_form_ready(languages=languages, default=default_language)
+def register():
+    from personal_inventory.presentation import get_language
+    form = UserEditForm(fl.request.form, languages=config.LANGUAGES, default_language=get_language())
     if fl.request.method == 'POST':
         form.validate()
         user = form.make_object()
@@ -76,10 +77,9 @@ def register(languages, default_language):
 
 
 @login_required
-def profile(languages, user=None):
-    form = UserEditForm(fl.request.form)
+def profile(user=None):
+    form = UserEditForm(fl.request.form, languages=config.LANGUAGES)
     form.password.description = _('Leave it blank to keep the current password')
-    form.ensure_form_ready(languages=languages)
 
     if fl.request.method == 'GET':
         form.fill_form(user)

@@ -1,16 +1,6 @@
 import abc
-import functools
 
 from wtforms import Form
-
-
-def safe_form(func):
-    @functools.wraps(func)
-    def wrapper(self, *args, **kwargs):
-        self._ensure_from_ready(**kwargs)
-        return func(self, *args, **kwargs)
-
-    return wrapper
 
 
 def _strip_filter(value):
@@ -27,21 +17,17 @@ class BaseForm(Form):
             filters.append(_strip_filter)
             return unbound_field.bind(form=form, filters=filters, **options)
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, formdata=None):
+        from personal_inventory.presentation import get_language
+        super().__init__(formdata=formdata, meta={'locales': [get_language()]})
         self.global_errors = []
 
     @abc.abstractmethod
-    def ensure_form_ready(self, **kwargs):
-        pass
-
-    @safe_form
-    @abc.abstractmethod
-    def fill_form(self, obj, **kwargs):
+    def fill_form(self, obj):
         pass
 
     @abc.abstractmethod
-    def make_object(self):
+    def make_object(self, **kwargs):
         pass
 
     @abc.abstractmethod
@@ -69,10 +55,7 @@ class BaseForm(Form):
 
 
 class DeleteForm(BaseForm):
-    def ensure_form_ready(self, **kwargs):
-        pass
-
-    def fill_form(self, obj, **kwargs):
+    def fill_form(self, obj):
         pass
 
     def make_object(self):

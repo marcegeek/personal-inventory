@@ -51,12 +51,12 @@ def logout():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    return user_views.register(config.LANGUAGES, get_language())
+    return user_views.register()
 
 
 @app.route('/profile', methods=['GET', 'POST'])
 def edit_profile():
-    return user_views.profile(config.LANGUAGES)
+    return user_views.profile()
 
 
 @app.route('/items', methods=['GET', 'POST'])

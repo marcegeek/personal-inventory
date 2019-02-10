@@ -21,16 +21,13 @@ def locations(user=None):
             forms[edit_form_key].fill_form(loc)
             forms['delete_location_{}'.format(loc.id)] = DeleteForm()
             item_form_key = 'new_item_in_{}'.format(loc.id)
-            forms[item_form_key] = ItemForm()
-            forms[item_form_key].ensure_form_ready(locations=user_locations)
-            forms[item_form_key].location.data = loc.id
+            forms[item_form_key] = ItemForm(locations=user_locations, default_location=loc.id)
 
         _retrieve_last_form(forms)
         return fl.render_template('locations.html', forms=forms, locations=user_locations)
     else:  # POST
         forms[new_location_key].validate()
-        new_loc = forms[new_location_key].make_object()
-        new_loc.owner_id = user.id
+        new_loc = forms[new_location_key].make_object(owner_id=user.id)
 
         @business_exception_handler(forms[new_location_key])
         def make_changes():
@@ -61,14 +58,12 @@ def location(location_id, user=None):
         forms[edit_form_key].fill_form(current_location)
 
         new_item_key = 'new_item_in_{}'.format(current_location.id)
-        forms[new_item_key] = ItemForm()
-        forms[new_item_key].ensure_form_ready(locations=user_locations)
-        forms[new_item_key].location.data = current_location.id
+        forms[new_item_key] = ItemForm(locations=user_locations, default_location=current_location.id)
 
         for item in current_location.items:
             edit_item_key = 'edit_item_{}'.format(item.id)
-            forms[edit_item_key] = ItemForm()
-            forms[edit_item_key].fill_form(item, locations=user_locations)
+            forms[edit_item_key] = ItemForm(locations=user_locations)
+            forms[edit_item_key].fill_form(item)
             forms['delete_item_{}'.format(item.id)] = DeleteForm()
 
         _retrieve_last_form(forms)

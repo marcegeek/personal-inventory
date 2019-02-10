@@ -10,9 +10,6 @@ class LoginForm(BaseForm):
     username_email = StringField(_('Username or e-mail'))
     password = PasswordField(_('Password'))
 
-    def ensure_form_ready(self, **kwargs):
-        pass
-
     def fill_form(self, obj, **kwargs):
         pass
 
@@ -34,7 +31,7 @@ class UserEditForm(BaseForm):
                            render_kw={'aria-describedby': 'lastname-description'})
     email = StringField(_('E-mail'),
                         description=_('Field must be a valid e-mail adress and its length must be between %(min)d and %(max)d',
-                                       min=UserLogic.EMAIL_LEN[0], max=UserLogic.EMAIL_LEN[1]),
+                                      min=UserLogic.EMAIL_LEN[0], max=UserLogic.EMAIL_LEN[1]),
                         render_kw={'aria-describedby': 'email-description'})
     username = StringField(_('Username'),
                            description=_('Field must be made of lowercase letters, digits and underscores and its length must be between %(min)d and %(max)d',
@@ -48,14 +45,15 @@ class UserEditForm(BaseForm):
                              validators=[validators.EqualTo('confirm_password', message=_('Passwords must match'))])
     confirm_password = PasswordField(_('Confirm password'))
 
-    def ensure_form_ready(self, **kwargs):
-        languages = kwargs.get('languages', {})
+    def __init__(self, formdata=None, languages=None, default_language=''):
+        super().__init__(formdata)
+        if languages is None:
+            languages = {}
         self.language.choices = list(languages.items())
-        default = kwargs.get('default', '')
-        if default:
-            self.language.data = default
+        if languages and default_language:
+            self.language.data = default_language
 
-    def fill_form(self, user, **kwargs):
+    def fill_form(self, user):
         self.firstname.data = user.firstname
         self.lastname.data = user.lastname
         self.email.data = user.email
@@ -64,7 +62,7 @@ class UserEditForm(BaseForm):
         # la contraseña no se rellena, además si se implementa cifrado
         # de hecho sería imposible mostrarla
 
-    def make_object(self):
+    def make_object(self, **kwargs):
         return User(firstname=self.firstname.data, lastname=self.lastname.data, email=self.email.data,
                     username=self.username.data, language=self.language.data, password=self.password.data)
 
