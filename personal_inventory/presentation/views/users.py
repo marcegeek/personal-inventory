@@ -61,8 +61,7 @@ def login_required(func):
 def register():
     from personal_inventory.presentation import get_language
     form = UserEditForm(fl.request.form, languages=config.LANGUAGES, default_language=get_language())
-    if fl.request.method == 'POST':
-        form.validate()
+    if fl.request.method == 'POST' and form.validate():
         user = form.make_object()
 
         @business_exception_handler(form)
@@ -83,8 +82,7 @@ def profile(user=None):
 
     if fl.request.method == 'GET':
         form.fill_form(user)
-    elif fl.request.method == 'POST':
-        form.validate()
+    elif fl.request.method == 'POST' and form.validate():
         form.update_object(user)
 
         @business_exception_handler(form)
