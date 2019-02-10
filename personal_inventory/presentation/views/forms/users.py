@@ -50,7 +50,7 @@ class UserEditForm(BaseForm):
         if languages is None:
             languages = {}
         self.language.choices = list(languages.items())
-        if languages and default_language:
+        if languages and default_language and not formdata:
             self.language.data = default_language
 
     def fill_form(self, user):
