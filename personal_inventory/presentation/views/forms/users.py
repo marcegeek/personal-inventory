@@ -68,7 +68,7 @@ class UserEditForm(BaseForm):
 
     def update_object(self, user):
         user.firstname = self.firstname.data
-        user.lastname = self.username.data
+        user.lastname = self.lastname.data
         user.email = self.email.data
         user.username = self.username.data
         user.language = self.language.data
