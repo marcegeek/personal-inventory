@@ -33,6 +33,11 @@ def get_language():
     return fl.request.accept_languages.best_match(config.LANGUAGES.keys())
 
 
+@app.context_processor
+def utility_processor():
+    return dict(lang=babel.locale_selector_func())
+
+
 @app.route('/')
 def home():
     user = user_views.get_logged_in_user()
