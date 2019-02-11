@@ -223,7 +223,7 @@ class UserLogic(EntityLogic):
     def rule_firstname_len(cls, user, errors):
         """
         Validar que el nombre del usuario cuente con al menos 2 caracteres
-        y no más de 15.
+        y no más de 40.
 
         :type user: User
         :type errors: list of ValidationError
@@ -238,7 +238,7 @@ class UserLogic(EntityLogic):
     def rule_lastname_len(cls, user, errors):
         """
         Validar que el apellido del usuario cuente con al menos 2 caracteres
-        y no más de 15.
+        y no más de 40.
 
         :type user: User
         :type errors: list of ValidationError
