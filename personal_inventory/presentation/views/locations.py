@@ -26,14 +26,14 @@ def locations(user=None):
         _retrieve_last_form(forms)
         return fl.render_template('locations.html', forms=forms, locations=user_locations)
     else:  # POST
-        forms[new_location_key].validate()
-        new_loc = forms[new_location_key].make_object(owner_id=user.id)
+        if forms[new_location_key].validate():
+            new_loc = forms[new_location_key].make_object(owner_id=user.id)
 
-        @business_exception_handler(forms[new_location_key])
-        def make_changes():
-            LocationLogic().insert(new_loc)
+            @business_exception_handler(forms[new_location_key])
+            def make_changes():
+                LocationLogic().insert(new_loc)
 
-        make_changes()
+            make_changes()
         _save_last_form(forms[new_location_key], new_location_key)
         return fl.redirect(fl.request.referrer)
 
@@ -68,15 +68,15 @@ def location(location_id, user=None):
 
         _retrieve_last_form(forms)
         return fl.render_template('location.html', forms=forms, location=current_location)
-    else:
-        forms[edit_form_key].validate()
-        forms[edit_form_key].update_object(current_location)
+    else:  # POST
+        if forms[edit_form_key].validate():
+            forms[edit_form_key].update_object(current_location)
 
-        @business_exception_handler(forms[edit_form_key])
-        def make_changes():
-            location_logic.update(current_location)
+            @business_exception_handler(forms[edit_form_key])
+            def make_changes():
+                location_logic.update(current_location)
 
-        make_changes()
+            make_changes()
         _save_last_form(forms[edit_form_key], edit_form_key)
         return fl.redirect(fl.request.referrer)
 
@@ -91,14 +91,18 @@ def location_delete(location_id, user=None):
         fl.abort(401)
 
     delete_form = DeleteForm(fl.request.form)
-    delete_form.validate()
+    redir = None
+    if delete_form.validate():
 
-    @business_exception_handler(delete_form)
-    def make_changes():
-        location_logic.delete(location_id)
-        return fl.redirect(fl.url_for('locations'))
+        @business_exception_handler(delete_form)
+        def make_changes():
+            location_logic.delete(location_id)
+            # si se elimina la ubicación desde su propia vista,
+            # ya no tiene sentido volver a la misma, hay que ir al
+            # listado de ubicaciones
+            return fl.redirect(fl.url_for('locations'))
 
-    redir = make_changes()
+        redir = make_changes()
     _save_last_form(delete_form, 'delete_location_{}'.format(location_id))
     if redir:
         return redir
