@@ -18,25 +18,34 @@ class ItemLogic(EntityLogic):
         self.dao = ItemData()
         self.plain_object_factory = Item
 
-    def get_all_by_user(self, user, **fill_relations):
+    def get_all_by_user(self, user, sort_fields=None, reverse=False, **fill_relations):
         """
         Recuperar todos los ítems pertenecientes a un usuario.
 
         :type user: User
-        :type fill_relations: dict of bool
+        :type sort_fields: list of (tuple of str | str)
+        :type reverse: bool
         :rtype: list of Item
         """
-        return Item.make_from_model(self.dao.get_all_by_user(user), **fill_relations)
+        if sort_fields is None:
+            sort_fields = [('location', 'description'), 'description']
+        items = Item.make_from_model(self.dao.get_all_by_user(user), **fill_relations)
+        self._sort(items, sort_fields, reverse=reverse, **fill_relations)
+        return items
 
-    def get_all_by_location(self, location, **fill_relations):
+    def get_all_by_location(self, location, sort_fields=None, reverse=False, **fill_relations):
         """
         Recuperar todos los ítems que están en una ubicación.
 
         :type location: Location
-        :type fill_relations: dict of bool
+        :type sort_fields: list of (tuple of str | str)
+        :type reverse: bool
         :rtype: list of Item
         """
-        return Item.make_from_model(self.dao.get_all_by_location(location), **fill_relations)
+        if sort_fields is None:
+            sort_fields = ['description']
+        items = Item.make_from_model(self.dao.get_all_by_location(location), **fill_relations)
+        self._sort(items, sort_fields, reverse=reverse, **fill_relations)
 
     def validate_deletion_fk_rules(self, item_id, errors):
         """

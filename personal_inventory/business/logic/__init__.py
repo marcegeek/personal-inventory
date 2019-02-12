@@ -70,19 +70,23 @@ class EntityLogic(abc.ABC):
         Recuperar un objeto del modelo dado su id.
 
         :type object_id: int
-        :type fill_relations: dict of bool
         :rtype: BusinessEntity | None
         """
         return self.plain_object_factory.make_from_model(self.dao.get_by_id(object_id), **fill_relations)
 
-    def get_all(self, **fill_relations):
+    def get_all(self, sort_fields=None, reverse=False, **fill_relations):
         """
         Recuperar todos los objetos del modelo.
 
+        :type sort_fields: list of (tuple of str | str)
+        :type reverse: bool
         :rtype: list of BusinessEntity
-        :type fill_relations: dict of bool
         """
-        return self.plain_object_factory.make_from_model(self.dao.get_all(), **fill_relations)
+        if sort_fields is None:
+            sort_fields = []
+        objects = self.plain_object_factory.make_from_model(self.dao.get_all(), **fill_relations)
+        self._sort(objects, sort_fields, reverse=reverse, **fill_relations)
+        return objects
 
     def insert(self, obj):
         """
@@ -147,3 +151,32 @@ class EntityLogic(abc.ABC):
     @abc.abstractmethod
     def validate_deletion_fk_rules(self, object_id, errors):
         pass
+
+    @staticmethod
+    def _sort(objects, sort_fields, reverse=False, **fill_relations):
+        actual_sort_fields = []
+        for field in sort_fields:
+            if isinstance(field, (tuple, list)):
+                if len(field) == 2:
+                    # campo anidado (relación): ej: foo.bar
+                    # las relaciones se rellenan a un único nivel,
+                    # no se rellenan recursivamente
+                    # compruebo que el valor haya sido rellenado
+                    if fill_relations.get('fill_' + field[0], False):
+                        actual_sort_fields.append(field)
+            else:
+                actual_sort_fields.append(field)
+
+        def sort_by(obj):
+            keys = []
+            for sf in actual_sort_fields:
+                if isinstance(sf, (tuple, list)):
+                    key = obj
+                    for f in sf:
+                        key = getattr(key, f)
+                else:
+                    key = getattr(obj, sf)
+                keys.append(key)
+            return tuple(keys)
+
+        objects.sort(key=sort_by, reverse=reverse)
