@@ -12,8 +12,6 @@ from personal_inventory.presentation.views.users import login_required
 @login_required
 def items(user=None):
     user_locations = LocationLogic().get_all_by_user(user)
-    user_locations.sort(key=lambda l: l.description)
-    user_locations_dic = dict([(l.id, l.description) for l in user_locations])
 
     new_item_key = 'new_item'
     forms = {new_item_key: ItemForm(fl.request.form, locations=user_locations)}
@@ -23,7 +21,6 @@ def items(user=None):
             fl.flash(_('No locations yet, create one first'), 'error')
             return fl.redirect(fl.url_for('locations'))
         user_items = ItemLogic().get_all_by_user(user, fill_location=True)
-        user_items.sort(key=lambda i: (user_locations_dic[i.location_id], i.description))
 
         for it in user_items:
             edit_form_key = 'edit_item_{}'.format(it.id)
@@ -86,7 +83,6 @@ def item_delete(item_id, user=None):
 
     delete_form = DeleteForm(fl.request.form)
     if delete_form.validate():
-
         @business_exception_handler(delete_form)
         def make_changes():
             item_logic.delete(item_id)
