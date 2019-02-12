@@ -19,7 +19,6 @@ class Item(BusinessEntity):
         Generar un objeto ítem de negocio a partir del modelo.
 
         :type itemmodel: ItemModel | list of Item
-        :type fill_relations: dict of bool
         :rtype: Item | list of Item
         """
         if itemmodel is None:

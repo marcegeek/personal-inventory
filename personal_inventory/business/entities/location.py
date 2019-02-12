@@ -17,7 +17,6 @@ class Location(BusinessEntity):
         Generar un objeto ubicación de negocio a partir del modelo.
 
         :type locationmodel: LocationModel | list of LocationModel
-        :type fill_relations: dict of bool
         :rtype: Location | list of Location
         """
         if locationmodel is None:

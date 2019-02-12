@@ -62,7 +62,6 @@ class UserLogic(EntityLogic):
         Recuperar un usuario dado su email.
 
         :type email: str
-        :type fill_relations: dict of bool
         :rtype: User | None
         """
         return User.make_from_model(self.dao.get_by_email(email), **fill_relations)
@@ -72,7 +71,6 @@ class UserLogic(EntityLogic):
         Recuperar un usuario dado su nombre de usuario.
 
         :type username: str
-        :type fill_relations: dict of bool
         :rtype: User | None
         """
         return User.make_from_model(self.dao.get_by_username(username), **fill_relations)
@@ -82,7 +80,6 @@ class UserLogic(EntityLogic):
         Recuperar un usuario dado su nombre de usuario o e-mail.
 
         :type username_email: str
-        :type fill_relations: dict of bool
         :rtype: User | None
         """
         return User.make_from_model(self.dao.get_by_username_email(username_email), **fill_relations)
