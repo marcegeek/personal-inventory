@@ -19,6 +19,8 @@ class BaseForm(Form):
             return unbound_field.bind(form=form, filters=filters, **options)
 
         def render_field(self, field, render_kw):
+            # para que los errores de campo requerido
+            # se generen siempre desde las vistas
             render_kw.setdefault('required', False)
             return super().render_field(field, render_kw)
 
@@ -26,7 +28,7 @@ class BaseForm(Form):
         from personal_inventory.presentation import get_language
         super().__init__(formdata=formdata, meta={'locales': [get_language()]})
         for k in self._fields:
-            self._fields[k].required = False
+            self._fields[k].mark_required = False
         self.required_msg = _('Fields marked with an asterisk (*) are required')
         self.global_errors = []
 

@@ -58,13 +58,13 @@ class UserEditForm(BaseForm):
         self.language.choices = list(languages.items())
         if languages and default_language and not formdata:
             self.language.data = default_language
-        self.firstname.required = True
-        self.lastname.required = True
-        self.email.required = True
-        self.username.required = True
-        self.language.required = True
-        self.password.required = True
-        self.confirm_password.required = True
+        self.firstname.mark_required = True
+        self.lastname.mark_required = True
+        self.email.mark_required = True
+        self.username.mark_required = True
+        self.language.mark_required = True
+        self.password.mark_required = True
+        self.confirm_password.mark_required = True
 
     def fill_form(self, user):
         self.firstname.data = user.firstname

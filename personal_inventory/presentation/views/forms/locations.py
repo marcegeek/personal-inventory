@@ -14,7 +14,7 @@ class LocationForm(BaseForm):
 
     def __init__(self, formdata=None):
         super().__init__(formdata=formdata)
-        self.description.required = True
+        self.description.mark_required = True
 
     def fill_form(self, location):
         self.description.data = location.description

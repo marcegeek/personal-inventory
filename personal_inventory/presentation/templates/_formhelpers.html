@@ -7,13 +7,13 @@
     {% endif %}
     {% if not hidden_label %}
       {{ field.label }}
-      {% if field.required %}
+      {% if field.mark_required %}
         <span>*</span>
       {% endif %}
       {{ field(class_="form-control" + invalid_class, **kwargs)|safe }}
     {% else %}
       {{ field.label(class="sr-only") }}
-      {% if field.required %}
+      {% if field.mark_required %}
         {{ field(class_="form-control" + invalid_class, placeholder=field.label.text + ' *', **kwargs)|safe }}
       {% else %}
         {{ field(class_="form-control" + invalid_class, placeholder=field.label.text, **kwargs)|safe }}
