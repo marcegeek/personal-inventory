@@ -12,6 +12,10 @@ class LocationForm(BaseForm):
                                             min=LocationLogic.DESCRIPTION_LEN[0], max=LocationLogic.DESCRIPTION_LEN[1]),
                               render_kw={'aria-describedby': 'description-description'})
 
+    def __init__(self, formdata=None):
+        super().__init__(formdata=formdata)
+        self.description.required = True
+
     def fill_form(self, location):
         self.description.data = location.description
 

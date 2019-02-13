@@ -7,8 +7,14 @@ from personal_inventory.presentation.views.forms import BaseForm
 
 
 class LoginForm(BaseForm):
-    username_email = StringField(_('Username or e-mail'))
-    password = PasswordField(_('Password'))
+    username_email = StringField(_('Username or e-mail'),
+                                 validators=[validators.DataRequired(_('Required field'))])
+    password = PasswordField(_('Password'),
+                             validators=[validators.DataRequired(_('Required field'))])
+
+    def __init__(self, formdata=None):
+        super().__init__(formdata=formdata)
+        self.required_msg = None
 
     def fill_form(self, obj, **kwargs):
         pass
@@ -38,7 +44,7 @@ class UserEditForm(BaseForm):
                                          min=UserLogic.USERNAME_LEN[0], max=UserLogic.USERNAME_LEN[1]),
                            render_kw={'aria-describedby': 'username-description'})
     language = SelectField(_('Language'))
-    password = PasswordField(_('New password'),
+    password = PasswordField(_('Password'),
                              description=_('Field length must be between %(min)d and %(max)d',
                                            min=UserLogic.PASSWORD_LEN[0], max=UserLogic.PASSWORD_LEN[1]),
                              render_kw={'aria-describedby': 'password-description'},
@@ -52,6 +58,13 @@ class UserEditForm(BaseForm):
         self.language.choices = list(languages.items())
         if languages and default_language and not formdata:
             self.language.data = default_language
+        self.firstname.required = True
+        self.lastname.required = True
+        self.email.required = True
+        self.username.required = True
+        self.language.required = True
+        self.password.required = True
+        self.confirm_password.required = True
 
     def fill_form(self, user):
         self.firstname.data = user.firstname

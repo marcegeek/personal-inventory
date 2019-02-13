@@ -24,6 +24,8 @@ class ItemForm(BaseForm):
                                  for loc in locations]
         if locations and default_location:
             self.location.data = default_location
+        self.description.required = True
+        self.location.required = True
 
     def fill_form(self, item):
         self.description.data = item.description
