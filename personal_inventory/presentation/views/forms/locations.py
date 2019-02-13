@@ -1,9 +1,10 @@
+import flask as fl
 from flask_babel import lazy_gettext as _
 from wtforms import StringField
 
 from personal_inventory.business.entities.location import Location
 from personal_inventory.business.logic.location_logic import LocationLogic
-from personal_inventory.presentation.views.forms import BaseForm
+from personal_inventory.presentation.views.forms import BaseForm, DeleteForm
 
 
 class LocationForm(BaseForm):
@@ -14,9 +15,17 @@ class LocationForm(BaseForm):
 
     def __init__(self, formdata=None):
         super().__init__(formdata=formdata)
+        self.title = _('New location')
+        self.modal_id = 'new-location-modal'
+        self.action = fl.url_for('locations')
+        self.fields_to_render = [self.description]
+        self.autofocus_field = self.description
         self.description.mark_required = True
 
     def fill_form(self, location):
+        self.title = _('Editing location')
+        self.modal_id = 'edit-location-{}-modal'.format(location.id)
+        self.action = fl.url_for('location', location_id=location.id)
         self.description.data = location.description
 
     def make_object(self, **kwargs):
@@ -25,3 +34,13 @@ class LocationForm(BaseForm):
 
     def update_object(self, location):
         location.description = self.description.data
+
+
+class LocationDeleteForm(DeleteForm):
+
+    def __init__(self, formdata=None, location=None):
+        super().__init__(formdata=formdata)
+        if location is not None:
+            self.title = _('Delete location')
+            self.modal_id = 'delete-location-{}-modal'.format(location.id)
+            self.action = fl.url_for('item_delete', item_id=location.id)

@@ -27,10 +27,17 @@ class BaseForm(Form):
     def __init__(self, formdata=None):
         from personal_inventory.presentation import get_language
         super().__init__(formdata=formdata, meta={'locales': [get_language()]})
+        self.modal_id = None
+        self.title = ''
+        self.action = None
+        self.method = 'POST'
+        self.fields_to_render = []
+        self.autofocus_field = None
+        self.submit = _('Save')
+        self.global_errors = []
+        self.required_msg = _('Fields marked with an asterisk (*) are required')
         for k in self._fields:
             self._fields[k].mark_required = False
-        self.required_msg = _('Fields marked with an asterisk (*) are required')
-        self.global_errors = []
 
     @abc.abstractmethod
     def fill_form(self, obj):
@@ -65,6 +72,11 @@ class BaseForm(Form):
 
 
 class DeleteForm(BaseForm):
+
+    def __init__(self, formdata=None):
+        super().__init__(formdata=formdata)
+        self.submit = _('Delete')
+
     def fill_form(self, obj):
         pass
 

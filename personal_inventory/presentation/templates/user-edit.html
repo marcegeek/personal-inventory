@@ -8,14 +8,5 @@
 {% from "_formhelpers.html" import make_form %}
 
 {% block main %}
-{% if not user %}
-{% set title = _('User registration') %}
-{% set save = _('Register') %}
-{% else %}
-{% set title = _('User profile') %}
-{% set save = _('Save') %}
-{% endif %}
-{% set form_fields = [form.firstname, form.lastname, form.email, form.language,
-                      form.username, form.password, form.confirm_password] %}
-{{ make_form(title, form, form_fields, autofocus=form.firstname, save=save) }}
+{{ make_form(form) }}
 {% endblock %}

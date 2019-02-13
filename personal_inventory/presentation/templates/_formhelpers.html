@@ -46,15 +46,15 @@
   {% endfor %}
 {% endmacro %}
 
-{% macro _render_fields(form, fields, autofocus, hidden_labels) %}
-  {% if fields %}
+{% macro _render_fields(form, hidden_labels) %}
+  {% if form.fields_to_render %}
     {% if form.required_msg %}
       <span class="form-text text-muted mb-1">
-        {{ _('Fields marked with an asterisk (*) are required') }}
+        {{ form.required_msg }}
       </span>
     {% endif %}
-    {% for field in fields %}
-      {% if not autofocus or autofocus != field %}
+    {% for field in form.fields_to_render %}
+      {% if not form.autofocus_field or form.autofocus_field != field %}
         {{ render_field(field, hidden_label=hidden_labels) }}
       {% else %}
         {{ render_field(field, autofocus=true, hidden_label=hidden_labels) }}
@@ -63,37 +63,37 @@
   {% endif %}
 {% endmacro %}
 
-{% macro _render_form_body(form, fields, autofocus, hidden_labels, caller=None) %}
+{% macro _render_form_body(form, hidden_labels, caller=None) %}
   {{ _render_global_errors(form.global_errors) }}
   {% if caller %}
     {{ caller() }}
   {% endif %}
-  {{ _render_fields(form, fields, autofocus, hidden_labels) }}
+  {{ _render_fields(form, hidden_labels) }}
 {% endmacro %}
 
-{% macro make_form(title, form, fields=None, title_level="1", autofocus=None, hidden_labels=False, action=None, method="post", save=_('Save'), class="simple-form") %}
-  <form class="{{ class }}" {% if action %}action="{{action}}"{% endif %} method="{{method}}">
-    <h{{title_level}} class="text-center">{{title}}</h{{title_level}}>
-    {{ _render_form_body(form, fields, autofocus, hidden_labels, caller) }}
-    <button type="submit" class="btn btn-lg btn-primary btn-block">{{ save }}</button>
+{% macro make_form(form, title_level="1", hidden_labels=False, class="simple-form") %}
+  <form class="{{ class }}" {% if form.action %}action="{{ form.action }}"{% endif %} method="{{ form.method }}">
+    <h{{title_level}} class="text-center">{{ form.title }}</h{{title_level}}>
+    {{ _render_form_body(form, hidden_labels, caller) }}
+    <button type="submit" class="btn btn-lg btn-primary btn-block">{{ form.submit }}</button>
   </form>
 {% endmacro %}
 
-{% macro make_modal_form(id, title, form, fields=None, title_level="2", autofocus=None, hidden_labels=False, action=None, method="post", save=_('Save')) %}
-  <div id="{{id}}" class="modal fade">
+{% macro make_modal_form(form, title_level="2", hidden_labels=False) %}
+  <div id="{{ form.modal_id }}" class="modal fade">
     <div class="modal-dialog">
       <div class="modal-content">
-        <form {% if action %}action="{{action}}"{% endif %} method="{{method}}">
+        <form {% if form.action %}action="{{ form.action }}"{% endif %} method="{{ form.method }}">
           <div class="modal-header">
-           <h{{title_level}} class="modal-title">{{title}}</h{{title_level}}>
+           <h{{title_level}} class="modal-title">{{ form.title }}</h{{title_level}}>
            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           </div>
           <div class="modal-body">
-            {{ _render_form_body(form, fields, autofocus, hidden_labels, caller) }}
+            {{ _render_form_body(form, hidden_labels, caller) }}
           </div>
           <div class="modal-footer">
             <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ _('Cancel') }}">
-            <input type="submit" class="btn btn-success" value="{{ save }}">
+            <input type="submit" class="btn btn-success" value="{{ form.submit }}">
           </div>
         </form>
       </div>
@@ -115,14 +115,14 @@
   <p class="text-warning">{{ _('This action cannot be undone.') }}</p>
 {% endmacro %}
 
-{% macro make_delete_form(id, title, form, element, title_level="2", action=None) %}
-  {% call make_form(id, title, form, title_level=title_level, action=action, save=_('Delete')) %}
+{% macro make_delete_form(form, element, title_level="2") %}
+  {% call make_form(form, title_level=title_level) %}
     {{ _delete_body_content(element) }}
   {% endcall %}
 {% endmacro %}
 
-{% macro make_delete_modal_form(id, title, form, element, title_level="2", action=None) %}
-  {% call make_modal_form(id, title, form, title_level=title_level, action=action, save=_('Delete')) %}
+{% macro make_delete_modal_form(form, element, title_level="2") %}
+  {% call make_modal_form(form, title_level=title_level) %}
     {{ _delete_body_content(element) }}
   {% endcall %}
 {% endmacro %}

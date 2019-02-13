@@ -1,15 +1,5 @@
 {% from "_formhelpers.html" import make_modal_form %}
 
 {% macro location_modal_form(form, location=None) %}
-  {% if not location %}
-    {% set id = 'new-location-modal' %}
-    {% set title = _('New location') %}
-    {% set action = url_for('locations') %}
-  {% else %}
-    {% set id = 'edit-location-{}-modal'.format(location.id) %}
-    {% set title = _('Editing location') %}
-    {% set action = url_for('location', location_id=location.id) %}
-  {% endif %}
-  {% set form_fields = [form.description] %}
-  {{ make_modal_form(id, title, form, form_fields, autofocus=form.description, action=action) }}
+  {{ make_modal_form(form) }}
 {% endmacro %}

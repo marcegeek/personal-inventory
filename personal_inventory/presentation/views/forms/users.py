@@ -14,6 +14,10 @@ class LoginForm(BaseForm):
 
     def __init__(self, formdata=None):
         super().__init__(formdata=formdata)
+        self.title = _('Login')
+        self.submit = _('Login')
+        self.fields_to_render = [self.username_email, self.password]
+        self.autofocus_field = self.username_email
         self.required_msg = None
 
     def fill_form(self, obj, **kwargs):
@@ -53,6 +57,11 @@ class UserEditForm(BaseForm):
 
     def __init__(self, formdata=None, languages=None, default_language=''):
         super().__init__(formdata)
+        self.title = _('User registration')
+        self.submit = _('Register')
+        self.fields_to_render = [self.firstname, self.lastname, self.email, self.language,
+                                 self.username, self.password, self.confirm_password]
+        self.autofocus_field = self.firstname
         if languages is None:
             languages = {}
         self.language.choices = list(languages.items())
@@ -67,6 +76,8 @@ class UserEditForm(BaseForm):
         self.confirm_password.mark_required = True
 
     def fill_form(self, user):
+        self.title = _('User profile')
+        self.submit = _('Save')
         self.firstname.data = user.firstname
         self.lastname.data = user.lastname
         self.email.data = user.email

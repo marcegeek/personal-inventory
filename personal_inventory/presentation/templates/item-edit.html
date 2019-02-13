@@ -1,19 +1,5 @@
 {% from "_formhelpers.html" import make_modal_form %}
 
 {% macro item_modal_form(form, item=None, location=None) %}
-  {% if not item %}
-    {% if not location %}
-      {% set id = 'new-item-modal' %}
-    {% else %}
-      {% set id = 'new-item-in-{}-modal'.format(location.id) %}
-    {% endif %}
-    {% set title = _('New item') %}
-    {% set action = url_for('items') %}
-  {% else %}
-    {% set id = 'edit-item-{}-modal'.format(item.id) %}
-    {% set title = _('Editing item') %}
-    {% set action = url_for('item', item_id=item.id) %}
-  {% endif %}
-  {% set form_fields = [form.description, form.location, form.quantity] %}
-  {{ make_modal_form(id, title, form, form_fields, autofocus=form.description, action=action) }}
+  {{ make_modal_form(form) }}
 {% endmacro %}

@@ -5,7 +5,7 @@ from personal_inventory.business.logic.item_logic import ItemLogic
 from personal_inventory.business.logic.location_logic import LocationLogic
 from personal_inventory.presentation.views import _retrieve_last_form, business_exception_handler, _save_last_form
 from personal_inventory.presentation.views.forms import DeleteForm
-from personal_inventory.presentation.views.forms.items import ItemForm
+from personal_inventory.presentation.views.forms.items import ItemForm, ItemDeleteForm
 from personal_inventory.presentation.views.users import login_required
 
 
@@ -27,7 +27,7 @@ def items(user=None):
             delete_form_key = 'delete_item_{}'.format(it.id)
             forms[edit_form_key] = ItemForm(locations=user_locations)
             forms[edit_form_key].fill_form(it)
-            forms[delete_form_key] = DeleteForm()
+            forms[delete_form_key] = ItemDeleteForm(item=it)
 
         _retrieve_last_form(forms)
         return fl.render_template('items.html', forms=forms, items=user_items, locations=user_locations)

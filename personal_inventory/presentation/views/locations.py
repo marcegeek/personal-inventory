@@ -3,8 +3,8 @@ import flask as fl
 from personal_inventory.business.logic.location_logic import LocationLogic
 from personal_inventory.presentation.views.forms import DeleteForm
 from personal_inventory.presentation.views import business_exception_handler, _retrieve_last_form, _save_last_form
-from personal_inventory.presentation.views.forms.items import ItemForm
-from personal_inventory.presentation.views.forms.locations import LocationForm
+from personal_inventory.presentation.views.forms.items import ItemForm, ItemDeleteForm
+from personal_inventory.presentation.views.forms.locations import LocationForm, LocationDeleteForm
 from personal_inventory.presentation.views.users import login_required
 
 
@@ -19,9 +19,9 @@ def locations(user=None):
             edit_form_key = 'edit_location_{}'.format(loc.id)
             forms[edit_form_key] = LocationForm()
             forms[edit_form_key].fill_form(loc)
-            forms['delete_location_{}'.format(loc.id)] = DeleteForm()
+            forms['delete_location_{}'.format(loc.id)] = LocationDeleteForm(location=loc)
             item_form_key = 'new_item_in_{}'.format(loc.id)
-            forms[item_form_key] = ItemForm(locations=user_locations, default_location=loc.id)
+            forms[item_form_key] = ItemForm(locations=user_locations, default_location=loc)
 
         _retrieve_last_form(forms)
         return fl.render_template('locations.html', forms=forms, locations=user_locations)
@@ -50,7 +50,7 @@ def location(location_id, user=None):
     delete_form_key = 'delete_location_{}'.format(location_id)
     forms = {
         edit_form_key: LocationForm(fl.request.form),
-        delete_form_key: DeleteForm()
+        delete_form_key: LocationDeleteForm(location=current_location)
     }
 
     if fl.request.method == 'GET':
@@ -58,13 +58,13 @@ def location(location_id, user=None):
         forms[edit_form_key].fill_form(current_location)
 
         new_item_key = 'new_item_in_{}'.format(current_location.id)
-        forms[new_item_key] = ItemForm(locations=user_locations, default_location=current_location.id)
+        forms[new_item_key] = ItemForm(locations=user_locations, default_location=current_location)
 
         for item in current_location.items:
             edit_item_key = 'edit_item_{}'.format(item.id)
             forms[edit_item_key] = ItemForm(locations=user_locations)
             forms[edit_item_key].fill_form(item)
-            forms['delete_item_{}'.format(item.id)] = DeleteForm()
+            forms['delete_item_{}'.format(item.id)] = ItemDeleteForm(item=item)
 
         _retrieve_last_form(forms)
         return fl.render_template('location.html', forms=forms, location=current_location)
