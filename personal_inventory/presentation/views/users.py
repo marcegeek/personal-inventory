@@ -36,7 +36,7 @@ def login():
             redir = fl.session.pop('redirect', fl.url_for('home'))
             return fl.redirect(redir)
         else:
-            form.global_errors.append(_('Wrong username/e-mail or password'))
+            fl.flash(_('Wrong username/e-mail or password'), 'error')
     return fl.render_template('login.html', form=form)
 
 
@@ -61,6 +61,7 @@ def login_required(func):
 def register():
     from personal_inventory.presentation import get_language
     form = UserEditForm(fl.request.form, languages=config.LANGUAGES, default_language=get_language())
+
     if fl.request.method == 'POST' and form.validate():
         user = form.make_object()
 
@@ -79,6 +80,8 @@ def register():
 def profile(user=None):
     form = UserEditForm(fl.request.form, languages=config.LANGUAGES)
     form.password.description = _('Leave it blank to keep the current password')
+    form.password.mark_required = False
+    form.confirm_password.mark_required = False
 
     if fl.request.method == 'GET':
         form.fill_form(user)
