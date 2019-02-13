@@ -1,5 +1,6 @@
 import abc
 
+from flask_babel import lazy_gettext as _
 from wtforms import Form
 
 
@@ -17,9 +18,16 @@ class BaseForm(Form):
             filters.append(_strip_filter)
             return unbound_field.bind(form=form, filters=filters, **options)
 
+        def render_field(self, field, render_kw):
+            render_kw.setdefault('required', False)
+            return super().render_field(field, render_kw)
+
     def __init__(self, formdata=None):
         from personal_inventory.presentation import get_language
         super().__init__(formdata=formdata, meta={'locales': [get_language()]})
+        for k in self._fields:
+            self._fields[k].required = False
+        self.required_msg = _('Fields marked with an asterisk (*) are required')
         self.global_errors = []
 
     @abc.abstractmethod
