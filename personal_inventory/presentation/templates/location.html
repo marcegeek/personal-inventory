@@ -2,10 +2,10 @@
 
 {% from "_formhelpers.html" import make_modal_form %}
 
-{% from 'location-editor.html' import location_modal_form %}
-{% from 'delete-location.html' import delete_location_modal %}
-{% from 'item-editor.html' import item_modal_form %}
-{% from 'delete-item.html' import delete_item_modal %}
+{% from 'location-edit.html' import location_modal_form %}
+{% from 'location-delete.html' import delete_location_modal %}
+{% from 'item-edit.html' import item_modal_form %}
+{% from 'item-delete.html' import delete_item_modal %}
 {% block main %}
 <div class="row mb-3">
   <h1 class="col-sm-9">{{ _('Location: %(name)s', name=location.description) }}</h1>

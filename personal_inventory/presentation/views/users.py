@@ -73,7 +73,7 @@ def register():
         redir = make_changes()
         if redir:
             return redir
-    return fl.render_template('user-editor.html', form=form)
+    return fl.render_template('user-edit.html', form=form)
 
 
 @login_required
@@ -96,4 +96,4 @@ def profile(user=None):
         redir = make_changes()
         if redir:
             return redir
-    return fl.render_template('user-editor.html', user=user, form=form)
+    return fl.render_template('user-edit.html', user=user, form=form)
