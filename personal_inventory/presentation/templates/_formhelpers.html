@@ -46,56 +46,40 @@
   {% endfor %}
 {% endmacro %}
 
-{% macro _render_fields(form, fields_values, autofocus, hidden_labels) %}
-  {% if fields_values %}
+{% macro _render_fields(form, fields, autofocus, hidden_labels) %}
+  {% if fields %}
     {% if form.required_msg %}
       <span class="form-text text-muted mb-1">
         {{ _('Fields marked with an asterisk (*) are required') }}
       </span>
     {% endif %}
-    {% for fv in fields_values %}
-      {% if fv is sequence and fv is not string %}
-        {% set field = fv[0] %}
-        {% if fv|length == 2 %}
-          {% set value = fv[1] %}
-        {% endif %}
-      {% else %}
-        {% set field = fv %}
-      {% endif %}
+    {% for field in fields %}
       {% if not autofocus or autofocus != field %}
-        {% if value is defined %}
-          {{ render_field(field, value=value, hidden_label=hidden_labels) }}
-        {% else %}
-          {{ render_field(field, hidden_label=hidden_labels) }}
-        {% endif %}
+        {{ render_field(field, hidden_label=hidden_labels) }}
       {% else %}
-        {% if value is defined %}
-          {{ render_field(field, value=value, autofocus=true, hidden_label=hidden_labels) }}
-        {% else %}
-          {{ render_field(field, autofocus=true, hidden_label=hidden_labels) }}
-        {% endif %}
+        {{ render_field(field, autofocus=true, hidden_label=hidden_labels) }}
       {% endif %}
     {% endfor %}
   {% endif %}
 {% endmacro %}
 
-{% macro _render_form_body(form, fields_values, autofocus, hidden_labels, caller=None) %}
+{% macro _render_form_body(form, fields, autofocus, hidden_labels, caller=None) %}
   {{ _render_global_errors(form.global_errors) }}
   {% if caller %}
     {{ caller() }}
   {% endif %}
-  {{ _render_fields(form, fields_values, autofocus, hidden_labels) }}
+  {{ _render_fields(form, fields, autofocus, hidden_labels) }}
 {% endmacro %}
 
-{% macro make_form(title, form, fields_values=None, title_level="1", autofocus=None, hidden_labels=False, action=None, method="post", save=_('Save'), class="simple-form") %}
+{% macro make_form(title, form, fields=None, title_level="1", autofocus=None, hidden_labels=False, action=None, method="post", save=_('Save'), class="simple-form") %}
   <form class="{{ class }}" {% if action %}action="{{action}}"{% endif %} method="{{method}}">
     <h{{title_level}} class="text-center">{{title}}</h{{title_level}}>
-    {{ _render_form_body(form, fields_values, autofocus, hidden_labels, caller) }}
+    {{ _render_form_body(form, fields, autofocus, hidden_labels, caller) }}
     <button type="submit" class="btn btn-lg btn-primary btn-block">{{ save }}</button>
   </form>
 {% endmacro %}
 
-{% macro make_modal_form(id, title, form, fields_values=None, title_level="2", autofocus=None, hidden_labels=False, action=None, method="post", save=_('Save')) %}
+{% macro make_modal_form(id, title, form, fields=None, title_level="2", autofocus=None, hidden_labels=False, action=None, method="post", save=_('Save')) %}
   <div id="{{id}}" class="modal fade">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -105,7 +89,7 @@
            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           </div>
           <div class="modal-body">
-            {{ _render_form_body(form, fields_values, autofocus, hidden_labels, caller) }}
+            {{ _render_form_body(form, fields, autofocus, hidden_labels, caller) }}
           </div>
           <div class="modal-footer">
             <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ _('Cancel') }}">
