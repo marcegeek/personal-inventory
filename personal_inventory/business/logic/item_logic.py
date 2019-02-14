@@ -46,6 +46,7 @@ class ItemLogic(EntityLogic):
             sort_fields = ['description']
         items = Item.make_from_model(self.dao.get_all_by_location(location), **fill_relations)
         self._sort(items, sort_fields, reverse=reverse, **fill_relations)
+        return items
 
     def validate_deletion_fk_rules(self, item_id, errors):
         """
