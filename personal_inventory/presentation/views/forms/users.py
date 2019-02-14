@@ -24,7 +24,7 @@ class LoginForm(BaseForm):
         self.extra_footer_html = '<div {}>\n'.format(html_params(class_='mt-2'))
         self.extra_footer_html += '  <a {}>'.format(html_params(href=fl.url_for('register')))
         self.extra_footer_html += _('Create account')
-        self.extra_footer_html += '  </a>\n'
+        self.extra_footer_html += '</a>\n'
         self.extra_footer_html += '</div>'
 
     def fill_form(self, obj, **kwargs):
