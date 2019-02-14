@@ -8,7 +8,7 @@
 <div class="row mb-2">
   <h1 class="col-sm-10">{{ _('Managing locations') }}</h1>
   <div class="col-sm-2 mt-2">
-    <a href="#new-location-modal" class="btn btn-success justify-content-sm-end" role="button" data-toggle="modal">
+    <a href="#{{forms['new_location'].modal_id}}" class="btn btn-success justify-content-sm-end" role="button" data-toggle="modal">
       <i class="fa fa-plus"></i> {{ _('New location') }}
     </a>
   </div>
@@ -29,16 +29,16 @@
         <a href="{{ url_for('location', location_id=location.id) }}" class="btn btn-primary">
           <i class="far fa-eye"></i> {{ _('View') }}
         </a>
-        <a href="#edit-location-{{location.id}}-modal" class="btn btn-warning" role="button" data-toggle="modal">
+        <a href="#{{forms['edit_location_{}'.format(location.id)].modal_id}}" class="btn btn-warning" role="button" data-toggle="modal">
           <i class="fas fa-edit"></i> {{ _('Edit') }}
         </a>
-        <a href="#delete-location-{{location.id}}-modal" class="btn btn-danger" role="button" data-toggle="modal">
+        <a href="#{{forms['delete_location_{}'.format(location.id)].modal_id}}" class="btn btn-danger" role="button" data-toggle="modal">
           <i class="fas fa-trash-alt"></i> {{ _('Delete') }}
         </a>
       </div>
     </div>
     <p class="card-text"><strong>{{ _('Items') }}:</strong> {{location.items|length}}</p>
-    <a href="#new-item-in-{{location.id}}-modal" class="btn btn-success" role="button" data-toggle="modal">
+    <a href="#{{forms['new_item_in_{}'.format(location.id)].modal_id}}" class="btn btn-success" role="button" data-toggle="modal">
       <i class="fas fa-plus"></i> {{ _('New item') }}
     </a>
   </div>
