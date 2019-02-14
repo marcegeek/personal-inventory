@@ -61,32 +61,35 @@ class ValidationException(Exception):
 
 
 class EntityLogic(abc.ABC):
+    """Objeto base de la lógica de entidades de negocio."""
 
     def __init__(self):
         self.dao = ObjectData()  # reemplazar en las subclases
         self.plain_object_factory = BusinessEntity  # reemplazar en las subclases
 
-    def get_by_id(self, object_id, **fill_relations):
+    def get_by_id(self, object_id, **populate_relations):
         """
         Recuperar un objeto del modelo dado su id.
 
         :type object_id: int
+        :param populate_relations: relaciones a rellenar
         :rtype: BusinessEntity | None
         """
-        return self.plain_object_factory.make_from_model(self.dao.get_by_id(object_id), **fill_relations)
+        return self.plain_object_factory.make_from_model(self.dao.get_by_id(object_id), **populate_relations)
 
-    def get_all(self, sort_fields=None, reverse=False, **fill_relations):
+    def get_all(self, sort_fields=None, reverse=False, **populate_relations):
         """
         Recuperar todos los objetos del modelo.
 
         :type sort_fields: list of (tuple of str | str)
         :type reverse: bool
+        :param populate_relations: relaciones a rellenar
         :rtype: list of BusinessEntity
         """
         if sort_fields is None:
             sort_fields = []
-        objects = self.plain_object_factory.make_from_model(self.dao.get_all(), **fill_relations)
-        self._sort(objects, sort_fields, reverse=reverse, **fill_relations)
+        objects = self.plain_object_factory.make_from_model(self.dao.get_all(), **populate_relations)
+        self._sort(objects, sort_fields, reverse=reverse, **populate_relations)
         return objects
 
     def insert(self, obj):
@@ -154,7 +157,7 @@ class EntityLogic(abc.ABC):
         pass
 
     @staticmethod
-    def _sort(objects, sort_fields, reverse=False, **fill_relations):
+    def _sort(objects, sort_fields, reverse=False, **populate_locations):
         actual_sort_fields = []
         for field in sort_fields:
             if isinstance(field, (tuple, list)):
@@ -163,7 +166,7 @@ class EntityLogic(abc.ABC):
                     # las relaciones se rellenan a un único nivel,
                     # no se rellenan recursivamente
                     # compruebo que el valor haya sido rellenado
-                    if fill_relations.get('fill_' + field[0], False):
+                    if populate_locations.get('fill_' + field[0], False):
                         actual_sort_fields.append(field)
             else:
                 actual_sort_fields.append(field)

@@ -2,14 +2,14 @@ import abc
 
 
 class BusinessEntity(abc.ABC):
-    """Entidad de la capa de negocio"""
+    """Entidad de la capa de negocio."""
 
     def __init__(self, id=None):
         self.id = id
 
     @classmethod
     @abc.abstractmethod
-    def make_from_model(cls, modelobject, **fill_relations):
+    def make_from_model(cls, modelobject, **populate_relations):
         pass
 
     @abc.abstractmethod

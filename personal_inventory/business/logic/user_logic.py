@@ -47,6 +47,8 @@ class InvalidUsernameError(FieldValidationError):
 
 
 class UserLogic(EntityLogic):
+    """Objeto de la lógica de ítems"""
+
     NAME_LEN = (2, 40)
     EMAIL_LEN = (3, 50)
     USERNAME_LEN = (5, 50)
@@ -57,32 +59,38 @@ class UserLogic(EntityLogic):
         self.dao = UserData()
         self.plain_object_factory = User
 
-    def get_by_email(self, email, **fill_relations):
+    def get_by_email(self, email, populate_locations=False, populate_items=False):
         """
         Recuperar un usuario dado su email.
 
         :type email: str
+        :type populate_locations: bool
+        :type populate_items: bool
         :rtype: User | None
         """
-        return User.make_from_model(self.dao.get_by_email(email), **fill_relations)
+        return User.make_from_model(self.dao.get_by_email(email), populate_locations=populate_locations, populate_items=populate_items)
 
-    def get_by_username(self, username, **fill_relations):
+    def get_by_username(self, username, populate_locations=False, populate_items=False):
         """
         Recuperar un usuario dado su nombre de usuario.
 
         :type username: str
+        :type populate_locations: bool
+        :type populate_items: bool
         :rtype: User | None
         """
-        return User.make_from_model(self.dao.get_by_username(username), **fill_relations)
+        return User.make_from_model(self.dao.get_by_username(username), populate_locations=populate_locations, populate_items=populate_items)
 
-    def get_by_username_email(self, username_email, **fill_relations):
+    def get_by_username_email(self, username_email, populate_locations=False, populate_items=False):
         """
         Recuperar un usuario dado su nombre de usuario o e-mail.
 
         :type username_email: str
+        :type populate_locations: bool
+        :type populate_items: bool
         :rtype: User | None
         """
-        return User.make_from_model(self.dao.get_by_username_email(username_email), **fill_relations)
+        return User.make_from_model(self.dao.get_by_username_email(username_email), populate_locations=populate_locations, populate_items=populate_items)
 
     def validate_login(self, username_email, password):
         """

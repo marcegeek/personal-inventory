@@ -11,6 +11,8 @@ class InvalidValue(FieldValidationError):
 
 
 class ItemLogic(EntityLogic):
+    """Objeto de la lógica de ítems."""
+
     DESCRIPTION_LEN = (3, 50)
 
     def __init__(self):
@@ -18,34 +20,38 @@ class ItemLogic(EntityLogic):
         self.dao = ItemData()
         self.plain_object_factory = Item
 
-    def get_all_by_user(self, user, sort_fields=None, reverse=False, **fill_relations):
+    def get_all_by_user(self, user, sort_fields=None, reverse=False, populate_owner=False, populate_location=False):
         """
         Recuperar todos los ítems pertenecientes a un usuario.
 
         :type user: User
         :type sort_fields: list of (tuple of str | str)
         :type reverse: bool
+        :type populate_owner: bool
+        :type populate_location: bool
         :rtype: list of Item
         """
         if sort_fields is None:
             sort_fields = [('location', 'description'), 'description']
-        items = Item.make_from_model(self.dao.get_all_by_user(user), **fill_relations)
-        self._sort(items, sort_fields, reverse=reverse, **fill_relations)
+        items = Item.make_from_model(self.dao.get_all_by_user(user), populate_owner=populate_owner, populate_location=populate_location)
+        self._sort(items, sort_fields, reverse=reverse, populate_owner=populate_owner, populate_location=populate_location)
         return items
 
-    def get_all_by_location(self, location, sort_fields=None, reverse=False, **fill_relations):
+    def get_all_by_location(self, location, sort_fields=None, reverse=False, populate_owner=False, populate_location=False):
         """
         Recuperar todos los ítems que están en una ubicación.
 
         :type location: Location
         :type sort_fields: list of (tuple of str | str)
         :type reverse: bool
+        :type populate_owner: bool
+        :type populate_location: bool
         :rtype: list of Item
         """
         if sort_fields is None:
             sort_fields = ['description']
-        items = Item.make_from_model(self.dao.get_all_by_location(location), **fill_relations)
-        self._sort(items, sort_fields, reverse=reverse, **fill_relations)
+        items = Item.make_from_model(self.dao.get_all_by_location(location), populate_owner=populate_owner, populate_location=populate_location)
+        self._sort(items, sort_fields, reverse=reverse, populate_owner=populate_owner, populate_location=populate_location)
         return items
 
     def validate_deletion_fk_rules(self, item_id, errors):

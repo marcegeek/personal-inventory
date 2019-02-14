@@ -3,6 +3,7 @@ from personal_inventory.data.models.itemmodel import ItemModel
 
 
 class Item(BusinessEntity):
+    """Entidad ítem de la capa de negocio."""
 
     def __init__(self, id=None, owner_id=None, description=None, location_id=None, quantity=None):
         super().__init__(id)
@@ -21,23 +22,29 @@ class Item(BusinessEntity):
         return o1 == o2
 
     @classmethod
-    def make_from_model(cls, itemmodel, **fill_relations):
+    def make_from_model(cls, itemmodel, populate_owner=False, populate_location=False):
         """
         Generar un objeto ítem de negocio a partir del modelo.
+        Pudiendo rellenar las relaciones con su propietario y/o su
+        ubicación.
+
+        Las relaciones no se rellenan de manera recursiva.
 
         :type itemmodel: ItemModel | list of Item
+        :type populate_owner: bool
+        :type populate_location: bool
         :rtype: Item | list of Item
         """
         if itemmodel is None:
             return None
         if isinstance(itemmodel, list):
-            return [cls.make_from_model(im, **fill_relations) for im in itemmodel]
+            return [cls.make_from_model(im, populate_owner, populate_location) for im in itemmodel]
         item = cls(itemmodel.id, itemmodel.owner_id, itemmodel.description,
                    itemmodel.location_id, itemmodel.quantity)
-        if fill_relations.get('fill_owner', False):
+        if populate_owner:
             from personal_inventory.business.entities.user import User
             item.owner = User.make_from_model(itemmodel.owner)
-        if fill_relations.get('fill_location', False):
+        if populate_location:
             from personal_inventory.business.entities.location import Location
             item.location = Location.make_from_model(itemmodel.location)
         return item
@@ -58,6 +65,8 @@ class Item(BusinessEntity):
         """
         Modificar un objeto ítem del modelo desde el objeto de negocio.
         El id no se modifica.
+
+        Las relaciones con otros objetos no se modifican.
 
         :type itemmodel: ItemModel
         """

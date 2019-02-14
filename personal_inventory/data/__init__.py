@@ -1,3 +1,5 @@
+import abc
+
 from sqlalchemy import engine_from_config
 from sqlalchemy.orm import sessionmaker
 
@@ -28,7 +30,8 @@ def configure(data_conf):
     configured = True
 
 
-class ObjectData:
+class ObjectData(abc.ABC):
+    """Objeto base del acceso a datos de objetos del modelo."""
 
     def __init__(self):
         if not configured:

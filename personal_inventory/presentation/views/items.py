@@ -20,7 +20,7 @@ def items(user=None):
         if len(user_locations) == 0:
             fl.flash(_('No locations yet, create one first'), 'error')
             return fl.redirect(fl.url_for('locations'))
-        user_items = ItemLogic().get_all_by_user(user, fill_location=True)
+        user_items = ItemLogic().get_all_by_user(user, populate_location=True)
 
         for it in user_items:
             edit_form_key = 'edit_item_{}'.format(it.id)

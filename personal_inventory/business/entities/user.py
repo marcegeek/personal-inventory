@@ -3,6 +3,7 @@ from personal_inventory.data.models.usermodel import UserModel
 
 
 class User(BusinessEntity):
+    """Entidad usuario de la capa de negocio."""
 
     def __init__(self, id=None, firstname=None, lastname=None,
                  email=None, username=None, password=None,
@@ -25,24 +26,30 @@ class User(BusinessEntity):
         return o1 == o2
 
     @classmethod
-    def make_from_model(cls, usermodel, **fill_relations):
+    def make_from_model(cls, usermodel, populate_locations=False, populate_items=False):
         """
         Generar un objeto usuario de negocio a partir del modelo.
+        Pudiendo rellenar las relaciones con sus ubicaciones y/o sus
+        ítems.
+
+        Las relaciones no se rellenan de manera recursiva.
 
         :type usermodel: UserModel | list of UserModel
+        :type populate_locations: bool
+        :type populate_items: bool
         :rtype: User | list of User
         """
         if isinstance(usermodel, list):
-            return [cls.make_from_model(um, **fill_relations) for um in usermodel]
+            return [cls.make_from_model(um, populate_locations, populate_items) for um in usermodel]
         if usermodel is None:
             return None
         user = cls(usermodel.id, usermodel.firstname, usermodel.lastname,
                    usermodel.email, usermodel.username, usermodel.password,
                    usermodel.language)
-        if fill_relations.get('fill_locations', False):
+        if populate_locations:
             from personal_inventory.business.entities.location import Location
             user.locations = Location.make_from_model(usermodel.locations)
-        if fill_relations.get('fill_items', False):
+        if populate_items:
             from personal_inventory.business.entities.item import Item
             user.items = Item.make_from_model(usermodel.items)
         return user
@@ -63,6 +70,8 @@ class User(BusinessEntity):
         """
         Modificar un objeto usuario del modelo desde el objeto de negocio.
         El id no se modifica.
+
+        Las relaciones con otros objetos no se modifican.
 
         :type usermodel: UserModel
         """

@@ -14,7 +14,7 @@ def locations(user=None):
     forms = {new_location_key: LocationForm(fl.request.form)}
 
     if fl.request.method == 'GET':
-        user_locations = LocationLogic().get_all_by_user(user, fill_items=True)
+        user_locations = LocationLogic().get_all_by_user(user, populate_items=True)
         for loc in user_locations:
             edit_form_key = 'edit_location_{}'.format(loc.id)
             forms[edit_form_key] = LocationForm()
@@ -41,7 +41,7 @@ def locations(user=None):
 @login_required
 def location(location_id, user=None):
     location_logic = LocationLogic()
-    current_location = location_logic.get_by_id(location_id, fill_items=True)
+    current_location = location_logic.get_by_id(location_id, populate_items=True)
     if current_location is None:
         fl.abort(404)
     if current_location.owner_id != user.id:
