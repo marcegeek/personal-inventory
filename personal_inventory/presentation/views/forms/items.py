@@ -10,6 +10,8 @@ from personal_inventory.presentation.views.forms import BaseForm, DeleteForm
 
 
 class ItemForm(BaseForm):
+    """Formulario de edición de ítem"""
+
     description = StringField(_('Description'), description=_('Field length must be between %(min)d and %(max)d',
                                                               min=ItemLogic.DESCRIPTION_LEN[0],
                                                               max=ItemLogic.DESCRIPTION_LEN[1]),
@@ -55,6 +57,7 @@ class ItemForm(BaseForm):
 
 
 class ItemDeleteForm(DeleteForm):
+    """Formulario de eliminación de ítem"""
 
     def __init__(self, formdata=None, item=None):
         super().__init__(formdata=formdata)

@@ -8,6 +8,8 @@ from personal_inventory.presentation.views.forms import BaseForm, DeleteForm
 
 
 class LocationForm(BaseForm):
+    """Formulario de edición de ubicación"""
+
     description = StringField(_('Description'),
                               description=_('Field length must be between %(min)d and %(max)d',
                                             min=LocationLogic.DESCRIPTION_LEN[0], max=LocationLogic.DESCRIPTION_LEN[1]),
@@ -37,6 +39,7 @@ class LocationForm(BaseForm):
 
 
 class LocationDeleteForm(DeleteForm):
+    """Formulario de eliminación de ubicación"""
 
     def __init__(self, formdata=None, location=None):
         super().__init__(formdata=formdata)

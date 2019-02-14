@@ -9,6 +9,8 @@ from personal_inventory.presentation.views.forms import BaseForm
 
 
 class LoginForm(BaseForm):
+    """Formulario de login"""
+
     username_email = StringField(_('Username or e-mail'),
                                  validators=[validators.DataRequired(_('Required field'))])
     password = PasswordField(_('Password'),
@@ -38,6 +40,8 @@ class LoginForm(BaseForm):
 
 
 class UserEditForm(BaseForm):
+    """Formulario de edición de usuario"""
+
     firstname = StringField(_('First name'),
                             description=_('Field length must be between %(min)d and %(max)d',
                                           min=UserLogic.NAME_LEN[0], max=UserLogic.NAME_LEN[1]),

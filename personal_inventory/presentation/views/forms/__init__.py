@@ -12,6 +12,11 @@ def _strip_filter(value):
 
 
 class BaseForm(Form):
+    """
+    Base de los formularios.
+
+    Integra todos los datos para la presentación de los mismos.
+    """
     class Meta:
         @staticmethod
         def bind_field(form, unbound_field, options):
