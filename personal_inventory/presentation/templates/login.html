@@ -7,5 +7,5 @@
 {% from '_formhelpers.html' import make_form %}
 
 {% block main %}
-  {{ make_form(_('Login'), form, [form.username_email, form.password], hidden_labels=True, autofocus=form.username_email, save=_('Login')) }}
+  {{ make_form(form, hidden_labels=True) }}
 {% endblock %}

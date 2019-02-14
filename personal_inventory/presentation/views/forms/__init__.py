@@ -2,6 +2,7 @@ import abc
 
 from flask_babel import lazy_gettext as _
 from wtforms import Form
+from wtforms.widgets import html_params
 
 
 def _strip_filter(value):
@@ -38,6 +39,8 @@ class BaseForm(Form):
         self.required_msg = _('Fields marked with an asterisk (*) are required')
         for k in self._fields:
             self._fields[k].mark_required = False
+        self.extra_body_html = None  # trozo de HTML antes (o en lugar) de los campos
+        self.extra_footer_html = None  # footer al final del form, solamente si no es modal
 
     @abc.abstractmethod
     def fill_form(self, obj):
@@ -76,6 +79,16 @@ class DeleteForm(BaseForm):
     def __init__(self, formdata=None):
         super().__init__(formdata=formdata)
         self.submit = _('Delete')
+
+    @staticmethod
+    def delete_body(object_name):
+        html = '<p {}>'.format(html_params(class_='lead'))
+        html += _('Do you really want to delete "%(element)s"?', element=object_name)
+        html += '</p>\n'
+        html += '<p {}>'.format(html_params(class_='text-warning'))
+        html += _('This action cannot be undone.')
+        html += '</p>'
+        return html
 
     def fill_form(self, obj):
         pass

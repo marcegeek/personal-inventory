@@ -10,7 +10,9 @@ from personal_inventory.presentation.views.forms import BaseForm, DeleteForm
 
 
 class ItemForm(BaseForm):
-    description = StringField(_('Description'), description=_('Field length must be between %(min)d and %(max)d', min=ItemLogic.DESCRIPTION_LEN[0], max=ItemLogic.DESCRIPTION_LEN[1]),
+    description = StringField(_('Description'), description=_('Field length must be between %(min)d and %(max)d',
+                                                              min=ItemLogic.DESCRIPTION_LEN[0],
+                                                              max=ItemLogic.DESCRIPTION_LEN[1]),
                               render_kw={'aria-describedby': 'description-description'})
     location = SelectField(_('Location'), coerce=int)
     quantity = IntegerField(_('Quantity'), description=_('Optional field, must be a non-negative integer number'),
@@ -60,3 +62,4 @@ class ItemDeleteForm(DeleteForm):
             self.title = _('Delete item')
             self.modal_id = 'delete-item-{}-modal'.format(item.id)
             self.action = fl.url_for('item_delete', item_id=item.id)
+            self.extra_body_html = self.delete_body(item.description)

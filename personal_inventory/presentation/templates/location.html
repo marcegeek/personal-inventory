@@ -2,10 +2,6 @@
 
 {% from "_formhelpers.html" import make_modal_form %}
 
-{% from 'location-edit.html' import location_modal_form %}
-{% from 'location-delete.html' import delete_location_modal %}
-{% from 'item-edit.html' import item_modal_form %}
-{% from 'item-delete.html' import delete_item_modal %}
 {% block main %}
 <div class="row mb-3">
   <h1 class="col-sm-9">{{ _('Location: %(name)s', name=location.description) }}</h1>
@@ -27,9 +23,9 @@
   </div>
 </div>
 
-{{ location_modal_form(forms['edit_location_{}'.format(location.id)], location) }}
-{{ delete_location_modal(forms['delete_location_{}'.format(location.id)], location) }}
-{{ item_modal_form(forms['new_item_in_{}'.format(location.id)], location=location) }}
+{{ make_modal_form(forms['edit_location_{}'.format(location.id)]) }}
+{{ make_modal_form(forms['delete_location_{}'.format(location.id)]) }}
+{{ make_modal_form(forms['new_item_in_{}'.format(location.id)]) }}
 
 {% if not location.items %}
 <p class="lead">{{ _('No items in this location yet, try creating some item first.') }}</p>
@@ -51,8 +47,8 @@
     {% endif %}
   </div>
 </div>
-{{ item_modal_form(forms['edit_item_{}'.format(item.id)], item=item) }}
-{{ delete_item_modal(forms['delete_item_{}'.format(item.id)], item) }}
+{{ make_modal_form(forms['edit_item_{}'.format(item.id)], title_level="3") }}
+{{ make_modal_form(forms['delete_item_{}'.format(item.id)], title_level="3") }}
 {% endfor %}
 {% endblock %}
 

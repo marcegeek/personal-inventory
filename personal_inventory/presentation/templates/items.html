@@ -2,8 +2,7 @@
 
 {% block nav_items_active%}active{% endblock %}
 
-{% from 'item-edit.html' import item_modal_form %}
-{% from 'item-delete.html' import delete_item_modal %}
+{% from '_formhelpers.html' import make_modal_form %}
 
 {% block main %}
 <div class="row mb-2">
@@ -14,7 +13,7 @@
     </a>
   </div>
 </div>
-{{ item_modal_form(forms['new_item']) }}
+{{ make_modal_form(forms['new_item']) }}
 
 {% if not items %}
 <p class="lead">{{ _('No items yet, try creating some item first.') }}</p>
@@ -42,8 +41,8 @@
     {% endif %}
   </div>
 </div>
-{{ item_modal_form(forms['edit_item_{}'.format(item.id)], item) }}
-{{ delete_item_modal(forms['delete_item_{}'.format(item.id)], item) }}
+{{ make_modal_form(forms['edit_item_{}'.format(item.id)], title_level="3") }}
+{{ make_modal_form(forms['delete_item_{}'.format(item.id)], title_level="3") }}
 {% endfor %}
 {% endblock %}
 

@@ -44,3 +44,5 @@ class LocationDeleteForm(DeleteForm):
             self.title = _('Delete location')
             self.modal_id = 'delete-location-{}-modal'.format(location.id)
             self.action = fl.url_for('item_delete', item_id=location.id)
+            self.extra_body_html = self.delete_body(location.description)
+            self.extra_footer_html = '<p>Jeje esto es raro</p>'

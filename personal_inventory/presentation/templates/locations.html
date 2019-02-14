@@ -2,9 +2,7 @@
 
 {% block nav_locations_active%}active{% endblock %}
 
-{% from 'location-edit.html' import location_modal_form %}
-{% from 'location-delete.html' import delete_location_modal %}
-{% from 'item-edit.html' import item_modal_form %}
+{% from "_formhelpers.html" import make_modal_form %}
 
 {% block main %}
 <div class="row mb-2">
@@ -15,7 +13,7 @@
     </a>
   </div>
 </div>
-{{ location_modal_form(forms['new_location']) }}
+{{ make_modal_form(forms['new_location']) }}
 
 {% if not locations %}
 <p class="lead">{{ _('No locations yet, try creating some location first.') }}</p>
@@ -45,9 +43,9 @@
     </a>
   </div>
 </div>
-{{ location_modal_form(forms['edit_location_{}'.format(location.id)], location) }}
-{{ delete_location_modal(forms['delete_location_{}'.format(location.id)], location) }}
-{{ item_modal_form(forms['new_item_in_{}'.format(location.id)], location=location) }}
+{{ make_modal_form(forms['edit_location_{}'.format(location.id)], title_level="3") }}
+{{ make_modal_form(forms['delete_location_{}'.format(location.id)], title_level="3") }}
+{{ make_modal_form(forms['new_item_in_{}'.format(location.id)], title_level="3") }}
 {% endfor %}
 {% endblock %}
 

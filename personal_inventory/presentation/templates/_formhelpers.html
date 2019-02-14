@@ -1,4 +1,4 @@
-{% macro render_field(field, hidden_label=False) %}
+{% macro _render_field(field, hidden_label=False) %}
   <div class="from-group mb-3">
     {% if field.errors %}
       {% set invalid_class = " is-invalid" %}
@@ -55,18 +55,18 @@
     {% endif %}
     {% for field in form.fields_to_render %}
       {% if not form.autofocus_field or form.autofocus_field != field %}
-        {{ render_field(field, hidden_label=hidden_labels) }}
+        {{ _render_field(field, hidden_label=hidden_labels) }}
       {% else %}
-        {{ render_field(field, autofocus=true, hidden_label=hidden_labels) }}
+        {{ _render_field(field, autofocus=true, hidden_label=hidden_labels) }}
       {% endif %}
     {% endfor %}
   {% endif %}
 {% endmacro %}
 
-{% macro _render_form_body(form, hidden_labels, caller=None) %}
+{% macro _render_form_body(form, hidden_labels) %}
   {{ _render_global_errors(form.global_errors) }}
-  {% if caller %}
-    {{ caller() }}
+  {% if form.extra_body_html %}
+    {{ form.extra_body_html|safe }}
   {% endif %}
   {{ _render_fields(form, hidden_labels) }}
 {% endmacro %}
@@ -74,8 +74,11 @@
 {% macro make_form(form, title_level="1", hidden_labels=False, class="simple-form") %}
   <form class="{{ class }}" {% if form.action %}action="{{ form.action }}"{% endif %} method="{{ form.method }}">
     <h{{title_level}} class="text-center">{{ form.title }}</h{{title_level}}>
-    {{ _render_form_body(form, hidden_labels, caller) }}
+    {{ _render_form_body(form, hidden_labels) }}
     <button type="submit" class="btn btn-lg btn-primary btn-block">{{ form.submit }}</button>
+    {% if form.extra_footer_html %}
+      {{ form.extra_footer_html|safe }}
+    {% endif %}
   </form>
 {% endmacro %}
 
@@ -89,7 +92,7 @@
            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           </div>
           <div class="modal-body">
-            {{ _render_form_body(form, hidden_labels, caller) }}
+            {{ _render_form_body(form, hidden_labels) }}
           </div>
           <div class="modal-footer">
             <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ _('Cancel') }}">
@@ -108,21 +111,4 @@
     });
   </script>
   {% endif %}
-{% endmacro %}
-
-{% macro _delete_body_content(element) %}
-  <p class="lead">{{ _('Do you really want to delete "%(element)s"?', element=element) }}</p>
-  <p class="text-warning">{{ _('This action cannot be undone.') }}</p>
-{% endmacro %}
-
-{% macro make_delete_form(form, element, title_level="2") %}
-  {% call make_form(form, title_level=title_level) %}
-    {{ _delete_body_content(element) }}
-  {% endcall %}
-{% endmacro %}
-
-{% macro make_delete_modal_form(form, element, title_level="2") %}
-  {% call make_modal_form(form, title_level=title_level) %}
-    {{ _delete_body_content(element) }}
-  {% endcall %}
 {% endmacro %}

@@ -1,6 +1,0 @@
-{% from '_formhelpers.html' import make_delete_modal_form %}
-
-{% macro delete_location_modal(form, loc) %}
-  {% set element=loc.description %}
-  {{ make_delete_modal_form(form, element, title_level="3") }}
-{% endmacro %}
