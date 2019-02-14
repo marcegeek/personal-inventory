@@ -12,7 +12,7 @@ def _strip_filter(value):
     return value
 
 
-class BaseForm(Form, abc.ABC):
+class BaseForm(Form):
     """
     Base de los formularios.
 
@@ -83,7 +83,7 @@ class BaseForm(Form, abc.ABC):
         return super().errors
 
 
-class DeleteForm(BaseForm, abc.ABC):
+class DeleteForm(BaseForm):
     """Base de los formularios de eliminación"""
 
     def __init__(self, formdata=None):
