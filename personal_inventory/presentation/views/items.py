@@ -26,7 +26,7 @@ def items(user=None):
             edit_form_key = 'edit_item_{}'.format(it.id)
             delete_form_key = 'delete_item_{}'.format(it.id)
             forms[edit_form_key] = ItemForm(locations=user_locations)
-            forms[edit_form_key].fill_form(it)
+            forms[edit_form_key].fill(it)
             forms[delete_form_key] = ItemDeleteForm(item=it)
 
         _retrieve_last_form(forms)

@@ -81,7 +81,7 @@ def profile(user=None):
     form = UserEditForm(fl.request.form, languages=config.LANGUAGES)
 
     if fl.request.method == 'GET':
-        form.fill_form(user)
+        form.fill(user)
     elif fl.request.method == 'POST' and form.validate():
         form.update_object(user)
 

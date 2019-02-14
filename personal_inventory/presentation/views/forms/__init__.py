@@ -48,7 +48,7 @@ class BaseForm(Form):
         self.extra_footer_html = None  # footer al final del form, solamente si no es modal
 
     @abc.abstractmethod
-    def fill_form(self, obj):
+    def fill(self, obj):
         pass
 
     @abc.abstractmethod
@@ -95,7 +95,7 @@ class DeleteForm(BaseForm):
         html += '</p>'
         return html
 
-    def fill_form(self, obj):
+    def fill(self, obj):
         pass
 
     def make_object(self):

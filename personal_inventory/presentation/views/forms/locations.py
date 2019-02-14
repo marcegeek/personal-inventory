@@ -24,7 +24,7 @@ class LocationForm(BaseForm):
         self.autofocus_field = self.description
         self.description.mark_required = True
 
-    def fill_form(self, location):
+    def fill(self, location):
         self.title = _('Editing location')
         self.modal_id = 'edit-location-{}-modal'.format(location.id)
         self.action = fl.url_for('location', location_id=location.id)

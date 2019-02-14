@@ -38,7 +38,7 @@ class ItemForm(BaseForm):
         self.description.mark_required = True
         self.location.mark_required = True
 
-    def fill_form(self, item):
+    def fill(self, item):
         self.title = _('Editing item')
         self.modal_id = 'edit-item-{}-modal'.format(item.id)
         self.action = fl.url_for('item', item_id=item.id)

@@ -29,7 +29,7 @@ class LoginForm(BaseForm):
         self.extra_footer_html += '</a>\n'
         self.extra_footer_html += '</div>'
 
-    def fill_form(self, obj, **kwargs):
+    def fill(self, obj, **kwargs):
         pass
 
     def make_object(self):
@@ -86,7 +86,7 @@ class UserEditForm(BaseForm):
         self.password.mark_required = True
         self.confirm_password.mark_required = True
 
-    def fill_form(self, user):
+    def fill(self, user):
         self.title = _('User profile')
         self.submit = _('Save')
         self.password.label = _('New password')

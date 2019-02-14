@@ -18,7 +18,7 @@ def locations(user=None):
         for loc in user_locations:
             edit_form_key = 'edit_location_{}'.format(loc.id)
             forms[edit_form_key] = LocationForm()
-            forms[edit_form_key].fill_form(loc)
+            forms[edit_form_key].fill(loc)
             forms['delete_location_{}'.format(loc.id)] = LocationDeleteForm(location=loc)
             item_form_key = 'new_item_in_{}'.format(loc.id)
             forms[item_form_key] = ItemForm(locations=user_locations, default_location=loc)
@@ -55,7 +55,7 @@ def location(location_id, user=None):
 
     if fl.request.method == 'GET':
         user_locations = location_logic.get_all_by_user(user)
-        forms[edit_form_key].fill_form(current_location)
+        forms[edit_form_key].fill(current_location)
 
         new_item_key = 'new_item_in_{}'.format(current_location.id)
         forms[new_item_key] = ItemForm(locations=user_locations, default_location=current_location)
@@ -63,7 +63,7 @@ def location(location_id, user=None):
         for item in current_location.items:
             edit_item_key = 'edit_item_{}'.format(item.id)
             forms[edit_item_key] = ItemForm(locations=user_locations)
-            forms[edit_item_key].fill_form(item)
+            forms[edit_item_key].fill(item)
             forms['delete_item_{}'.format(item.id)] = ItemDeleteForm(item=item)
 
         _retrieve_last_form(forms)
