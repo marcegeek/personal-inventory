@@ -7,17 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-02-13 22:25-0300\n"
-"PO-Revision-Date: 2019-02-13 22:26-0300\n"
+"POT-Creation-Date: 2019-02-14 00:43-0300\n"
+"PO-Revision-Date: 2019-02-14 00:44-0300\n"
 "Last-Translator: \n"
 "Language: es\n"
 "Language-Team: es <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.6.0\n"
-"X-Generator: Poedit 2.0.4\n"
 
 #: templates/401.html:4
 msgid "Error 401 - Unauthorized resource"
@@ -55,28 +54,30 @@ msgstr "Cancelar"
 #: templates/home.html:8
 msgid ""
 "Web application written in Python with\n"
-"      <strong>Flask</strong> and <strong>SQLAlchemy</strong> for managing\n"
+"      <strong>Flask</strong> and <strong>SQLAlchemy</strong> for managing"
+"\n"
 "      an inventory of personal objects."
 msgstr ""
 "Aplicación web escrita en Python con\n"
-"      <strong>Flask</strong> y <strong>SQLAlchemy</strong> para administrar\n"
+"      <strong>Flask</strong> y <strong>SQLAlchemy</strong> para "
+"administrar\n"
 "      un inventario de objetos personales."
 
 #: templates/home.html:14
 #, python-format
 msgid ""
-"Please <a href=\"%(login)s\">login</a> or <a href=\"%(register)s\">register</"
-"a> to use the application."
+"Please <a href=\"%(login)s\">login</a> or <a "
+"href=\"%(register)s\">register</a> to use the application."
 msgstr ""
-"Por favor <a href=\"%(login)s\">ingrese</a> o <a href=\"%(register)s"
-"\">regístrese</a> para usar la aplicación."
+"Por favor <a href=\"%(login)s\">ingrese</a> o <a "
+"href=\"%(register)s\">regístrese</a> para usar la aplicación."
 
 #: templates/items.html:9
 msgid "Managing items"
 msgstr "Administrando ítems"
 
-#: templates/items.html:12 templates/location.html:21 templates/locations.html:42
-#: views/forms/items.py:24
+#: templates/items.html:12 templates/location.html:21
+#: templates/locations.html:42 views/forms/items.py:24
 msgid "New item"
 msgstr "Nuevo ítem"
 
@@ -84,13 +85,14 @@ msgstr "Nuevo ítem"
 msgid "No items yet, try creating some item first."
 msgstr "Todavía no hay ítems, intente crear alguno."
 
-#: templates/items.html:29 templates/location.html:10 templates/location.html:41
-#: templates/locations.html:33
+#: templates/items.html:29 templates/location.html:10
+#: templates/location.html:41 templates/locations.html:33
 msgid "Edit"
 msgstr "Editar"
 
-#: templates/items.html:30 templates/location.html:13 templates/location.html:42
-#: templates/locations.html:36 views/forms/__init__.py:81
+#: templates/items.html:30 templates/location.html:13
+#: templates/location.html:42 templates/locations.html:36
+#: views/forms/__init__.py:81
 msgid "Delete"
 msgstr "Eliminar"
 
@@ -198,10 +200,6 @@ msgstr "Nombre de usuario/e-mail o contraseña incorrectos"
 msgid "Please login to use the application"
 msgstr "Por favor inicie sesión para usar la aplicación"
 
-#: views/users.py:82
-msgid "Leave it blank to keep the current password"
-msgstr "Deje en blanco para mantener la contraseña actual"
-
 #: views/forms/__init__.py:37 views/forms/users.py:87
 msgid "Save"
 msgstr "Guardar"
@@ -288,11 +286,11 @@ msgstr "E-mail"
 #: views/forms/users.py:50
 #, python-format
 msgid ""
-"Field must be a valid e-mail adress and its length must be between %(min)d and "
-"%(max)d"
+"Field must be a valid e-mail adress and its length must be between "
+"%(min)d and %(max)d"
 msgstr ""
-"El campo debe ser una dirección de e-mail válida y su longitud debe estar "
-"entre %(min)d y %(max)d"
+"El campo debe ser una dirección de e-mail válida y su longitud debe estar"
+" entre %(min)d y %(max)d"
 
 #: views/forms/users.py:53
 msgid "Username"
@@ -301,11 +299,11 @@ msgstr "Nombre de usuario"
 #: views/forms/users.py:54
 #, python-format
 msgid ""
-"Field must be made of lowercase letters, digits and underscores and its length "
-"must be between %(min)d and %(max)d"
+"Field must be made of lowercase letters, digits and underscores and its "
+"length must be between %(min)d and %(max)d"
 msgstr ""
-"El campo debe estar formado por letras minúsculas, dígitos y guiones bajos; y "
-"su longitud debe estar entre %(min)dy %(max)d"
+"El campo debe estar formado por letras minúsculas, dígitos y guiones "
+"bajos; y su longitud debe estar entre %(min)dy %(max)d"
 
 #: views/forms/users.py:57
 msgid "Language"
@@ -331,5 +329,11 @@ msgstr "Registro"
 msgid "User profile"
 msgstr "Perfil de usuario"
 
-#~ msgid "New password"
-#~ msgstr "Nueva contraseña"
+#: views/forms/users.py:88
+msgid "New password"
+msgstr "Nueva contraseña"
+
+#: views/forms/users.py:89
+msgid "Leave it blank to keep the current password"
+msgstr "Deje en blanco para mantener la contraseña actual"
+
