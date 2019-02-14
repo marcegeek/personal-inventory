@@ -85,6 +85,10 @@ class UserEditForm(BaseForm):
     def fill_form(self, user):
         self.title = _('User profile')
         self.submit = _('Save')
+        self.password.label = _('New password')
+        self.password.description = _('Leave it blank to keep the current password')
+        self.password.mark_required = False
+        self.confirm_password.mark_required = False
         self.firstname.data = user.firstname
         self.lastname.data = user.lastname
         self.email.data = user.email

@@ -79,9 +79,6 @@ def register():
 @login_required
 def profile(user=None):
     form = UserEditForm(fl.request.form, languages=config.LANGUAGES)
-    form.password.description = _('Leave it blank to keep the current password')
-    form.password.mark_required = False
-    form.confirm_password.mark_required = False
 
     if fl.request.method == 'GET':
         form.fill_form(user)
