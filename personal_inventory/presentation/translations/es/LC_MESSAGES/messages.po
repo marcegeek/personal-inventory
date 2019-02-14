@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-02-07 15:21-0300\n"
-"PO-Revision-Date: 2019-02-07 16:01-0300\n"
+"POT-Creation-Date: 2019-02-13 22:25-0300\n"
+"PO-Revision-Date: 2019-02-13 22:26-0300\n"
 "Last-Translator: \n"
 "Language: es\n"
 "Language-Team: es <LL@li.org>\n"
@@ -48,37 +48,9 @@ msgstr "Error 405 - Método no permitido"
 msgid "The method is not allowed for the requested URL."
 msgstr "El método no está permitido para la URL solicitada."
 
-#: templates/_formhelpers.html:77 templates/_formhelpers.html:85
-#: templates/user-editor.html:16
-msgid "Save"
-msgstr "Guardar"
-
 #: templates/_formhelpers.html:98
 msgid "Cancel"
 msgstr "Cancelar"
-
-#: templates/_formhelpers.html:117
-#, python-format
-msgid "Do you really want to delete \"%(element)s\"?"
-msgstr "¿Realmente quiere eliminar \"%(element)s\"?"
-
-#: templates/_formhelpers.html:118
-msgid "This action cannot be undone."
-msgstr "Esta acción no se puede deshacer."
-
-#: templates/_formhelpers.html:122 templates/_formhelpers.html:128
-#: templates/items.html:31 templates/location.html:17 templates/location.html:46
-#: templates/locations.html:35
-msgid "Delete"
-msgstr "Eliminar"
-
-#: templates/delete-item.html:5
-msgid "Delete item"
-msgstr "Eliminar ítem"
-
-#: templates/delete-location.html:5
-msgid "Delete location"
-msgstr "Eliminar ubicación"
 
 #: templates/home.html:8
 msgid ""
@@ -99,32 +71,34 @@ msgstr ""
 "Por favor <a href=\"%(login)s\">ingrese</a> o <a href=\"%(register)s"
 "\">regístrese</a> para usar la aplicación."
 
-#: templates/item-editor.html:10 templates/items.html:13
-#: templates/location.html:25 templates/locations.html:41
-msgid "New item"
-msgstr "Nuevo ítem"
-
-#: templates/item-editor.html:14
-msgid "Editing item"
-msgstr "Editando ítem"
-
-#: templates/items.html:10
+#: templates/items.html:9
 msgid "Managing items"
 msgstr "Administrando ítems"
 
-#: templates/items.html:20
+#: templates/items.html:12 templates/location.html:21 templates/locations.html:42
+#: views/forms/items.py:24
+msgid "New item"
+msgstr "Nuevo ítem"
+
+#: templates/items.html:19
 msgid "No items yet, try creating some item first."
 msgstr "Todavía no hay ítems, intente crear alguno."
 
-#: templates/items.html:30 templates/location.html:14 templates/location.html:45
+#: templates/items.html:29 templates/location.html:10 templates/location.html:41
+#: templates/locations.html:33
 msgid "Edit"
 msgstr "Editar"
 
-#: templates/items.html:35
+#: templates/items.html:30 templates/location.html:13 templates/location.html:42
+#: templates/locations.html:36 views/forms/__init__.py:81
+msgid "Delete"
+msgstr "Eliminar"
+
+#: templates/items.html:34
 msgid "Location:"
 msgstr "Ubicación:"
 
-#: templates/items.html:41 templates/location.html:50
+#: templates/items.html:40 templates/location.html:46
 msgid "Quantity:"
 msgstr "Cantidad:"
 
@@ -132,8 +106,8 @@ msgstr "Cantidad:"
 msgid "Home"
 msgstr "Inicio"
 
-#: templates/layout.html:49 templates/location.html:22
-#: templates/locations.html:39
+#: templates/layout.html:49 templates/location.html:18
+#: templates/locations.html:40
 msgid "Items"
 msgstr "Ítems"
 
@@ -153,52 +127,32 @@ msgstr "Editar perfil"
 msgid "Logout"
 msgstr "Cerrar sesión"
 
-#: templates/location-editor.html:6 templates/locations.html:14
-msgid "New location"
-msgstr "Nueva ubicación"
-
-#: templates/location-editor.html:9
-msgid "Editing location"
-msgstr "Editando ubicación"
-
-#: templates/location.html:11
+#: templates/location.html:7
 #, python-format
 msgid "Location: %(name)s"
 msgstr "Ubicación: %(name)s"
 
-#: templates/location.html:35
+#: templates/location.html:31
 msgid "No items in this location yet, try creating some item first."
 msgstr "Todavía no hay ítems en esta ubicación, intente crear alguno."
 
-#: templates/locations.html:11
+#: templates/locations.html:9
 msgid "Managing locations"
 msgstr "Administrando ubicaciones"
 
-#: templates/locations.html:21
+#: templates/locations.html:12 views/forms/locations.py:18
+msgid "New location"
+msgstr "Nueva ubicación"
+
+#: templates/locations.html:19
 msgid "No locations yet, try creating some location first."
 msgstr "Todavía no hay ubicaciones, intente crear alguna."
 
-#: templates/locations.html:32
+#: templates/locations.html:30
 msgid "View"
 msgstr "Ver"
 
-#: templates/login.html:10
-msgid "Login"
-msgstr "Iniciar sesión"
-
-#: templates/user-editor.html:12
-msgid "User registration"
-msgstr "Registro de usuario"
-
-#: templates/user-editor.html:13
-msgid "Register"
-msgstr "Registro"
-
-#: templates/user-editor.html:15
-msgid "User profile"
-msgstr "Perfil de usuario"
-
-#: views/error_handler.py:11
+#: views/error_handler.py:11 views/forms/users.py:13 views/forms/users.py:15
 msgid "Required field"
 msgstr "Campo requerido"
 
@@ -232,7 +186,7 @@ msgstr "Nombre de ubicación repetido"
 msgid "Invalid value"
 msgstr "Valor inválido"
 
-#: views/items.py:23
+#: views/items.py:21
 msgid "No locations yet, create one first"
 msgstr "Todavía no hay ubicaciones, cree una primero"
 
@@ -244,53 +198,94 @@ msgstr "Nombre de usuario/e-mail o contraseña incorrectos"
 msgid "Please login to use the application"
 msgstr "Por favor inicie sesión para usar la aplicación"
 
-#: views/users.py:90
+#: views/users.py:82
 msgid "Leave it blank to keep the current password"
 msgstr "Deje en blanco para mantener la contraseña actual"
 
-#: views/forms/items.py:11 views/forms/locations.py:9
+#: views/forms/__init__.py:37 views/forms/users.py:87
+msgid "Save"
+msgstr "Guardar"
+
+#: views/forms/__init__.py:39
+msgid "Fields marked with an asterisk (*) are required"
+msgstr "Los campos marcados con un asterisco (*) son requeridos"
+
+#: views/forms/__init__.py:86
+#, python-format
+msgid "Do you really want to delete \"%(element)s\"?"
+msgstr "¿Realmente quiere eliminar \"%(element)s\"?"
+
+#: views/forms/__init__.py:89
+msgid "This action cannot be undone."
+msgstr "Esta acción no se puede deshacer."
+
+#: views/forms/items.py:13 views/forms/locations.py:11
 msgid "Description"
 msgstr "Descripción"
 
-#: views/forms/items.py:11 views/forms/locations.py:9 views/forms/users.py:15
-#: views/forms/users.py:19 views/forms/users.py:32
+#: views/forms/items.py:13 views/forms/locations.py:12 views/forms/users.py:42
+#: views/forms/users.py:46 views/forms/users.py:59
 #, python-format
 msgid "Field length must be between %(min)d and %(max)d"
 msgstr "La longitud del campo debe estrar entre %(min)d y %(max)d"
 
-#: views/forms/items.py:13
+#: views/forms/items.py:17
 msgid "Location"
 msgstr "Ubicación"
 
-#: views/forms/items.py:14
+#: views/forms/items.py:18
 msgid "Quantity"
 msgstr "Cantidad"
 
-#: views/forms/items.py:14
+#: views/forms/items.py:18
 msgid "Optional field, must be a non-negative integer number"
 msgstr "Campo opcional, debe ser un número entero no negativo"
 
-#: views/forms/users.py:9
+#: views/forms/items.py:40
+msgid "Editing item"
+msgstr "Editando ítem"
+
+#: views/forms/items.py:62
+msgid "Delete item"
+msgstr "Eliminar ítem"
+
+#: views/forms/locations.py:26
+msgid "Editing location"
+msgstr "Editando ubicación"
+
+#: views/forms/locations.py:44
+msgid "Delete location"
+msgstr "Eliminar ubicación"
+
+#: views/forms/users.py:12
 msgid "Username or e-mail"
 msgstr "Nombre de usuario o e-mail"
 
-#: views/forms/users.py:10
+#: views/forms/users.py:14 views/forms/users.py:58
 msgid "Password"
 msgstr "Contraseña"
 
-#: views/forms/users.py:14
+#: views/forms/users.py:19 views/forms/users.py:20
+msgid "Login"
+msgstr "Iniciar sesión"
+
+#: views/forms/users.py:26
+msgid "Create account"
+msgstr "Crear cuenta"
+
+#: views/forms/users.py:41
 msgid "First name"
 msgstr "Nombre"
 
-#: views/forms/users.py:18
+#: views/forms/users.py:45
 msgid "Last name"
 msgstr "Apellido"
 
-#: views/forms/users.py:22
+#: views/forms/users.py:49
 msgid "E-mail"
 msgstr "E-mail"
 
-#: views/forms/users.py:23
+#: views/forms/users.py:50
 #, python-format
 msgid ""
 "Field must be a valid e-mail adress and its length must be between %(min)d and "
@@ -299,11 +294,11 @@ msgstr ""
 "El campo debe ser una dirección de e-mail válida y su longitud debe estar "
 "entre %(min)d y %(max)d"
 
-#: views/forms/users.py:26
+#: views/forms/users.py:53
 msgid "Username"
 msgstr "Nombre de usuario"
 
-#: views/forms/users.py:27
+#: views/forms/users.py:54
 #, python-format
 msgid ""
 "Field must be made of lowercase letters, digits and underscores and its length "
@@ -312,18 +307,29 @@ msgstr ""
 "El campo debe estar formado por letras minúsculas, dígitos y guiones bajos; y "
 "su longitud debe estar entre %(min)dy %(max)d"
 
-#: views/forms/users.py:30
+#: views/forms/users.py:57
 msgid "Language"
 msgstr "Idioma"
 
-#: views/forms/users.py:31
-msgid "New password"
-msgstr "Nueva contraseña"
-
-#: views/forms/users.py:35
+#: views/forms/users.py:62
 msgid "Passwords must match"
 msgstr "Las contraseñas deben coincidir"
 
-#: views/forms/users.py:36
+#: views/forms/users.py:63
 msgid "Confirm password"
 msgstr "Confirmar contraseña"
+
+#: views/forms/users.py:67
+msgid "User registration"
+msgstr "Registro de usuario"
+
+#: views/forms/users.py:68
+msgid "Register"
+msgstr "Registro"
+
+#: views/forms/users.py:86
+msgid "User profile"
+msgstr "Perfil de usuario"
+
+#~ msgid "New password"
+#~ msgstr "Nueva contraseña"
