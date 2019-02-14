@@ -1,4 +1,5 @@
 import abc
+import locale
 
 from personal_inventory.business.entities import BusinessEntity
 from personal_inventory.data import ObjectData
@@ -176,7 +177,7 @@ class EntityLogic(abc.ABC):
                         key = getattr(key, f)
                 else:
                     key = getattr(obj, sf)
-                keys.append(key)
+                keys.append(locale.strxfrm(key))
             return tuple(keys)
 
         objects.sort(key=sort_by, reverse=reverse)

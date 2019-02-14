@@ -1,3 +1,4 @@
+import locale
 import os
 
 import flask as fl
@@ -11,6 +12,7 @@ from personal_inventory.presentation.views import items as item_views
 
 app = fl.Flask(__name__)
 
+locale.setlocale(locale.LC_ALL, '')  # para poder ordenar de manera correcta
 configs = config.get_configs()
 dal.configure(configs['data'])
 app.config.from_object(configs['flask'])
