@@ -1,5 +1,7 @@
+import flask as fl
 from flask_babel import lazy_gettext as _
 from wtforms import StringField, PasswordField, SelectField, validators
+from wtforms.widgets import html_params
 
 from personal_inventory.business.entities.user import User
 from personal_inventory.business.logic.user_logic import UserLogic
@@ -19,6 +21,11 @@ class LoginForm(BaseForm):
         self.fields_to_render = [self.username_email, self.password]
         self.autofocus_field = self.username_email
         self.required_msg = None
+        self.extra_footer_html = '<div {}>\n'.format(html_params(class_='mt-2'))
+        self.extra_footer_html += '  <a {}>'.format(html_params(href=fl.url_for('register')))
+        self.extra_footer_html += _('Create account')
+        self.extra_footer_html += '  </a>\n'
+        self.extra_footer_html += '</div>'
 
     def fill_form(self, obj, **kwargs):
         pass

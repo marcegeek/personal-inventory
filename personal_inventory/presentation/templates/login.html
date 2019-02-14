@@ -7,5 +7,7 @@
 {% from '_formhelpers.html' import make_form %}
 
 {% block main %}
-  {{ make_form(form, hidden_labels=True) }}
+  <div class="text-center">
+    {{ make_form(form, hidden_labels=True) }}
+  </div>
 {% endblock %}
