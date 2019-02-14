@@ -6,12 +6,13 @@ from wtforms.widgets import html_params
 
 
 def _strip_filter(value):
+    """Filtro de limpieza de espacios en blanco extra"""
     if value is not None and hasattr(value, 'strip'):
         return value.strip()
     return value
 
 
-class BaseForm(Form):
+class BaseForm(Form, abc.ABC):
     """
     Base de los formularios.
 
@@ -49,14 +50,17 @@ class BaseForm(Form):
 
     @abc.abstractmethod
     def fill(self, obj):
+        """Rellenar datos del formulario desde el objeto entidad de negocio"""
         pass
 
     @abc.abstractmethod
     def make_object(self, **kwargs):
+        """Generar el objeto entidad de negocio desde los datos del formulario"""
         pass
 
     @abc.abstractmethod
     def update_object(self, obj):
+        """Actualizar el objeto entidad de negocio desde los datos del formulario"""
         pass
 
     @property
@@ -79,7 +83,8 @@ class BaseForm(Form):
         return super().errors
 
 
-class DeleteForm(BaseForm):
+class DeleteForm(BaseForm, abc.ABC):
+    """Base de los formularios de eliminación"""
 
     def __init__(self, formdata=None):
         super().__init__(formdata=formdata)
@@ -87,6 +92,8 @@ class DeleteForm(BaseForm):
 
     @staticmethod
     def delete_body(object_name):
+        """Generar el HTML del cuerpo del formulario"""
+
         html = '<p {}>'.format(html_params(class_='lead'))
         html += _('Do you really want to delete "%(element)s"?', element=object_name)
         html += '</p>\n'

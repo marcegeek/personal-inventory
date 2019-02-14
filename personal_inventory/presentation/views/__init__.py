@@ -7,6 +7,10 @@ from personal_inventory.presentation.views import error_handler
 
 
 def business_exception_handler(form):
+    """
+    Decorator para manejar excepciones de negocio y
+    cargar los mensajes en el formulario.
+    """
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):

@@ -7,6 +7,8 @@ from personal_inventory.business.logic.user_logic import InvalidEmailError, Repe
 
 
 def error_str(error):
+    """Generar mensaje a partir de un error de la capa de negocio"""
+
     if isinstance(error, RequiredFieldError):
         return _('Required field')
     elif isinstance(error, DeleteForeingKeyError):
@@ -24,4 +26,4 @@ def error_str(error):
     elif isinstance(error, InvalidValue):
         return _('Invalid value')
     else:
-        return str(error)  # fallback
+        return str(error)  # fallback, sin localización
