@@ -11,6 +11,11 @@ class Location(BusinessEntity):
         self.owner = None
         self.items = None
 
+    def __eq__(self, other):
+        o1 = (self.id, self.owner_id, self.description, self.owner, self.items)
+        o2 = (other.id, other.owner_id, other.description, other.owner, other.items)
+        return o1 == o2
+
     @classmethod
     def make_from_model(cls, locationmodel, **fill_relations):
         """

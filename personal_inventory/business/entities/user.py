@@ -17,6 +17,13 @@ class User(BusinessEntity):
         self.locations = None
         self.items = None
 
+    def __eq__(self, other):
+        o1 = (self.firstname, self.lastname, self.email, self.username,
+              self.password, self.language, self.locations, self.items)
+        o2 = (other.firstname, other.lastname, other.email, other.username,
+              other.password, other.language, other.locations, other.items)
+        return o1 == o2
+
     @classmethod
     def make_from_model(cls, usermodel, **fill_relations):
         """

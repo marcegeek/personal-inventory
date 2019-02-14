@@ -13,6 +13,13 @@ class Item(BusinessEntity):
         self.owner = None
         self.location = None
 
+    def __eq__(self, other):
+        o1 = (self.id, self.owner_id, self.description, self.location_id,
+              self.quantity, self.owner, self.location)
+        o2 = (other.id, other.owner_id, other.description, other.location_id,
+              other.quantity, other.owner, other.location)
+        return o1 == o2
+
     @classmethod
     def make_from_model(cls, itemmodel, **fill_relations):
         """
