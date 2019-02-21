@@ -1,7 +1,11 @@
+import functools
+import locale
+
 from personal_inventory.business.entities import BusinessEntity
 from personal_inventory.data.models.usermodel import UserModel
 
 
+@functools.total_ordering
 class User(BusinessEntity):
     """Entidad usuario de la capa de negocio."""
 
@@ -19,11 +23,16 @@ class User(BusinessEntity):
         self.items = None
 
     def __eq__(self, other):
-        o1 = (self.firstname, self.lastname, self.email, self.username,
+        o1 = (self.id, self.firstname, self.lastname, self.email, self.username,
               self.password, self.language, self.locations, self.items)
-        o2 = (other.firstname, other.lastname, other.email, other.username,
+        o2 = (other.id, other.firstname, other.lastname, other.email, other.username,
               other.password, other.language, other.locations, other.items)
         return o1 == o2
+
+    def __lt__(self, other):
+        o1 = (locale.strxfrm(self.lastname), locale.strxfrm(self.firstname))
+        o2 = (locale.strxfrm(other.lastname), locale.strxfrm(other.firstname))
+        return o1 < o2
 
     @classmethod
     def make_from_model(cls, usermodel, populate_locations=False, populate_items=False):
@@ -40,7 +49,9 @@ class User(BusinessEntity):
         :rtype: User | list of User
         """
         if isinstance(usermodel, list):
-            return [cls.make_from_model(um, populate_locations, populate_items) for um in usermodel]
+            users = [cls.make_from_model(um, populate_locations, populate_items) for um in usermodel]
+            users.sort()
+            return users
         if usermodel is None:
             return None
         user = cls(usermodel.id, usermodel.firstname, usermodel.lastname,
@@ -49,9 +60,11 @@ class User(BusinessEntity):
         if populate_locations:
             from personal_inventory.business.entities.location import Location
             user.locations = Location.make_from_model(usermodel.locations)
+            user.locations.sort()
         if populate_items:
             from personal_inventory.business.entities.item import Item
             user.items = Item.make_from_model(usermodel.items)
+            user.items.sort()
         return user
 
     def to_model(self):

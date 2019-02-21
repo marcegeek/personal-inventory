@@ -1,7 +1,11 @@
+import functools
+import locale
+
 from personal_inventory.business.entities import BusinessEntity
 from personal_inventory.data.models.locationmodel import LocationModel
 
 
+@functools.total_ordering
 class Location(BusinessEntity):
     """Entidad ubicación de la capa de negocio."""
 
@@ -16,6 +20,9 @@ class Location(BusinessEntity):
         o1 = (self.id, self.owner_id, self.description, self.owner, self.items)
         o2 = (other.id, other.owner_id, other.description, other.owner, other.items)
         return o1 == o2
+
+    def __lt__(self, other):
+        return locale.strcoll(self.description, other.description) < 0
 
     @classmethod
     def make_from_model(cls, locationmodel, populate_owner=False, populate_items=False):
@@ -34,7 +41,9 @@ class Location(BusinessEntity):
         if locationmodel is None:
             return None
         if isinstance(locationmodel, list):
-            return [cls.make_from_model(lm, populate_owner, populate_items) for lm in locationmodel]
+            locs = [cls.make_from_model(lm, populate_owner, populate_items) for lm in locationmodel]
+            locs.sort()
+            return locs
         location = cls(locationmodel.id, locationmodel.owner_id, locationmodel.description)
         if populate_owner:
             from personal_inventory.business.entities.user import User
@@ -42,6 +51,7 @@ class Location(BusinessEntity):
         if populate_items:
             from personal_inventory.business.entities.item import Item
             location.items = Item.make_from_model(locationmodel.items)
+            location.items.sort()
         return location
 
     def to_model(self):

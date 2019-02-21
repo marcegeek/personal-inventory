@@ -77,20 +77,14 @@ class EntityLogic(abc.ABC):
         """
         return self.plain_object_factory.make_from_model(self.dao.get_by_id(object_id), **populate_relations)
 
-    def get_all(self, sort_fields=None, reverse=False, **populate_relations):
+    def get_all(self, **populate_relations):
         """
         Recuperar todos los objetos del modelo.
 
-        :type sort_fields: list of (tuple of str | str)
-        :type reverse: bool
         :param populate_relations: relaciones a rellenar
         :rtype: list of BusinessEntity
         """
-        if sort_fields is None:
-            sort_fields = []
-        objects = self.plain_object_factory.make_from_model(self.dao.get_all(), **populate_relations)
-        self._sort(objects, sort_fields, reverse=reverse, **populate_relations)
-        return objects
+        return self.plain_object_factory.make_from_model(self.dao.get_all(), **populate_relations)
 
     def insert(self, obj):
         """
@@ -155,32 +149,3 @@ class EntityLogic(abc.ABC):
     @abc.abstractmethod
     def validate_deletion_fk_rules(self, object_id, errors):
         pass
-
-    @staticmethod
-    def _sort(objects, sort_fields, reverse=False, **populate_locations):
-        actual_sort_fields = []
-        for field in sort_fields:
-            if isinstance(field, (tuple, list)):
-                if len(field) == 2:
-                    # campo anidado (relación): ej: foo.bar
-                    # las relaciones se rellenan a un único nivel,
-                    # no se rellenan recursivamente
-                    # compruebo que el valor haya sido rellenado
-                    if populate_locations.get('fill_' + field[0], False):
-                        actual_sort_fields.append(field)
-            else:
-                actual_sort_fields.append(field)
-
-        def sort_by(obj):
-            keys = []
-            for sf in actual_sort_fields:
-                if isinstance(sf, (tuple, list)):
-                    key = obj
-                    for f in sf:
-                        key = getattr(key, f)
-                else:
-                    key = getattr(obj, sf)
-                keys.append(locale.strxfrm(key))
-            return tuple(keys)
-
-        objects.sort(key=sort_by, reverse=reverse)

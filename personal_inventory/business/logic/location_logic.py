@@ -23,22 +23,16 @@ class LocationLogic(EntityLogic):
         self.dao = LocationData()
         self.plain_object_factory = Location
 
-    def get_all_by_user(self, user, sort_fields=None, reverse=False, populate_owner=False, populate_items=False):
+    def get_all_by_user(self, user, populate_owner=False, populate_items=False):
         """
         Recuperar todas las ubicaciones pertenecientes a un usuario.
 
         :type user: User
-        :type sort_fields: list of (tuple of str | str)
-        :type reverse: bool
         :type populate_owner: bool
         :type populate_items: bool
         :rtype: list of Location
         """
-        if sort_fields is None:
-            sort_fields = ['description']
-        locations = Location.make_from_model(self.dao.get_all_by_user(user), populate_owner=populate_owner, populate_items=populate_items)
-        self._sort(locations, sort_fields, reverse=reverse, populate_owner=populate_owner, populate_items=populate_items)
-        return locations
+        return Location.make_from_model(self.dao.get_all_by_user(user), populate_owner=populate_owner, populate_items=populate_items)
 
     def validate_deletion_fk_rules(self, location_id, errors):
         """

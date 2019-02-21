@@ -1,7 +1,11 @@
+import functools
+import locale
+
 from personal_inventory.business.entities import BusinessEntity
 from personal_inventory.data.models.itemmodel import ItemModel
 
 
+@functools.total_ordering
 class Item(BusinessEntity):
     """Entidad ítem de la capa de negocio."""
 
@@ -21,6 +25,15 @@ class Item(BusinessEntity):
               other.quantity, other.owner, other.location)
         return o1 == o2
 
+    def __lt__(self, other):
+        if self.location is not None and other.location is not None:
+            o1 = (self.location, locale.strxfrm(self.description))
+            o2 = (other.location, locale.strxfrm(other.description))
+        else:
+            o1 = locale.strxfrm(self.description)
+            o2 = locale.strxfrm(other.description)
+        return o1 < o2
+
     @classmethod
     def make_from_model(cls, itemmodel, populate_owner=False, populate_location=False):
         """
@@ -38,7 +51,9 @@ class Item(BusinessEntity):
         if itemmodel is None:
             return None
         if isinstance(itemmodel, list):
-            return [cls.make_from_model(im, populate_owner, populate_location) for im in itemmodel]
+            items = [cls.make_from_model(im, populate_owner, populate_location) for im in itemmodel]
+            items.sort()
+            return items
         item = cls(itemmodel.id, itemmodel.owner_id, itemmodel.description,
                    itemmodel.location_id, itemmodel.quantity)
         if populate_owner:
