@@ -22,6 +22,7 @@ class TestUserData(Test):
         u = self.users[0]
         self.userdao.insert(u)
         self.assertEqual(u.id, 1)
+        self.assertEqual(self.userdao.get_all(), [u])
 
     def test_update(self):
         # pre-condiciones: no hay usuarios registrados
