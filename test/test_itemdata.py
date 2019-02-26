@@ -170,3 +170,38 @@ class TestItemData(Test):
 
         self.assertEqual(self.itemdao.get_all_by_location(loc1), [item1, item2])
         self.assertEqual(self.itemdao.get_all_by_location(loc2), [item3, item4])
+
+    def test_relationships(self):
+        # pre-condiciones: no hay ítems registrados
+        self.assertEqual(len(self.itemdao.get_all()), 0)
+
+        u1 = UserModel(firstname='Carlos', lastname='García',
+                       email='carlosgarcia@gmail.com', username='carlosgarcia',
+                       password='123456')
+        u2 = UserModel(firstname='Carlos G', lastname='Pérez',
+                       email='carlosperez@gmail.com', username='carlosperez',
+                       password='123456')
+        self.userdao.insert(u1)
+        self.userdao.insert(u2)
+        loc1 = LocationModel(owner_id=u1.id, description='root 1')
+        loc2 = LocationModel(owner_id=u2.id, description='root 2')
+        self.locationdao.insert(loc1)
+        self.locationdao.insert(loc2)
+
+        item1 = ItemModel(owner_id=u1.id, location_id=loc1.id, description='item 1')
+        item2 = ItemModel(owner_id=u1.id, location_id=loc1.id, description='item 2')
+        item3 = ItemModel(owner_id=u2.id, location_id=loc2.id, description='item 3')
+        item4 = ItemModel(owner_id=u2.id, location_id=loc2.id, description='item 4')
+        self.itemdao.insert(item1)
+        self.itemdao.insert(item2)
+        self.itemdao.insert(item3)
+        self.itemdao.insert(item4)
+
+        self.assertEqual(u1.items, [item1, item2])
+        self.assertEqual(loc1.items, [item1, item2])
+        self.assertEqual(item1.location, loc1)
+        self.assertEqual(item2.location, loc1)
+        self.assertEqual(u2.items, [item3, item4])
+        self.assertEqual(loc2.items, [item3, item4])
+        self.assertEqual(item3.location, loc2)
+        self.assertEqual(item4.location, loc2)
