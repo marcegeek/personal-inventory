@@ -16,3 +16,10 @@ class UserModel(Base):
     language = Column(String(5))
     items = relationship('ItemModel', backref='owner', viewonly=True, bake_queries=False)
     locations = relationship('LocationModel', backref='owner', viewonly=True, bake_queries=False)
+
+    def __eq__(self, other):
+        o1 = (self.id, self.firstname, self.lastname, self.email,
+              self.username, self.password, self.language)
+        o2 = (other.id, other.firstname, other.lastname, other.email,
+              other.username, other.password, other.language)
+        return o1 == o2
