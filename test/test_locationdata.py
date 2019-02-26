@@ -119,3 +119,31 @@ class TestLocationData(Test):
 
         self.assertEqual(self.locationdao.get_all_by_user(u1), [loc1, loc2])
         self.assertEqual(self.locationdao.get_all_by_user(u2), [loc3, loc4])
+
+    def test_relationships(self):
+        # pre-condiciones: no hay ubicaciones registradas
+        self.assertEqual(len(self.locationdao.get_all()), 0)
+
+        u1 = UserModel(firstname='Carlos', lastname='García',
+                       email='carlosgarcia@gmail.com', username='carlosgarcia',
+                       password='123456')
+        u2 = UserModel(firstname='Carlos G', lastname='Pérez',
+                       email='carlosperez@gmail.com', username='carlosperez',
+                       password='123456')
+        self.userdao.insert(u1)
+        self.userdao.insert(u2)
+        loc1 = LocationModel(owner_id=u1.id, description='root 1')
+        loc2 = LocationModel(owner_id=u1.id, description='root 2')
+        loc3 = LocationModel(owner_id=u2.id, description='root 3')
+        loc4 = LocationModel(owner_id=u2.id, description='root 4')
+        self.locationdao.insert(loc1)
+        self.locationdao.insert(loc2)
+        self.locationdao.insert(loc3)
+        self.locationdao.insert(loc4)
+
+        self.assertEqual(u1.locations, [loc1, loc2])
+        self.assertEqual(loc1.owner, u1)
+        self.assertEqual(loc2.owner, u1)
+        self.assertEqual(u2.locations, [loc3, loc4])
+        self.assertEqual(loc3.owner, u2)
+        self.assertEqual(loc4.owner, u2)
