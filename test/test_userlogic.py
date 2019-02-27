@@ -80,7 +80,7 @@ class TestUserLogic(Test):
         self.assertEqual(self.ul.get_all(), self.users)
 
     def test_rule_required_fields(self):
-        required_fields = {'firstname', 'lastname', 'email', 'username', 'password'}
+        required_fields = {'firstname', 'lastname', 'email', 'language', 'username', 'password'}
         fields_subsets = list(
             itertools.chain.from_iterable(itertools.combinations(required_fields, r)
                                           for r in range(len(required_fields) + 1))
@@ -91,8 +91,8 @@ class TestUserLogic(Test):
             errors = []
             # usuario con todos los campos requeridos
             user = User(firstname='Juan', lastname='García',
-                        email='juangarcia@gmail.com', username='juangarcia',
-                        password='123456')
+                        email='juangarcia@gmail.com', language='es',
+                        username='juangarcia', password='123456')
             # elimino los campos que no están presentes
             expected_absent_fields = set([f for f in required_fields if f not in expected_fields])
             for field in expected_absent_fields:

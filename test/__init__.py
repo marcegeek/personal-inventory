@@ -17,14 +17,14 @@ class Test(unittest.TestCase):
 
 def make_data_test_users():
     return [UserModel(firstname='Carlos', lastname='Pérez',
-                      email='carlosperez@gmail.com', username='carlosperez',
-                      password='123456'),
+                      email='carlosperez@gmail.com', language='es',
+                      username='carlosperez', password='123456'),
             UserModel(firstname='Roberto', lastname='García',
-                      email='robgarcia@gmail.com', username='robgarcia',
-                      password='123456'),
+                      email='robgarcia@gmail.com', language='es',
+                      username='robgarcia', password='123456'),
             UserModel(firstname='José', lastname='Duval',
-                      email='jduval@gmail.com', username='jduval',
-                      password='123456')]
+                      email='jduval@gmail.com', language='es',
+                      username='jduval', password='123456')]
 
 
 def make_logic_test_users():

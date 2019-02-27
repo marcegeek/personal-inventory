@@ -164,6 +164,8 @@ class UserLogic(EntityLogic):
             present_fields.append('lastname')
         if user.email:
             present_fields.append('email')
+        if user.language:
+            present_fields.append('language')
         if user.username:
             present_fields.append('username')
         if user.password:
@@ -186,6 +188,8 @@ class UserLogic(EntityLogic):
             field_errors.append(RequiredFieldError('lastname'))
         if 'email' not in present_fields:
             field_errors.append(RequiredFieldError('email'))
+        if 'language' not in present_fields:
+            field_errors.append(RequiredFieldError('language'))
         if 'username' not in present_fields:
             field_errors.append(RequiredFieldError('username'))
         if 'password' not in present_fields:
