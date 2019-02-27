@@ -1,8 +1,5 @@
 import personal_inventory.data as dal
-from personal_inventory.data.models.itemmodel import ItemModel
-from personal_inventory.data.models.locationmodel import LocationModel
-from personal_inventory.data.models.usermodel import UserModel
-from test import Test
+from test import Test, make_data_test_users, make_data_test_locations, make_data_test_items
 
 
 class TestItemData(Test):
@@ -12,196 +9,132 @@ class TestItemData(Test):
         self.userdao = dal.UserData()
         self.locationdao = dal.LocationData()
         self.itemdao = dal.ItemData()
+        self.users = make_data_test_users()
+        self.locations = make_data_test_locations()
+        self.items = make_data_test_items()
 
     def test_insert(self):
         # pre-condiciones: no hay ítems registrados
         self.assertEqual(len(self.itemdao.get_all()), 0)
 
-        u = UserModel(firstname='Carlos', lastname='García',
-                      email='carlosgarcia@gmail.com', username='carlosgarcia',
-                      password='123456')
-        self.userdao.insert(u)
-        loc = LocationModel(owner_id=u.id, description='root 1')
-        self.locationdao.insert(loc)
+        for u in self.users:
+            self.userdao.insert(u)
+        for loc in self.locations:
+            self.locationdao.insert(loc)
+        for item in self.items:
+            self.itemdao.insert(item)
 
-        item1 = ItemModel(owner_id=u.id, location_id=loc.id, description='item 1')
-        item2 = ItemModel(owner_id=u.id, location_id=loc.id, description='item 2')
-        self.itemdao.insert(item1)
-        self.itemdao.insert(item2)
-
-        self.assertEqual(item1.id, 1)
-        self.assertEqual(item2.id, 2)
-        self.assertEqual(self.itemdao.get_all(), [item1, item2])
+        item_id = 1
+        for item in self.items:
+            self.assertEqual(item.id, item_id)
+            item_id += 1
 
     def test_update(self):
         # pre-condiciones: no hay ítems registrados
         self.assertEqual(len(self.itemdao.get_all()), 0)
 
-        u = UserModel(firstname='Carlos', lastname='García',
-                      email='carlosgarcia@gmail.com', username='carlosgarcia',
-                      password='123456')
-        self.userdao.insert(u)
-        loc = LocationModel(owner_id=u.id, description='root 1')
-        self.locationdao.insert(loc)
+        for u in self.users:
+            self.userdao.insert(u)
+        for loc in self.locations:
+            self.locationdao.insert(loc)
+        for item in self.items:
+            self.itemdao.insert(item)
 
-        item1 = ItemModel(owner_id=u.id, location_id=loc.id, description='item 1')
-        item2 = ItemModel(owner_id=u.id, location_id=loc.id, description='item 2')
-        self.itemdao.insert(item1)
-        self.itemdao.insert(item2)
-        item2.description = 'object 2'
-        self.itemdao.update(item2)
-
-        self.assertEqual(self.itemdao.get_by_id(item2.id).description, 'object 2')
+        for item in self.items:
+            item.description = 'object'
+            self.itemdao.update(item)
+            self.assertEqual(self.itemdao.get_by_id(item.id), item)
 
     def test_delete(self):
         # pre-condiciones: no hay ítems registrados
         self.assertEqual(len(self.itemdao.get_all()), 0)
 
-        u = UserModel(firstname='Carlos', lastname='García',
-                      email='carlosgarcia@gmail.com', username='carlosgarcia',
-                      password='123456')
-        self.userdao.insert(u)
-        loc = LocationModel(owner_id=u.id, description='root 1')
-        self.locationdao.insert(loc)
+        for u in self.users:
+            self.userdao.insert(u)
+        for loc in self.locations:
+            self.locationdao.insert(loc)
+        for item in self.items:
+            self.itemdao.insert(item)
 
-        item1 = ItemModel(owner_id=u.id, location_id=loc.id, description='item 1')
-        item2 = ItemModel(owner_id=u.id, location_id=loc.id, description='item 2')
-        self.itemdao.insert(item1)
-        self.itemdao.insert(item2)
-
-        self.itemdao.delete(item1.id)
-        self.assertIsNone(self.itemdao.get_by_id(item1.id))
-        self.itemdao.delete(item2.id)
-        self.assertIsNone(self.itemdao.get_by_id(item2.id))
-
+        for item in self.items:
+            self.itemdao.delete(item.id)
+            self.assertIsNone(self.itemdao.get_by_id(item.id))
         self.assertEqual(len(self.itemdao.get_all()), 0)
 
     def test_get_by_id(self):
         # pre-condiciones: no hay ítems registrados
         self.assertEqual(len(self.itemdao.get_all()), 0)
 
-        u = UserModel(firstname='Carlos', lastname='García',
-                      email='carlosgarcia@gmail.com', username='carlosgarcia',
-                      password='123456')
-        self.userdao.insert(u)
-        loc = LocationModel(owner_id=u.id, description='root 1')
-        self.locationdao.insert(loc)
+        for u in self.users:
+            self.userdao.insert(u)
+        for loc in self.locations:
+            self.locationdao.insert(loc)
+        for item in self.items:
+            self.itemdao.insert(item)
 
-        item1 = ItemModel(owner_id=u.id, location_id=loc.id, description='item 1')
-        item2 = ItemModel(owner_id=u.id, location_id=loc.id, description='item 2')
-        self.itemdao.insert(item1)
-        self.itemdao.insert(item2)
-
-        self.assertEqual(self.itemdao.get_by_id(item1.id), item1)
-        self.assertEqual(self.itemdao.get_by_id(item2.id), item2)
+        for item in self.items:
+            self.assertEqual(self.itemdao.get_by_id(item.id), item)
 
     def test_get_all(self):
         # pre-condiciones: no hay ítems registrados
         self.assertEqual(len(self.itemdao.get_all()), 0)
 
-        u = UserModel(firstname='Carlos', lastname='García',
-                      email='carlosgarcia@gmail.com', username='carlosgarcia',
-                      password='123456')
-        self.userdao.insert(u)
-        loc = LocationModel(owner_id=u.id, description='root 1')
-        self.locationdao.insert(loc)
+        for u in self.users:
+            self.userdao.insert(u)
+        for loc in self.locations:
+            self.locationdao.insert(loc)
+        for item in self.items:
+            self.itemdao.insert(item)
 
-        item1 = ItemModel(owner_id=u.id, location_id=loc.id, description='item 1')
-        item2 = ItemModel(owner_id=u.id, location_id=loc.id, description='item 2')
-        self.itemdao.insert(item1)
-        self.itemdao.insert(item2)
-
-        self.assertEqual(self.itemdao.get_all(), [item1, item2])
+        self.assertEqual(self.itemdao.get_all(), self.items)
 
     def test_get_all_by_user(self):
         # pre-condiciones: no hay ítems registrados
         self.assertEqual(len(self.itemdao.get_all()), 0)
 
-        u1 = UserModel(firstname='Carlos', lastname='García',
-                       email='carlosgarcia@gmail.com', username='carlosgarcia',
-                       password='123456')
-        u2 = UserModel(firstname='Carlos G', lastname='Pérez',
-                       email='carlosperez@gmail.com', username='carlosperez',
-                       password='123456')
-        self.userdao.insert(u1)
-        self.userdao.insert(u2)
-        loc1 = LocationModel(owner_id=u1.id, description='root 1')
-        loc2 = LocationModel(owner_id=u2.id, description='root 2')
-        self.locationdao.insert(loc1)
-        self.locationdao.insert(loc2)
+        for u in self.users:
+            self.userdao.insert(u)
+        for loc in self.locations:
+            self.locationdao.insert(loc)
+        for item in self.items:
+            self.itemdao.insert(item)
 
-        item1 = ItemModel(owner_id=u1.id, location_id=loc1.id, description='item 1')
-        item2 = ItemModel(owner_id=u1.id, location_id=loc1.id, description='item 2')
-        item3 = ItemModel(owner_id=u2.id, location_id=loc2.id, description='item 3')
-        item4 = ItemModel(owner_id=u2.id, location_id=loc2.id, description='item 4')
-        self.itemdao.insert(item1)
-        self.itemdao.insert(item2)
-        self.itemdao.insert(item3)
-        self.itemdao.insert(item4)
-
-        self.assertEqual(self.itemdao.get_all_by_user(u1), [item1, item2])
-        self.assertEqual(self.itemdao.get_all_by_user(u2), [item3, item4])
+        for u in self.users:
+            user_items = [item for item in self.items if item.owner_id == u.id]
+            self.assertEqual(self.itemdao.get_all_by_user(u), user_items)
 
     def test_get_all_by_location(self):
         # pre-condiciones: no hay ítems registrados
         self.assertEqual(len(self.itemdao.get_all()), 0)
 
-        u1 = UserModel(firstname='Carlos', lastname='García',
-                       email='carlosgarcia@gmail.com', username='carlosgarcia',
-                       password='123456')
-        u2 = UserModel(firstname='Carlos G', lastname='Pérez',
-                       email='carlosperez@gmail.com', username='carlosperez',
-                       password='123456')
-        self.userdao.insert(u1)
-        self.userdao.insert(u2)
-        loc1 = LocationModel(owner_id=u1.id, description='root 1')
-        loc2 = LocationModel(owner_id=u2.id, description='root 2')
-        self.locationdao.insert(loc1)
-        self.locationdao.insert(loc2)
+        for u in self.users:
+            self.userdao.insert(u)
+        for loc in self.locations:
+            self.locationdao.insert(loc)
+        for item in self.items:
+            self.itemdao.insert(item)
 
-        item1 = ItemModel(owner_id=u1.id, location_id=loc1.id, description='item 1')
-        item2 = ItemModel(owner_id=u1.id, location_id=loc1.id, description='item 2')
-        item3 = ItemModel(owner_id=u2.id, location_id=loc2.id, description='item 3')
-        item4 = ItemModel(owner_id=u2.id, location_id=loc2.id, description='item 4')
-        self.itemdao.insert(item1)
-        self.itemdao.insert(item2)
-        self.itemdao.insert(item3)
-        self.itemdao.insert(item4)
-
-        self.assertEqual(self.itemdao.get_all_by_location(loc1), [item1, item2])
-        self.assertEqual(self.itemdao.get_all_by_location(loc2), [item3, item4])
+        for loc in self.locations:
+            loc_items = [item for item in self.items if item.location_id == loc.id]
+            self.assertEqual(self.itemdao.get_all_by_location(loc), loc_items)
 
     def test_relationships(self):
         # pre-condiciones: no hay ítems registrados
         self.assertEqual(len(self.itemdao.get_all()), 0)
 
-        u1 = UserModel(firstname='Carlos', lastname='García',
-                       email='carlosgarcia@gmail.com', username='carlosgarcia',
-                       password='123456')
-        u2 = UserModel(firstname='Carlos G', lastname='Pérez',
-                       email='carlosperez@gmail.com', username='carlosperez',
-                       password='123456')
-        self.userdao.insert(u1)
-        self.userdao.insert(u2)
-        loc1 = LocationModel(owner_id=u1.id, description='root 1')
-        loc2 = LocationModel(owner_id=u2.id, description='root 2')
-        self.locationdao.insert(loc1)
-        self.locationdao.insert(loc2)
+        for u in self.users:
+            self.userdao.insert(u)
+        for loc in self.locations:
+            self.locationdao.insert(loc)
+        for item in self.items:
+            self.itemdao.insert(item)
 
-        item1 = ItemModel(owner_id=u1.id, location_id=loc1.id, description='item 1')
-        item2 = ItemModel(owner_id=u1.id, location_id=loc1.id, description='item 2')
-        item3 = ItemModel(owner_id=u2.id, location_id=loc2.id, description='item 3')
-        item4 = ItemModel(owner_id=u2.id, location_id=loc2.id, description='item 4')
-        self.itemdao.insert(item1)
-        self.itemdao.insert(item2)
-        self.itemdao.insert(item3)
-        self.itemdao.insert(item4)
-
-        self.assertEqual(u1.items, [item1, item2])
-        self.assertEqual(loc1.items, [item1, item2])
-        self.assertEqual(item1.location, loc1)
-        self.assertEqual(item2.location, loc1)
-        self.assertEqual(u2.items, [item3, item4])
-        self.assertEqual(loc2.items, [item3, item4])
-        self.assertEqual(item3.location, loc2)
-        self.assertEqual(item4.location, loc2)
+        for u in self.users:
+            user_items = [item for item in self.items if item.owner_id == u.id]
+            self.assertEqual(u.items, user_items)
+        for loc in self.locations:
+            loc_items = [item for item in self.items if item.location_id == loc.id]
+            self.assertEqual(loc.items, loc_items)
+        for item in self.items:
+            item_loc = [loc for loc in self.locations if loc.id == item.location_id][0]
+            self.assertEqual(item.location, item_loc)

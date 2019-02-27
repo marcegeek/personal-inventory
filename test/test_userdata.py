@@ -1,6 +1,5 @@
 import personal_inventory.data as dal
-from personal_inventory.data.models.usermodel import UserModel
-from test import Test
+from test import Test, make_data_test_users
 
 
 class TestUserData(Test):
@@ -8,21 +7,19 @@ class TestUserData(Test):
     def setUp(self):
         super().setUp()
         self.userdao = dal.UserData()
-        self.users = [UserModel(firstname='Carlos', lastname='Pérez',
-                                email='carlosperez@gmail.com', username='carlosperez',
-                                password='123456'),
-                      UserModel(firstname='Roberto', lastname='García',
-                                email='robgarcia@gmail.com', username='robgarcia',
-                                password='123456')]
+        self.users = make_data_test_users()
 
     def test_insert(self):
         # pre-condiciones: no hay usuarios registrados
         self.assertEqual(len(self.userdao.get_all()), 0)
 
-        u = self.users[0]
-        self.userdao.insert(u)
-        self.assertEqual(u.id, 1)
-        self.assertEqual(self.userdao.get_all(), [u])
+        for u in self.users:
+            self.userdao.insert(u)
+
+        user_id = 1
+        for u in self.users:
+            self.assertEqual(u.id, user_id)
+            user_id += 1
 
     def test_update(self):
         # pre-condiciones: no hay usuarios registrados
@@ -34,8 +31,7 @@ class TestUserData(Test):
         for u in self.users:
             u.firstname = 'Juan'
             self.userdao.update(u)
-            found = self.userdao.get_by_id(u.id)
-            self.assertEqual(found.firstname, 'Juan')
+            self.assertEqual(self.userdao.get_by_id(u.id), u)
 
     def test_delete(self):
         # pre-condiciones: no hay usuarios registrados
@@ -47,7 +43,6 @@ class TestUserData(Test):
         for u in self.users:
             self.userdao.delete(u.id)
             self.assertIsNone(self.userdao.get_by_id(u.id))
-
         self.assertEqual(len(self.userdao.get_all()), 0)
 
     def test_get_by_id(self):
