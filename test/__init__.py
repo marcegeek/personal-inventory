@@ -2,6 +2,7 @@ import unittest
 
 import personal_inventory.data as dal
 import personal_inventory.defaultconfigs as config
+from personal_inventory.business.entities.user import User
 from personal_inventory.data import UserModel, LocationModel, ItemModel
 
 
@@ -20,7 +21,15 @@ def make_data_test_users():
                       password='123456'),
             UserModel(firstname='Roberto', lastname='García',
                       email='robgarcia@gmail.com', username='robgarcia',
+                      password='123456'),
+            UserModel(firstname='José', lastname='Duval',
+                      email='jduval@gmail.com', username='jduval',
                       password='123456')]
+
+
+def make_logic_test_users():
+    # lista ordenada con el orden por defecto
+    return User.make_from_model(make_data_test_users())
 
 
 def make_data_test_locations():

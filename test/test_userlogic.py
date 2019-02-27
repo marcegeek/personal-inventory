@@ -1,8 +1,10 @@
+import itertools
+
 from personal_inventory.business.entities.user import User
 from personal_inventory.business.logic import RequiredFieldError, InvalidLength
 from personal_inventory.business.logic.user_logic import UserLogic, RepeatedEmailError, RepeatedUsernameError, \
     InvalidUsernameError, InvalidEmailError
-from test import Test
+from test import Test, make_logic_test_users
 
 
 class TestUserLogic(Test):
@@ -10,188 +12,120 @@ class TestUserLogic(Test):
     def setUp(self):
         super().setUp()
         self.ul = UserLogic()
+        self.users = make_logic_test_users()
 
     def test_insert(self):
         # pre-condiciones: no hay usuarios registrados
         self.assertEqual(len(self.ul.get_all()), 0)
 
-        user = User(firstname='Carlos', lastname='Pérez',
-                    email='carlosperez@gmail.com', username='carlosperez',
-                    password='123456')
-        success = self.ul.insert(user)
+        # ejecuto la lógica
+        successes = []
+        for u in self.users:
+            successes.append(self.ul.insert(u))
 
-        # post-condiciones
-        self.assertTrue(success)
-        self.assertEqual(user.id, 1)
-        self.assertEqual(len(self.ul.get_all()), 1)
+        # post-condiciones: usuarios registrados
+        self.assertEqual(successes, [True] * len(self.users))
+        self.assertEqual(len(self.ul.get_all()), len(self.users))
 
     def test_update(self):
         # pre-condiciones: no hay usuarios registrados
         self.assertEqual(len(self.ul.get_all()), 0)
 
-        user1 = User(firstname='Carlos', lastname='Pérez',
-                     email='carlosperez@gmail.com', username='carlosperez',
-                     password='123456')
-        user2 = User(firstname='Roberto', lastname='García',
-                     email='robgarcia@gmail.com', username='rgarcia',
-                     password='123456')
-        user3 = User(firstname='José', lastname='Duval',
-                     email='jduval@gmail.com', username='jduval',
-                     password='123456')
-        self.ul.insert(user1)
-        self.ul.insert(user2)
-        self.ul.insert(user3)
-        user2.password = 'algomejor123456'
-        success = self.ul.update(user2)
+        # ejecuto la lógica
+        successes = []
+        for u in self.users:
+            self.ul.insert(u)
+        for u in self.users:
+            u.password = 'algomejor123456'
+            successes.append(self.ul.update(u))
 
-        updated = self.ul.get_by_id(user2.id)
-
-        # post-condiciones
-        self.assertTrue(success)
-        self.assertEqual(updated.id, user2.id)
-        self.assertEqual(updated.password, 'algomejor123456')
+        # post-condiciones: usuarios modificados
+        self.assertEqual(successes, [True] * len(self.users))
+        for u in self.users:
+            self.assertEqual(self.ul.get_by_id(u.id), u)
 
     def test_delete(self):
         # pre-condiciones: no hay usuarios registrados
         self.assertEqual(len(self.ul.get_all()), 0)
 
-        user1 = User(firstname='Carlos', lastname='Pérez',
-                     email='carlosperez@gmail.com', username='carlosperez',
-                     password='123456')
-        user2 = User(firstname='Roberto', lastname='García',
-                     email='robgarcia@gmail.com', username='rgarcia',
-                     password='123456')
-        user3 = User(firstname='José', lastname='Duval',
-                     email='jduval@gmail.com', username='jduval',
-                     password='123456')
-        self.ul.insert(user1)
-        self.ul.insert(user2)
-        self.ul.insert(user3)
-        success = self.ul.delete(user2.id)
-        failure = self.ul.delete(4)
+        # ejecuto la lógica
+        successes = []
+        for u in self.users:
+            self.ul.insert(u)
+        for u in self.users:
+            successes.append(self.ul.delete(u.id))
+        failure = self.ul.delete(self.users[-1].id + 1)
 
-        # post-condiciones
-        self.assertTrue(success)
+        # post-condiciones: usuarios eliminados
+        self.assertEqual(successes, [True] * len(self.users))
         self.assertFalse(failure)
-        self.assertEqual(len(self.ul.get_all()), 2)
+        self.assertEqual(len(self.ul.get_all()), 0)
 
     def test_gets(self):
         # pre-condiciones: no hay usuarios registrados
         self.assertEqual(len(self.ul.get_all()), 0)
 
-        user1 = User(firstname='Carlos', lastname='Pérez',
-                     email='carlosperez@gmail.com', username='carlosperez',
-                     password='123456')
-        user2 = User(firstname='Roberto', lastname='García',
-                     email='robgarcia@gmail.com', username='rgarcia',
-                     password='123456')
-        user3 = User(firstname='José', lastname='Duval',
-                     email='jduval@gmail.com', username='jduval',
-                     password='123456')
-        self.ul.insert(user1)
-        self.ul.insert(user2)
-        self.ul.insert(user3)
+        # ejecuto la lógica
+        for u in self.users:
+            self.ul.insert(u)
 
-        # post-condiciones
-        self.assertEqual(self.ul.get_by_id(user1.id).id, user1.id)
-        self.assertEqual(self.ul.get_by_email(user1.email).id, user1.id)
-        self.assertEqual(self.ul.get_by_username(user1.username).id, user1.id)
-        self.assertEqual(self.ul.get_by_username_email(user1.username).id, user1.id)
-        self.assertEqual(self.ul.get_by_username_email(user1.email).id, user1.id)
-        self.assertEqual(self.ul.get_by_id(user2.id).id, user2.id)
-        self.assertEqual(self.ul.get_by_email(user2.email).id, user2.id)
-        self.assertEqual(self.ul.get_by_username(user2.username).id, user2.id)
-        self.assertEqual(self.ul.get_by_username_email(user2.username).id, user2.id)
-        self.assertEqual(self.ul.get_by_username_email(user2.email).id, user2.id)
-        self.assertEqual(len(self.ul.get_all()), 3)
+        # post-condiciones: recupera los usuarios
+        for u in self.users:
+            self.assertEqual(self.ul.get_by_id(u.id), u)
+            self.assertEqual(self.ul.get_by_email(u.email), u)
+            self.assertEqual(self.ul.get_by_username(u.username), u)
+            self.assertEqual(self.ul.get_by_username_email(u.username), u)
+            self.assertEqual(self.ul.get_by_username_email(u.email), u)
+        # lista ordenada con el orden por defecto
+        self.assertEqual(self.ul.get_all(), self.users)
 
     def test_rule_required_fields(self):
-        # valida regla
-        valido = User(firstname='Juan', lastname='García',
-                      email='juangarcia@gmail.com', username='juangarcia',
-                      password='123456')
+        required_fields = {'firstname', 'lastname', 'email', 'username', 'password'}
+        fields_subsets = list(
+            itertools.chain.from_iterable(itertools.combinations(required_fields, r)
+                                          for r in range(len(required_fields) + 1))
+        )
+        fields_subsets = [set(fs) for fs in fields_subsets]
 
-        errors = []
-        present_fields = self.ul.get_present_fields(valido)
-        self.assertTrue(self.ul.rule_required_fields(errors, present_fields))
-        self.assertEqual(len(errors), 0)
-        for field in ['firstname', 'lastname', 'email', 'username', 'password']:
-            self.assertIn(field, present_fields)
-
-        # falta nombre
-        invalido = User(lastname='García',
+        for expected_fields in fields_subsets:
+            errors = []
+            # usuario con todos los campos requeridos
+            user = User(firstname='Juan', lastname='García',
                         email='juangarcia@gmail.com', username='juangarcia',
                         password='123456')
-        errors = []
-        present_fields = self.ul.get_present_fields(invalido)
-        self.assertFalse(self.ul.rule_required_fields(errors, present_fields))
-        self.assertIsInstance(errors[0], RequiredFieldError)
-        self.assertEqual(errors[0].field, 'firstname')
-        self.assertNotIn('firstname', present_fields)
-
-        # falta apellido
-        invalido = User(firstname='Juan',
-                        email='juangarcia@gmail.com', username='juangarcia',
-                        password='123456')
-        errors = []
-        present_fields = self.ul.get_present_fields(invalido)
-        self.assertFalse(self.ul.rule_required_fields(errors, present_fields))
-        self.assertIsInstance(errors[0], RequiredFieldError)
-        self.assertEqual(errors[0].field, 'lastname')
-        self.assertNotIn('lastname', present_fields)
-
-        # falta e-mail
-        invalido = User(firstname='Juan', lastname='García',
-                        username='juangarcia',
-                        password='123456')
-        errors = []
-        present_fields = self.ul.get_present_fields(invalido)
-        self.assertFalse(self.ul.rule_required_fields(errors, present_fields))
-        self.assertIsInstance(errors[0], RequiredFieldError)
-        self.assertEqual(errors[0].field, 'email')
-        self.assertNotIn('email', present_fields)
-
-        # falta nombre de usuario
-        invalido = User(firstname='Juan', lastname='García',
-                        email='juanggarcia@gmail.com',
-                        password='123456')
-        errors = []
-        present_fields = self.ul.get_present_fields(invalido)
-        self.assertFalse(self.ul.rule_required_fields(errors, present_fields))
-        self.assertIsInstance(errors[0], RequiredFieldError)
-        self.assertEqual(errors[0].field, 'username')
-        self.assertNotIn('username', present_fields)
-
-        # falta contraseña
-        invalido = User(firstname='Juan', lastname='García',
-                        email='juanggarcia@gmail.com', username='carlosgarcia')
-        errors = []
-        present_fields = self.ul.get_present_fields(invalido)
-        self.assertFalse(self.ul.rule_required_fields(errors, present_fields))
-        self.assertIsInstance(errors[0], RequiredFieldError)
-        self.assertEqual(errors[0].field, 'password')
-        self.assertNotIn('password', present_fields)
+            # elimino los campos que no están presentes
+            expected_absent_fields = set([f for f in required_fields if f not in expected_fields])
+            for field in expected_absent_fields:
+                setattr(user, field, None)
+            present_fields = self.ul.get_present_fields(user)
+            # valida regla
+            if expected_fields == required_fields:
+                self.assertTrue(self.ul.rule_required_fields(errors, present_fields))
+            else:
+                # falta/n campo/s requerido/s
+                self.assertFalse(self.ul.rule_required_fields(errors, present_fields))
+                for e in errors:
+                    self.assertIsInstance(e, RequiredFieldError)
+                self.assertEqual(set([e.field for e in errors]), expected_absent_fields)
+            self.assertEqual(len(errors), len(expected_absent_fields))
+            self.assertEqual(set(present_fields), expected_fields)
 
     def test_rule_unique_email(self):
         # pre-condiciones: no hay usuarios registrados
         self.assertEqual(len(self.ul.get_all()), 0)
 
-        user = User(firstname='Carlos', lastname='Pérez',
-                    email='carlosperez@gmail.com', username='carlosperez',
-                    password='123456')
-        self.ul.insert(user)
+        # ejecuto la lógica
+        self.ul.insert(self.users[0])
 
         # valida regla
-        valido = User(id=user.id + 1, firstname='Juan', lastname='García',
-                      email='juangarcia@gmail.com', username='juangarcia',
-                      password='123456')
+        valido = self.users[1]
         errors = []
         self.assertTrue(self.ul.rule_unique_email(valido, errors))
         self.assertEqual(len(errors), 0)
 
-        # E-mail repetido
-        invalido = User(id=valido.id + 1, firstname='Carlos', lastname='Pérez',
-                        email='carlosperez@gmail.com', username='carlitos',
+        # e-mail repetido
+        invalido = User(firstname='Carlos', lastname='Pérez',
+                        email=self.users[0].email, username='carlitos',
                         password='123456')
         self.assertFalse(self.ul.rule_unique_email(invalido, errors))
         self.assertIsInstance(errors[0], RepeatedEmailError)
@@ -200,21 +134,17 @@ class TestUserLogic(Test):
         # pre-condiciones: no hay usuarios registrados
         self.assertEqual(len(self.ul.get_all()), 0)
 
-        user = User(firstname='Carlos', lastname='Pérez',
-                    email='carlosperez@gmail.com', username='carlosperez',
-                    password='123456')
-        self.ul.insert(user)
+        # ejecuto la lógica
+        self.ul.insert(self.users[0])
 
         # valida regla
-        valido = User(id=user.id + 1, firstname='Juan', lastname='García',
-                      email='juangarcia@gmail.com', username='juangarcia',
-                      password='123456')
+        valido = self.users[1]
         errors = []
         self.assertTrue(self.ul.rule_unique_username(valido, errors))
 
-        # Nombre de usuario repetido
-        invalido = User(id=valido.id + 1, firstname='Carlos', lastname='Pérez',
-                        email='carlitosperez@gmail.com', username='carlosperez',
+        # nombre de usuario repetido
+        invalido = User(firstname='Carlos', lastname='Pérez',
+                        email='carlitosperez@gmail.com', username=self.users[0].username,
                         password='123456')
         self.assertFalse(self.ul.rule_unique_username(invalido, errors))
         self.assertIsInstance(errors[0], RepeatedUsernameError)
