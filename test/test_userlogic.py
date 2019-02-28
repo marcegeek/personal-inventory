@@ -88,7 +88,6 @@ class TestUserLogic(Test):
         fields_subsets = [set(fs) for fs in fields_subsets]
 
         for expected_fields in fields_subsets:
-            errors = []
             # usuario con todos los campos requeridos
             user = User(firstname='Juan', lastname='García',
                         email='juangarcia@gmail.com', language='es',
@@ -97,10 +96,14 @@ class TestUserLogic(Test):
             expected_absent_fields = set([f for f in required_fields if f not in expected_fields])
             for field in expected_absent_fields:
                 setattr(user, field, None)
+
             present_fields = self.ul.get_present_fields(user)
+
+            errors = []
             # valida regla
             if expected_fields == required_fields:
                 self.assertTrue(self.ul.rule_required_fields(errors, present_fields))
+                self.assertEqual(len(errors), 0)
             else:
                 # falta/n campo/s requerido/s
                 self.assertFalse(self.ul.rule_required_fields(errors, present_fields))
@@ -118,17 +121,17 @@ class TestUserLogic(Test):
         self.ul.insert(self.users[0])
 
         # valida regla
-        valido = self.users[1]
+        valid = self.users[1]
         errors = []
-        self.assertTrue(self.ul.rule_unique_email(valido, errors))
+        self.assertTrue(self.ul.rule_unique_email(valid, errors))
         self.assertEqual(len(errors), 0)
 
         # e-mail repetido
-        invalido = User(firstname='Carlos', lastname='Pérez',
-                        email=self.users[0].email, username='carlitos',
-                        password='123456')
-        self.assertFalse(self.ul.rule_unique_email(invalido, errors))
+        invalid = User(email=self.users[0].email)
+        self.assertFalse(self.ul.rule_unique_email(invalid, errors))
+        self.assertEqual(len(errors), 1)
         self.assertIsInstance(errors[0], RepeatedEmailError)
+        self.assertEqual(errors[0].field, 'email')
 
     def test_rule_unique_username(self):
         # pre-condiciones: no hay usuarios registrados
@@ -138,176 +141,190 @@ class TestUserLogic(Test):
         self.ul.insert(self.users[0])
 
         # valida regla
-        valido = self.users[1]
+        valid = self.users[1]
         errors = []
-        self.assertTrue(self.ul.rule_unique_username(valido, errors))
+        self.assertTrue(self.ul.rule_unique_username(valid, errors))
+        self.assertEqual(len(errors), 0)
 
         # nombre de usuario repetido
-        invalido = User(firstname='Carlos', lastname='Pérez',
-                        email='carlitosperez@gmail.com', username=self.users[0].username,
-                        password='123456')
-        self.assertFalse(self.ul.rule_unique_username(invalido, errors))
+        invalid = User(username=self.users[0].username)
+        self.assertFalse(self.ul.rule_unique_username(invalid, errors))
+        self.assertEqual(len(errors), 1)
         self.assertIsInstance(errors[0], RepeatedUsernameError)
+        self.assertEqual(errors[0].field, 'username')
 
     def test_rule_firstname_len_less_than_2(self):
         # valida regla
-        user = User(firstname='Al')
+        valid = User(firstname='Al')
         errors = []
-        self.assertTrue(self.ul.rule_firstname_len(user, errors))
+        self.assertTrue(self.ul.rule_firstname_len(valid, errors))
         self.assertEqual(len(errors), 0)
 
         # nombre menor que 2 caracteres
-        user = User(firstname='A')
-        self.assertFalse(self.ul.rule_firstname_len(user, errors))
+        invalid = User(firstname='A')
+        self.assertFalse(self.ul.rule_firstname_len(invalid, errors))
+        self.assertEqual(len(errors), 1)
         self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'firstname')
 
     def test_rule_firstname_len_greater_than_40(self):
         # valida regla
-        valido = User(firstname='Johann Sebastian Aaaaaaaaaaaaaaaaaaaaaaa')
+        valid = User(firstname='Johann Sebastian Aaaaaaaaaaaaaaaaaaaaaaa')
         errors = []
-        self.assertTrue(self.ul.rule_firstname_len(valido, errors))
+        self.assertTrue(self.ul.rule_firstname_len(valid, errors))
         self.assertEqual(len(errors), 0)
 
         # nombre mayor que 40 caracteres
-        invalido = User(firstname='Johann Sebastian Aaaaaaaaaaaaaaaaaaaaaaas')
-        self.assertFalse(self.ul.rule_firstname_len(invalido, errors))
+        invalid = User(firstname='Johann Sebastian Aaaaaaaaaaaaaaaaaaaaaaas')
+        self.assertFalse(self.ul.rule_firstname_len(invalid, errors))
+        self.assertEqual(len(errors), 1)
         self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'firstname')
 
     def test_rule_lastname_len_less_than_2(self):
         # valida regla
-        valido = User(lastname='Bo')
+        valid = User(lastname='Bo')
         errors = []
-        self.assertTrue(self.ul.rule_lastname_len(valido, errors))
+        self.assertTrue(self.ul.rule_lastname_len(valid, errors))
         self.assertEqual(len(errors), 0)
 
         # apellido menor que 2 caracteres
-        invalido = User(lastname='B')
-        self.assertFalse(self.ul.rule_lastname_len(invalido, errors))
+        invalid = User(lastname='B')
+        self.assertFalse(self.ul.rule_lastname_len(invalid, errors))
+        self.assertEqual(len(errors), 1)
         self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'lastname')
 
     def test_rule_lastname_len_greater_than_40(self):
         # valida regla
-        valido = User(lastname='Mastropieroooooooooooooooooooooooooooooo')
+        valid = User(lastname='Mastropieroooooooooooooooooooooooooooooo')
         errors = []
-        self.assertTrue(self.ul.rule_lastname_len(valido, errors))
+        self.assertTrue(self.ul.rule_lastname_len(valid, errors))
         self.assertEqual(len(errors), 0)
 
         # apellido mayor que 15 caracteres
-        invalido = User(lastname='Mastropieroooooooooooooooooooooooooooooos')
-        self.assertFalse(self.ul.rule_lastname_len(invalido, errors))
+        invalid = User(lastname='Mastropieroooooooooooooooooooooooooooooos')
+        self.assertFalse(self.ul.rule_lastname_len(invalid, errors))
         self.assertIsInstance(errors[0], InvalidLength)
+        self.assertEqual(len(errors), 1)
         self.assertEqual(errors[0].field, 'lastname')
 
     def test_rule_email_len_less_than_3(self):
         # valida regla
-        valido = User(email='a@b')
+        valid = User(email='a@b')
         errors = []
-        self.assertTrue(self.ul.rule_email_len(valido, errors))
+        self.assertTrue(self.ul.rule_email_len(valid, errors))
         self.assertEqual(len(errors), 0)
 
         # e-mail menor que 3 caracteres
-        invalido = User(email='a@')
-        self.assertFalse(self.ul.rule_email_len(invalido, errors))
+        invalid = User(email='a@')
+        self.assertFalse(self.ul.rule_email_len(invalid, errors))
+        self.assertEqual(len(errors), 1)
         self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'email')
 
     def test_rule_email_len_greater_than_50(self):
         # valida regla
-        valido = User(email='gytwaehwkidtuywxdmxyegiixtkfwvfdjgixifzj@gmail.com')
+        valid = User(email='gytwaehwkidtuywxdmxyegiixtkfwvfdjgixifzj@gmail.com')
         errors = []
-        self.assertTrue(self.ul.rule_email_len(valido, errors))
+        self.assertTrue(self.ul.rule_email_len(valid, errors))
         self.assertEqual(len(errors), 0)
 
         # e-mail mayor que 50 caracteres
-        invalido = User(email='gytwaehwkidtuywxdmxyegiixtkfwvfdjgixifzj1@gmail.com')
-        self.assertFalse(self.ul.rule_email_len(invalido, errors))
+        invalid = User(email='gytwaehwkidtuywxdmxyegiixtkfwvfdjgixifzj1@gmail.com')
+        self.assertFalse(self.ul.rule_email_len(invalid, errors))
+        self.assertEqual(len(errors), 1)
         self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'email')
 
     def test_rule_valid_email(self):
         # valida regla
-        valido = User(email='sdfxs.afaf_afa+33@domain.com')
+        valid = User(email='sdfxs.afaf_afa+33@domain.com')
         errors = []
-        self.assertTrue(self.ul.rule_valid_email(valido, errors))
+        self.assertTrue(self.ul.rule_valid_email(valid, errors))
         self.assertEqual(len(errors), 0)
 
         # e-mail con formato inválido
-        invalido = User(email='sdfxs.afaf_afa+33.@domain.com')
-        self.assertFalse(self.ul.rule_valid_email(invalido, errors))
+        invalid = User(email='sdfxs.afaf_afa+33.@domain.com')
+        self.assertFalse(self.ul.rule_valid_email(invalid, errors))
+        self.assertEqual(len(errors), 1)
         self.assertIsInstance(errors[0], InvalidEmailError)
         self.assertEqual(errors[0].field, 'email')
 
     def test_rule_username_len_less_than_5(self):
         # valida regla
-        valido = User(username='admin')
+        valid = User(username='admin')
         errors = []
-        self.assertTrue(self.ul.rule_username_len(valido, errors))
+        self.assertTrue(self.ul.rule_username_len(valid, errors))
         self.assertEqual(len(errors), 0)
 
         # nombre de usuario menor que 5 caracteres
-        invalido = User(username='admi')
-        self.assertFalse(self.ul.rule_username_len(invalido, errors))
+        invalid = User(username='admi')
+        self.assertFalse(self.ul.rule_username_len(invalid, errors))
+        self.assertEqual(len(errors), 1)
         self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'username')
 
     def test_rule_username_len_greater_than_50(self):
         # valida regla
-        valido = User(username='fbeumyivwzzxzrigiuhijhhacvjkncgzpvfnctaubxjlhmffcb')
+        valid = User(username='fbeumyivwzzxzrigiuhijhhacvjkncgzpvfnctaubxjlhmffcb')
         errors = []
-        self.assertTrue(self.ul.rule_username_len(valido, errors))
+        self.assertTrue(self.ul.rule_username_len(valid, errors))
         self.assertEqual(len(errors), 0)
 
         # nombre de usuario mayor que 50 caracteres
-        invalido = User(username='fbeumyivwzzxzrigiuhijhhacvjkncgzpvfnctaubxjlhmffcbc')
-        self.assertFalse(self.ul.rule_username_len(invalido, errors))
+        invalid = User(username='fbeumyivwzzxzrigiuhijhhacvjkncgzpvfnctaubxjlhmffcbc')
+        self.assertFalse(self.ul.rule_username_len(invalid, errors))
+        self.assertEqual(len(errors), 1)
         self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'username')
 
     def test_rule_valid_username(self):
         # valida regla
-        valido = User(username='admin1234_dbzdsfe')
+        valid = User(username='admin1234_dbzdsfe')
         errors = []
-        self.assertTrue(self.ul.rule_valid_username(valido, errors))
+        self.assertTrue(self.ul.rule_valid_username(valid, errors))
         self.assertEqual(len(errors), 0)
 
         # formato de nombre de usuario inválido
-        invalido = User(username='asdsfasf3432*')
-        self.assertFalse(self.ul.rule_valid_username(invalido, errors))
+        invalid = User(username='asdsfasf3432*')
+        self.assertFalse(self.ul.rule_valid_username(invalid, errors))
+        self.assertEqual(len(errors), 1)
         self.assertIsInstance(errors[0], InvalidUsernameError)
         self.assertEqual(errors[0].field, 'username')
 
         # formato de nombre de usuario inválido
-        invalido = User(username='afasdf_-sfsf_3432')
+        invalid = User(username='afasdf_-sfsf_3432')
         errors = []
-        self.assertFalse(self.ul.rule_valid_username(invalido, errors))
+        self.assertFalse(self.ul.rule_valid_username(invalid, errors))
+        self.assertEqual(len(errors), 1)
         self.assertIsInstance(errors[0], InvalidUsernameError)
         self.assertEqual(errors[0].field, 'username')
 
     def test_rule_password_len_less_than_6(self):
         # valida regla
-        valido = User(password='123456')
+        valid = User(password='123456')
         errors = []
-        self.assertTrue(self.ul.rule_password_len(valido, errors))
+        self.assertTrue(self.ul.rule_password_len(valid, errors))
         self.assertEqual(len(errors), 0)
 
         # contraseña menor que 6 caracteres
-        invalido = User(password='12345')
-        self.assertFalse(self.ul.rule_password_len(invalido, errors))
+        invalid = User(password='12345')
+        self.assertFalse(self.ul.rule_password_len(invalid, errors))
+        self.assertEqual(len(errors), 1)
         self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'password')
 
     def test_rule_password_len_greater_than_30(self):
         # valida regla
-        valido = User(password='rixrbeggtviybiavhotaegkznidjtq')
+        valid = User(password='rixrbeggtviybiavhotaegkznidjtq')
         errors = []
-        self.assertTrue(self.ul.rule_password_len(valido, errors))
+        self.assertTrue(self.ul.rule_password_len(valid, errors))
         self.assertEqual(len(errors), 0)
 
         # contraseña mayor que 30 caracteres
-        invalido = User(password='rixrbeggtviybiavhotaegkznidjtqx')
-        self.assertFalse(self.ul.rule_password_len(invalido, errors))
+        invalid = User(password='rixrbeggtviybiavhotaegkznidjtqx')
+        self.assertFalse(self.ul.rule_password_len(invalid, errors))
+        self.assertEqual(len(errors), 1)
         self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'password')
