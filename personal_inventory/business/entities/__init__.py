@@ -7,6 +7,12 @@ class BusinessEntity(abc.ABC):
     def __init__(self, id=None):
         self.id = id
 
+    def __str__(self):
+        return str(self.__dict__)
+
+    def __repr__(self):
+        return str(self)
+
     @classmethod
     @abc.abstractmethod
     def make_from_model(cls, modelobject, **populate_relations):

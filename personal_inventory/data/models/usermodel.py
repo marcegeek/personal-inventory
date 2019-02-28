@@ -25,6 +25,14 @@ class UserModel(Base):
         from personal_inventory.data import LocationModel
         return object_session(self).query(LocationModel).filter(LocationModel.owner_id == self.id).all()
 
+    def __str__(self):
+        d = self.__dict__.copy()
+        d.pop('_sa_instance_state')
+        return str(d)
+
+    def __repr__(self):
+        return str(self)
+
     def __eq__(self, other):
         o1 = (self.id, self.firstname, self.lastname, self.email,
               self.username, self.password, self.language)

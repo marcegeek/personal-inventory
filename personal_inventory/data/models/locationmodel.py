@@ -21,6 +21,14 @@ class LocationModel(Base):
         from personal_inventory.data import ItemModel
         return object_session(self).query(ItemModel).filter(ItemModel.location_id == self.id).all()
 
+    def __str__(self):
+        d = self.__dict__.copy()
+        d.pop('_sa_instance_state')
+        return str(d)
+
+    def __repr__(self):
+        return str(self)
+
     def __eq__(self, other):
         o1 = (self.id, self.owner_id, self.description)
         o2 = (other.id, other.owner_id, other.description)
