@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, ForeignKey, String
+from sqlalchemy.orm import object_session
 
 from personal_inventory.data.models import Base
 
@@ -11,6 +12,16 @@ class ItemModel(Base):
     description = Column(String(50), nullable=False)
     location_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
     quantity = Column(Integer)
+
+    @property
+    def owner(self):
+        from personal_inventory.data import UserModel
+        return object_session(self).query(UserModel).filter(UserModel.id == self.owner_id).first()
+
+    @property
+    def location(self):
+        from personal_inventory.data import LocationModel
+        return object_session(self).query(LocationModel).filter(LocationModel.id == self.location_id).first()
 
     def __eq__(self, other):
         o1 = (self.id, self.owner_id, self.description, self.location_id, self.quantity)

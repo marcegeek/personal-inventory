@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import object_session
 
 from personal_inventory.data.models import Base
 
@@ -14,8 +14,16 @@ class UserModel(Base):
     username = Column(String(50), unique=True, nullable=False)
     password = Column(String(30), nullable=False)
     language = Column(String(5))
-    items = relationship('ItemModel', backref='owner', viewonly=True, bake_queries=False)
-    locations = relationship('LocationModel', backref='owner', viewonly=True, bake_queries=False)
+
+    @property
+    def items(self):
+        from personal_inventory.data import ItemModel
+        return object_session(self).query(ItemModel).filter(ItemModel.owner_id == self.id).all()
+
+    @property
+    def locations(self):
+        from personal_inventory.data import LocationModel
+        return object_session(self).query(LocationModel).filter(LocationModel.owner_id == self.id).all()
 
     def __eq__(self, other):
         o1 = (self.id, self.firstname, self.lastname, self.email,
