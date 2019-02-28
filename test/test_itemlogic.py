@@ -1,7 +1,7 @@
 import itertools
 
 from personal_inventory.business.entities.item import Item
-from personal_inventory.business.logic import RequiredFieldError, ForeignKeyError, InvalidLength, DeleteForeingKeyError, \
+from personal_inventory.business.logic import RequiredFieldError, ForeignKeyError, InvalidLength, DeleteForeignKeyError, \
     ValidationException
 from personal_inventory.business.logic.item_logic import ItemLogic, InvalidValue, RepeatedItemNameError
 from personal_inventory.business.logic.location_logic import LocationLogic
@@ -250,8 +250,15 @@ class TestItemLogic(Test):
         self.assertTrue(self.il.rule_valid_quantity(valid, errors))
         self.assertEqual(len(errors), 0)
 
-        # número negativo
+        # número entero negativo
         invalid = Item(quantity=-1)
+        self.assertFalse(self.il.rule_valid_quantity(invalid, errors))
+        self.assertEqual(len(errors), 1)
+        self.assertIsInstance(errors[0], InvalidValue)
+        self.assertEqual(errors[0].field, 'quantity')
+
+        # número no entero
+        invalid = Item(quantity=1.1)
         self.assertFalse(self.il.rule_valid_quantity(invalid, errors))
         self.assertEqual(len(errors), 1)
         self.assertIsInstance(errors[0], InvalidValue)
@@ -341,7 +348,8 @@ class TestItemLogic(Test):
                 # referenciado, no se puede eliminar
                 self.assertFalse(self.ul.validate_deletion_fk_rules(u.id, errors))
                 self.assertEqual(len(errors), 1)
-                self.assertIsInstance(errors[0], DeleteForeingKeyError)
+                self.assertIsInstance(errors[0], DeleteForeignKeyError)
+                self.assertEqual(errors[0].relationship, 'locations')
                 with self.assertRaises(ValidationException):
                     self.ul.delete(u.id)
         # eliminación de ubicaciones que pueden estar referenciadas por ítems
@@ -356,7 +364,8 @@ class TestItemLogic(Test):
                 # referenciada, no se puede eliminar
                 self.assertFalse(self.ll.validate_deletion_fk_rules(loc.id, errors))
                 self.assertEqual(len(errors), 1)
-                self.assertIsInstance(errors[0], DeleteForeingKeyError)
+                self.assertIsInstance(errors[0], DeleteForeignKeyError)
+                self.assertEqual(errors[0].relationship, 'items')
                 with self.assertRaises(ValidationException):
                     self.ll.delete(loc.id)
         for item in self.items:

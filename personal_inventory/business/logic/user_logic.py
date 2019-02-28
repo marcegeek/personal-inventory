@@ -4,7 +4,7 @@ import email_validator
 
 from personal_inventory.business.entities.user import User
 from personal_inventory.business.logic import RequiredFieldError, RepeatedUniqueField, \
-    DeleteForeingKeyError, InvalidLength, EntityLogic, FieldValidationError
+    DeleteForeignKeyError, InvalidLength, EntityLogic, FieldValidationError
 from personal_inventory.business.logic import ValidationError
 from personal_inventory.data import UserData
 
@@ -110,26 +110,30 @@ class UserLogic(EntityLogic):
         """
         Validar las reglas de eliminación.
 
+        En caso de que hubieran ubicaciones y o ítems referenciando al usuario insertar un error de tipo
+        DeleteForeignKeyError con la relación correspondiente ('locations' o 'items'),
+        la primera que falle.
+
         :type user_id: int
         :type errors: list of ValidationError
         :rtype: bool
         """
-        user = self.get_by_id(user_id)
+        user = self.get_by_id(user_id, populate_locations=True, populate_items=True)
         if user is not None:
-            from personal_inventory.business.logic.item_logic import ItemLogic
-            from personal_inventory.business.logic.location_logic import LocationLogic
-
-            if len(ItemLogic().get_all_by_user(user)):
-                errors.append(DeleteForeingKeyError())
+            if user.locations:
+                errors.append(DeleteForeignKeyError('locations'))
                 return False
-            if len(LocationLogic().get_all_by_user(user)):
-                errors.append(DeleteForeingKeyError())
+            if user.items:
+                errors.append(DeleteForeignKeyError('items'))
                 return False
         return True  # no importa si el usuario no existe
 
     def validate_all_rules(self, user, errors):
         """
         Validar todas las reglas de negocio.
+
+        Reiniciar el listado de errores. En caso de que hubiera errores,
+        insertar los errores correspondientes.
 
         :type user: User
         :type errors: list of ValidationError
@@ -177,6 +181,9 @@ class UserLogic(EntityLogic):
         """
         Validar la presencia de los campos requeridos, dada la lista de los presentes.
 
+        En caso de que falten campos, insertar errores de tipo
+        RequiredFieldError con los campos respectivos.
+
         :type errors: list of ValidationError
         :type present_fields: list of str
         :rtype: bool
@@ -204,6 +211,9 @@ class UserLogic(EntityLogic):
         """
         Validar que el e-mail del usuario es único.
 
+        En caso del el e-mail esté repetido insertar un error de tipo
+        RepeatedEmailError.
+
         :type user: User
         :type errors: list of ValidationError
         :rtype: bool
@@ -217,6 +227,9 @@ class UserLogic(EntityLogic):
     def rule_unique_username(self, user, errors):
         """
         Validar que el nombre de usuario del usuario es único.
+
+        En caso del el nombre de usuario esté repetido insertar un error de tipo
+        RepeatedUsernameError.
 
         :type user: User
         :type errors: list of ValidationError
@@ -234,6 +247,9 @@ class UserLogic(EntityLogic):
         Validar que el nombre del usuario cuente con al menos 2 caracteres
         y no más de 40.
 
+        En caso de que la longitud sea inválida insertar un error de tipo
+        InvalidLength con el campo 'firstname' y el rango válido de la misma.
+
         :type user: User
         :type errors: list of ValidationError
         :rtype: bool
@@ -248,6 +264,9 @@ class UserLogic(EntityLogic):
         """
         Validar que el apellido del usuario cuente con al menos 2 caracteres
         y no más de 40.
+
+        En caso de que la longitud sea inválida insertar un error de tipo
+        InvalidLength con el campo 'lastname' y el rango válido de la misma.
 
         :type user: User
         :type errors: list of ValidationError
@@ -264,6 +283,9 @@ class UserLogic(EntityLogic):
         Validar que el e-mail del usuario cuente con al menos 3 caracteres
         y no más de 50.
 
+        En caso de que la longitud sea inválida insertar un error de tipo
+        InvalidLength con el campo 'email' y el rango válido de la misma.
+
         :type user: User
         :type errors: list of ValidationError
         :rtype: bool
@@ -277,6 +299,9 @@ class UserLogic(EntityLogic):
     def rule_valid_email(user, errors):
         """
         Validar que el e-mail del usuario sea una dirección válida.
+
+        En caso de que e-mail no sea válido insertar un error de tipo
+        InvalidEmailError.
 
         :type user: User
         :type errors: list of ValidationError
@@ -296,6 +321,9 @@ class UserLogic(EntityLogic):
         Validar que el nombre de usuario cuente con al menos 5 caracteres
         y no más de 50.
 
+        En caso de que la longitud sea inválida insertar un error de tipo
+        InvalidLength con el campo 'username' y el rango válido de la misma.
+
         :type user: User
         :type errors: list of ValidationError
         :rtype: bool
@@ -311,6 +339,9 @@ class UserLogic(EntityLogic):
         Validar que el nombre de usuario sea válido:
         minúsculas, números y guiones bajos
 
+        En caso de que el nombre de usuario no sea válido insertar un error de tipo
+        InvalidUsernameError.
+
         :type user: User
         :type errors: list of ValidationError
         :rtype: bool
@@ -325,6 +356,9 @@ class UserLogic(EntityLogic):
         """
         Validar que la contraseña cuente con al menos 6 caracteres
         y no más de 30.
+
+        En caso de que la longitud sea inválida insertar un error de tipo
+        InvalidLength con el campo 'password' y el rango válido de la misma.
 
         :type user: User
         :type errors: list of ValidationError

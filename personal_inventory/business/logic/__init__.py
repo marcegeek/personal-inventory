@@ -35,10 +35,13 @@ class ForeignKeyError(FieldValidationError):
         return "Foreign key {0} doesn't exist".format(self.field)
 
 
-class DeleteForeingKeyError(ValidationError):
+class DeleteForeignKeyError(ValidationError):
+
+    def __init__(self, relationship):
+        self.relationship = relationship
 
     def __str__(self):
-        return "There's still some object referencing this"
+        return "There's still some {} referencing this".format(self.relationship)
 
 
 class InvalidLength(FieldValidationError):

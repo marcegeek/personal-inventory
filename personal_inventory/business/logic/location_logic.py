@@ -1,6 +1,6 @@
 from personal_inventory.business.entities.location import Location
 from personal_inventory.business.logic import RequiredFieldError, ForeignKeyError, \
-    DeleteForeingKeyError, InvalidLength, EntityLogic, RepeatedUniqueField
+    DeleteForeignKeyError, InvalidLength, EntityLogic, RepeatedUniqueField
 from personal_inventory.data import LocationData
 
 
@@ -38,21 +38,26 @@ class LocationLogic(EntityLogic):
         """
         Validar las reglas de eliminación.
 
+        En caso de que hubieran ítems referenciando a la ubicación insertar un error de tipo
+        DeleteForeignKeyError con la relación 'items'.
+
         :type location_id: int
         :type errors: list of ValidationError
         :rtype: bool
         """
-        location = self.get_by_id(location_id)
+        location = self.get_by_id(location_id, populate_items=True)
         if location is not None:
-            from personal_inventory.business.logic.item_logic import ItemLogic
-            if len(ItemLogic().get_all_by_location(location)):
-                errors.append(DeleteForeingKeyError())
+            if location.items:
+                errors.append(DeleteForeignKeyError('items'))
                 return False
         return True  # no importa si la ubicación no existe
 
     def validate_all_rules(self, location, errors):
         """
         Validar todas las reglas de negocio.
+
+        Reiniciar el listado de errores. En caso de que hubiera errores,
+        insertar los errores correspondientes.
 
         :type location: Location
         :type errors: list of ValidationError
@@ -85,6 +90,9 @@ class LocationLogic(EntityLogic):
         """
         Validar la presencia de los campos requeridos, dada la lista de los presentes.
 
+        En caso de que falten campos, insertar errores de tipo
+        RequiredFieldError con los campos respectivos.
+
         :type errors: list of ValidationError
         :type present_fields: list of str
         :rtype: bool
@@ -105,6 +113,9 @@ class LocationLogic(EntityLogic):
         """
         Validar que existe el usuario que administra la ubicación.
 
+        En caso de que el usuario no exista insertar un error de tipo
+        ForeignKeyError con el campo 'owner_id'.
+
         :type location: Location
         :type errors: list of ValidationError
         :rtype: bool
@@ -122,6 +133,9 @@ class LocationLogic(EntityLogic):
         Validar que la descripción de la ubicación cuente con al menos 3 caracteres
         y no más de 50.
 
+        En caso de que la longitud sea inválida insertar un error de tipo
+        InvalidLength con el campo 'description' y el rango válido de la misma.
+
         :type location: Location
         :type errors: list of ValidationError
         :rtype: bool
@@ -134,6 +148,9 @@ class LocationLogic(EntityLogic):
     def rule_unique_description_per_user(self, location, errors):
         """
         Validar que el nombre de la ubicación es única para el usuario correspondiente.
+
+        En caso de que el nombre de la ubicación esté repetido insertar un error de tipo
+        RepeatedLocationNameError.
 
         :type location: Location
         :type errors: list of ValidationError

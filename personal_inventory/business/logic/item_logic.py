@@ -67,6 +67,9 @@ class ItemLogic(EntityLogic):
         """
         Validar todas las reglas de negocio.
 
+        Reiniciar el listado de errores. En caso de que hubiera errores,
+        insertar los errores correspondientes.
+
         :type item: Item
         :type errors: list of ValidationError
         :rtype: bool
@@ -106,6 +109,9 @@ class ItemLogic(EntityLogic):
         """
         Validar la presencia de los campos requeridos, dada la lista de los presentes.
 
+        En caso de que falten campos, insertar errores de tipo
+        RequiredFieldError con los campos respectivos.
+
         :type errors: list of ValidationError
         :type present_fields: list of str
         :rtype: bool
@@ -128,6 +134,9 @@ class ItemLogic(EntityLogic):
         """
         Validar que existe el usuario propietario del item.
 
+        En caso de que el usuario no exista insertar un error de tipo
+        ForeignKeyError con el campo 'owner_id'.
+
         :type item: Item
         :type errors: list of ValidationError
         :rtype: bool
@@ -143,6 +152,9 @@ class ItemLogic(EntityLogic):
     def rule_location_exists(item, errors):
         """
         Validar que existe la ubicación del ítem.
+
+        En caso de que la ubicación no exista insertar un error de tipo
+        ForeignKeyError con el campo 'location_id'.
 
         :type item: Item
         :type errors: list of ValidationError
@@ -161,6 +173,9 @@ class ItemLogic(EntityLogic):
         Validar que la descripción del ítem cuente con al menos 3 caracteres
         y no más de 50.
 
+        En caso de que la longitud sea inválida insertar un error de tipo
+        InvalidLength con el campo 'description' y el rango válido de la misma.
+
         :type item: Item
         :type errors: list of ValidationError
         :rtype: bool
@@ -173,6 +188,9 @@ class ItemLogic(EntityLogic):
     def rule_unique_description_per_user(self, item, errors):
         """
         Validar que el nombre del ítem es único para el usuario correspondiente.
+
+        En caso de que el nombre del ítem esté repetido insertar un error de tipo
+        RepeatedItemNameError.
 
         :type item: Item
         :type errors: list of ValidationError
@@ -191,18 +209,22 @@ class ItemLogic(EntityLogic):
         """
         Validar que la cantidad es un número entero no negativo.
 
+        En caso de que la cantidad sea inválida insertar un error de tipo
+        InvalidValue con el campo 'quantity'.
+
         :type item: Item
         :type errors: list of ValidationError
         :rtype: bool
         """
-        try:
-            q = int(item.quantity)
-            if q >= 0:
-                return True
-        except ValueError:
-            pass  # ignorar
-        except TypeError:
-            pass
+        if isinstance(item.quantity, int) and item.quantity >= 0:
+            return True
+        if isinstance(item.quantity, str):
+            try:
+                q = int(item.quantity)
+                if q >= 0:
+                    return True
+            except ValueError:
+                pass  # ignorar
         # si validó ya salió retornando True
         errors.append(InvalidValue('quantity'))
         return False

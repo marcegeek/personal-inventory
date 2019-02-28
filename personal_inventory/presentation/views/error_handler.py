@@ -1,6 +1,6 @@
 from flask_babel import gettext as _
 
-from personal_inventory.business.logic import RequiredFieldError, DeleteForeingKeyError, InvalidLength
+from personal_inventory.business.logic import RequiredFieldError, DeleteForeignKeyError, InvalidLength
 from personal_inventory.business.logic.item_logic import InvalidValue, RepeatedItemNameError
 from personal_inventory.business.logic.location_logic import RepeatedLocationNameError
 from personal_inventory.business.logic.user_logic import InvalidEmailError, RepeatedUsernameError, InvalidUsernameError
@@ -11,7 +11,7 @@ def error_str(error):
 
     if isinstance(error, RequiredFieldError):
         return _('Required field')
-    elif isinstance(error, DeleteForeingKeyError):
+    elif isinstance(error, DeleteForeignKeyError):
         return _("There's still some object referencing this")
     elif isinstance(error, InvalidLength):
         return _('Invalid field length')

@@ -2,7 +2,7 @@ import itertools
 
 from personal_inventory.business.entities.location import Location
 from personal_inventory.business.logic import RequiredFieldError, ForeignKeyError, InvalidLength, ValidationException, \
-    DeleteForeingKeyError
+    DeleteForeignKeyError
 from personal_inventory.business.logic.location_logic import LocationLogic, RepeatedLocationNameError
 from personal_inventory.business.logic.user_logic import UserLogic
 from test import Test, make_logic_test_users, make_logic_test_locations
@@ -246,7 +246,8 @@ class TestLocationLogic(Test):
                 # referenciado, no se puede eliminar
                 self.assertFalse(self.ul.validate_deletion_fk_rules(u.id, errors))
                 self.assertEqual(len(errors), 1)
-                self.assertIsInstance(errors[0], DeleteForeingKeyError)
+                self.assertIsInstance(errors[0], DeleteForeignKeyError)
+                self.assertEqual(errors[0].relationship, 'locations')
                 with self.assertRaises(ValidationException):
                     self.ul.delete(u.id)
         for loc in self.locations:
