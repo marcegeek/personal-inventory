@@ -9,8 +9,8 @@ from personal_inventory.data.models.locationmodel import LocationModel
 class Location(BusinessEntity):
     """Entidad ubicación de la capa de negocio."""
 
-    def __init__(self, id=None, owner_id=None, description=None):
-        super().__init__(id)
+    def __init__(self, object_id=None, owner_id=None, description=None):
+        super().__init__(object_id)
         self.owner_id = owner_id
         self.description = description
         self.owner = None

@@ -29,6 +29,7 @@ class BaseForm(Form):
             # para que los errores de campo requerido
             # se generen siempre desde las vistas
             render_kw.setdefault('required', False)
+            # noinspection PyUnresolvedReferences
             return super().render_field(field, render_kw)
 
     def __init__(self, formdata=None):
@@ -70,6 +71,7 @@ class BaseForm(Form):
             errors['_global'] = self.global_errors
         return errors
 
+    # noinspection PyMethodOverriding
     @errors.setter
     def errors(self, errors):
         for field, err in zip(errors.keys(), errors.values()):

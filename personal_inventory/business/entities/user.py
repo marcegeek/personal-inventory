@@ -9,10 +9,10 @@ from personal_inventory.data.models.usermodel import UserModel
 class User(BusinessEntity):
     """Entidad usuario de la capa de negocio."""
 
-    def __init__(self, id=None, firstname=None, lastname=None,
+    def __init__(self, object_id=None, firstname=None, lastname=None,
                  email=None, username=None, password=None,
                  language=None):
-        super().__init__(id)
+        super().__init__(object_id)
         self.firstname = firstname
         self.lastname = lastname
         self.email = email

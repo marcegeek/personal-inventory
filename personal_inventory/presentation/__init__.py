@@ -96,16 +96,19 @@ def location_delete(location_id):
     return location_views.location_delete(location_id)
 
 
+# noinspection PyUnusedLocal
 @app.errorhandler(404)
 def page_not_found(e):
     return fl.render_template('404.html'), 404
 
 
+# noinspection PyUnusedLocal
 @app.errorhandler(401)
 def unauthorized_resource(e):
     return fl.render_template('401.html'), 401
 
 
+# noinspection PyUnusedLocal
 @app.errorhandler(405)
 def method_not_allowed(e):
     return fl.render_template('405.html'), 405

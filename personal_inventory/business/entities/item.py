@@ -9,8 +9,8 @@ from personal_inventory.data.models.itemmodel import ItemModel
 class Item(BusinessEntity):
     """Entidad ítem de la capa de negocio."""
 
-    def __init__(self, id=None, owner_id=None, description=None, location_id=None, quantity=None):
-        super().__init__(id)
+    def __init__(self, object_id=None, owner_id=None, description=None, location_id=None, quantity=None):
+        super().__init__(object_id)
         self.owner_id = owner_id
         self.description = description
         self.location_id = location_id

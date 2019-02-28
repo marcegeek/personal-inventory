@@ -1,5 +1,6 @@
 {% macro _render_field(field, hidden_label=False) %}
-  <div class="from-group mb-3">
+  <!--suppress ALL -->
+<div class="from-group mb-3">
     {% if field.errors %}
       {% set invalid_class = " is-invalid" %}
     {% else %}
@@ -73,7 +74,7 @@
 
 {% macro make_form(form, title_level="1", hidden_labels=False, class="simple-form") %}
   <form class="{{ class }}" {% if form.action %}action="{{ form.action }}"{% endif %} method="{{ form.method }}">
-    <h{{title_level}} class="text-center">{{ form.title }}</h{{title_level}}>
+      <h{{title_level}} class="text-center">{{ form.title }}</h{{title_level}}>
     {{ _render_form_body(form, hidden_labels) }}
     <button type="submit" class="btn btn-lg btn-primary btn-block">{{ form.submit }}</button>
     {% if form.extra_footer_html %}
@@ -88,7 +89,7 @@
       <div class="modal-content">
         <form {% if form.action %}action="{{ form.action }}"{% endif %} method="{{ form.method }}">
           <div class="modal-header">
-           <h{{title_level}} class="modal-title">{{ form.title }}</h{{title_level}}>
+            <h{{title_level}} class="modal-title">{{ form.title }}</h{{title_level}}>
            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           </div>
           <div class="modal-body">

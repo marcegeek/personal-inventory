@@ -33,6 +33,7 @@ def configure(data_conf):
 class ObjectData(abc.ABC):
     """Objeto base del acceso a datos de objetos del modelo."""
 
+    # noinspection PyCallingNonCallable
     def __init__(self):
         if not configured:
             raise Exception('Data layer not configured')

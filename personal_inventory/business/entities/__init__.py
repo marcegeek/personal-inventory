@@ -4,8 +4,8 @@ import abc
 class BusinessEntity(abc.ABC):
     """Entidad de la capa de negocio."""
 
-    def __init__(self, id=None):
-        self.id = id
+    def __init__(self, object_id=None):
+        self.id = object_id
 
     def __str__(self):
         return str(self.__dict__)
