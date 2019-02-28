@@ -113,6 +113,7 @@ class LocationLogic(EntityLogic):
         ul = UserLogic()
         if ul.get_by_id(location.owner_id) is None:
             errors.append(ForeignKeyError('owner_id'))
+            return False
         return True
 
     @classmethod
