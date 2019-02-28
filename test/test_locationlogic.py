@@ -172,28 +172,28 @@ class TestLocationLogic(Test):
 
     def test_rule_description_len_less_than_3(self):
         # valida regla
-        loc = Location(description='Las')
+        valid = Location(description='Las')
         errors = []
-        self.assertTrue(self.ll.rule_description_len(loc, errors))
+        self.assertTrue(self.ll.rule_description_len(valid, errors))
         self.assertEqual(len(errors), 0)
 
         # descripción menor que 3 caracteres
-        loc = Location(description='La')
-        self.assertFalse(self.ll.rule_description_len(loc, errors))
+        invalid = Location(description='La')
+        self.assertFalse(self.ll.rule_description_len(invalid, errors))
         self.assertEqual(len(errors), 1)
         self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'description')
 
     def test_rule_description_len_greater_than_50(self):
         # valida regla
-        loc = Location(description='La gran y enorme ubicación que es superior a todas')
+        valid = Location(description='La gran y enorme ubicación que es superior a todas')
         errors = []
-        self.assertTrue(self.ll.rule_description_len(loc, errors))
+        self.assertTrue(self.ll.rule_description_len(valid, errors))
         self.assertEqual(len(errors), 0)
 
         # descripción mayor que 50 caracteres
-        loc = Location(description='La gran y enorme ubicación que es superior a todass')
-        self.assertFalse(self.ll.rule_description_len(loc, errors))
+        invalid = Location(description='La gran y enorme ubicación que es superior a todass')
+        self.assertFalse(self.ll.rule_description_len(invalid, errors))
         self.assertEqual(len(errors), 1)
         self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'description')
