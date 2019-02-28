@@ -15,7 +15,7 @@ class BusinessEntity(abc.ABC):
 
     @classmethod
     @abc.abstractmethod
-    def make_from_model(cls, modelobject, **populate_relations):
+    def make_from_model(cls, modelobject, **populate_relationships):
         pass
 
     @abc.abstractmethod

@@ -1,5 +1,4 @@
 import abc
-import locale
 
 from personal_inventory.business.entities import BusinessEntity
 from personal_inventory.data import ObjectData
@@ -64,24 +63,24 @@ class EntityLogic(abc.ABC):
         self.dao = ObjectData()  # reemplazar en las subclases
         self.plain_object_factory = BusinessEntity  # reemplazar en las subclases
 
-    def get_by_id(self, object_id, **populate_relations):
+    def get_by_id(self, object_id, **populate_relationships):
         """
         Recuperar un objeto del modelo dado su id.
 
         :type object_id: int
-        :param populate_relations: relaciones a rellenar
+        :param populate_relationships: valores booleanos con las relaciones a rellenar
         :rtype: BusinessEntity | None
         """
-        return self.plain_object_factory.make_from_model(self.dao.get_by_id(object_id), **populate_relations)
+        return self.plain_object_factory.make_from_model(self.dao.get_by_id(object_id), **populate_relationships)
 
-    def get_all(self, **populate_relations):
+    def get_all(self, **populate_relationships):
         """
         Recuperar todos los objetos del modelo.
 
-        :param populate_relations: relaciones a rellenar
+        :param populate_relationships: valores booleanos con las relaciones a rellenar
         :rtype: list of BusinessEntity
         """
-        return self.plain_object_factory.make_from_model(self.dao.get_all(), **populate_relations)
+        return self.plain_object_factory.make_from_model(self.dao.get_all(), **populate_relationships)
 
     def insert(self, obj):
         """
