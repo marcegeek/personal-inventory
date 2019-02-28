@@ -2,6 +2,7 @@ import unittest
 
 import personal_inventory.data as dal
 import personal_inventory.defaultconfigs as config
+from personal_inventory.business.entities.item import Item
 from personal_inventory.business.entities.location import Location
 from personal_inventory.business.entities.user import User
 from personal_inventory.data import UserModel, LocationModel, ItemModel
@@ -54,3 +55,8 @@ def make_logic_test_users():
 def make_logic_test_locations():
     # lista ordenada con el orden por defecto
     return Location.make_from_model(make_data_test_locations())
+
+
+def make_logic_test_items():
+    # lista ordenada con el orden por defecto
+    return Item.make_from_model(make_data_test_items())
