@@ -80,6 +80,7 @@ class ItemLogic(EntityLogic):
             self.rule_location_exists(item, errors)
         if 'description' in present_fields:
             self.rule_description_len(item, errors)
+            self.rule_unique_description_per_user(item, errors)
         if 'quantity' in present_fields:
             self.rule_valid_quantity(item, errors)
 
