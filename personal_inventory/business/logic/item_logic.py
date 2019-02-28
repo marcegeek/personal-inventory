@@ -1,7 +1,16 @@
 from personal_inventory.business.entities.item import Item
-from personal_inventory.business.logic import RequiredFieldError, ForeignKeyError, InvalidLength, EntityLogic, FieldValidationError
-from personal_inventory.business.logic import ValidationError
+from personal_inventory.business.logic import RequiredFieldError, ForeignKeyError, InvalidLength, EntityLogic, \
+    FieldValidationError, RepeatedUniqueField
 from personal_inventory.data import ItemData
+
+
+class RepeatedItemNameError(RepeatedUniqueField):
+
+    def __init__(self):
+        super().__init__('description')
+
+    def __str__(self):
+        return 'Item name repeated'
 
 
 class InvalidValue(FieldValidationError):
@@ -29,7 +38,8 @@ class ItemLogic(EntityLogic):
         :type populate_location: bool
         :rtype: list of Item
         """
-        return Item.make_from_model(self.dao.get_all_by_user(user), populate_owner=populate_owner, populate_location=populate_location)
+        return Item.make_from_model(self.dao.get_all_by_user(user), populate_owner=populate_owner,
+                                    populate_location=populate_location)
 
     def get_all_by_location(self, location, populate_owner=False, populate_location=False):
         """
@@ -40,7 +50,8 @@ class ItemLogic(EntityLogic):
         :type populate_location: bool
         :rtype: list of Item
         """
-        return Item.make_from_model(self.dao.get_all_by_location(location), populate_owner=populate_owner, populate_location=populate_location)
+        return Item.make_from_model(self.dao.get_all_by_location(location), populate_owner=populate_owner,
+                                    populate_location=populate_location)
 
     def validate_deletion_fk_rules(self, item_id, errors):
         """
@@ -154,6 +165,22 @@ class ItemLogic(EntityLogic):
         if not cls.DESCRIPTION_LEN[0] <= len(item.description) <= cls.DESCRIPTION_LEN[1]:
             errors.append(InvalidLength('description', cls.DESCRIPTION_LEN))
             return False
+        return True
+
+    def rule_unique_description_per_user(self, item, errors):
+        """
+        Validar que el nombre del ítem es único para el usuario correspondiente.
+
+        :type item: Item
+        :type errors: list of ValidationError
+        :rtype: bool
+        """
+        from personal_inventory.business.entities.user import UserModel
+        user_items = self.dao.get_all_by_user(UserModel(id=item.owner_id))
+        for found in user_items:
+            if item.id != found.id and item.description == found.description:
+                errors.append(RepeatedItemNameError())
+                return False
         return True
 
     @staticmethod
