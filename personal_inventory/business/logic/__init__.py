@@ -30,13 +30,10 @@ class RepeatedUniqueField(FieldValidationError):
         return '{0} is repeated'.format(self.field)
 
 
-class ForeignKeyError(ValidationError):
-
-    def __init__(self, foreign_entity):
-        self.foreign_entity = foreign_entity
+class ForeignKeyError(FieldValidationError):
 
     def __str__(self):
-        return "{0} foreign key doesn't exist".format(self.foreign_entity)
+        return "Foreign key {0} doesn't exist".format(self.field)
 
 
 class DeleteForeingKeyError(ValidationError):

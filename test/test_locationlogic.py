@@ -100,14 +100,17 @@ class TestLocationLogic(Test):
         fields_subsets = [set(fs) for fs in fields_subsets]
 
         for expected_fields in fields_subsets:
-            errors = []
             # ubicación con todos los campos requeridos
             loc = Location(owner_id=1, description='Location')
+
             # elimino los campos que no están presentes
             expected_absent_fields = set([f for f in required_fields if f not in expected_fields])
             for field in expected_absent_fields:
                 setattr(loc, field, None)
+
             present_fields = self.ll.get_present_fields(loc)
+
+            errors = []
             # valida regla
             if expected_fields == required_fields:
                 self.assertTrue(self.ll.rule_required_fields(errors, present_fields))
@@ -138,7 +141,9 @@ class TestLocationLogic(Test):
         # usuario propietario no existe
         invalid = Location(owner_id=self.users[-1].id + 1, description='Location')
         self.assertFalse(self.ll.rule_owner_user_exists(invalid, errors))
+        self.assertEqual(len(errors), 1)
         self.assertIsInstance(errors[0], ForeignKeyError)
+        self.assertEqual(errors[0].field, 'owner_id')
 
     def test_rule_unique_description_per_user(self):
         # pre-condiciones: no hay usuarios ni ubicaciones registradas
@@ -160,7 +165,9 @@ class TestLocationLogic(Test):
         # nombre de ubicación repetida para el mismo usuario
         invalid = Location(owner_id=self.users[0].id, description=first_user_locations[0].description)
         self.assertFalse(self.ll.rule_unique_description_per_user(invalid, errors))
+        self.assertEqual(len(errors), 1)
         self.assertIsInstance(errors[0], RepeatedLocationNameError)
+        self.assertEqual(errors[0].field, 'description')
 
         # nombre de ubicación repepetida para otro usuario (valida regla)
         valid = Location(owner_id=self.users[1].id, description=first_user_locations[0].description)
@@ -178,6 +185,7 @@ class TestLocationLogic(Test):
         # descripción menor que 3 caracteres
         loc = Location(description='La')
         self.assertFalse(self.ll.rule_description_len(loc, errors))
+        self.assertEqual(len(errors), 1)
         self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'description')
 
@@ -191,6 +199,7 @@ class TestLocationLogic(Test):
         # descripción mayor que 50 caracteres
         loc = Location(description='La gran y enorme ubicación que es superior a todass')
         self.assertFalse(self.ll.rule_description_len(loc, errors))
+        self.assertEqual(len(errors), 1)
         self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'description')
 
