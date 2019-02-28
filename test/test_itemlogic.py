@@ -1,7 +1,8 @@
 import itertools
 
 from personal_inventory.business.entities.item import Item
-from personal_inventory.business.logic import RequiredFieldError, ForeignKeyError, InvalidLength
+from personal_inventory.business.logic import RequiredFieldError, ForeignKeyError, InvalidLength, DeleteForeingKeyError, \
+    ValidationException
 from personal_inventory.business.logic.item_logic import ItemLogic, InvalidValue, RepeatedItemNameError
 from personal_inventory.business.logic.location_logic import LocationLogic
 from personal_inventory.business.logic.user_logic import UserLogic
@@ -322,6 +323,53 @@ class TestItemLogic(Test):
             self.assertIsNone(found.items)
             found = self.ll.get_by_id(loc.id, populate_items=True)
             self.assertEqual(found.items, self.il.get_all_by_location(found))
+
+    def test_delete_fk_rules(self):
+        self._preconditions()
+
+        # ejecuto la lógica
+        self._insert_all()
+        # eliminación de usuarios que pueden estar referenciados por ubicaciones y/o ítems
+        for u in self.users:
+            errors = []
+            if not self.ll.get_all_by_user(u) and not self.il.get_all_by_user(u):
+                # no referenciado, se puede eliminar
+                self.assertTrue(self.ul.validate_deletion_fk_rules(u.id, errors))
+                self.assertEqual(len(errors), 0)
+                self.assertTrue(self.ul.delete(u.id))
+            else:
+                # referenciado, no se puede eliminar
+                self.assertFalse(self.ul.validate_deletion_fk_rules(u.id, errors))
+                self.assertEqual(len(errors), 1)
+                self.assertIsInstance(errors[0], DeleteForeingKeyError)
+                with self.assertRaises(ValidationException):
+                    self.ul.delete(u.id)
+        # eliminación de ubicaciones que pueden estar referenciadas por ítems
+        for loc in self.locations:
+            errors = []
+            if not self.il.get_all_by_location(loc):
+                # no referenciada, se puede eliminar
+                self.assertTrue(self.ll.validate_deletion_fk_rules(loc.id, errors))
+                self.assertEqual(len(errors), 0)
+                self.assertTrue(self.ll.delete(loc.id))
+            else:
+                # referenciada, no se puede eliminar
+                self.assertFalse(self.ll.validate_deletion_fk_rules(loc.id, errors))
+                self.assertEqual(len(errors), 1)
+                self.assertIsInstance(errors[0], DeleteForeingKeyError)
+                with self.assertRaises(ValidationException):
+                    self.ll.delete(loc.id)
+        for item in self.items:
+            self.il.delete(item.id)
+        # ahora sí permite eliminar las ubicaciones que estaban referenciadas
+        for loc in self.ll.get_all():
+            self.assertTrue(self.ll.delete(loc.id))
+        # ahora sí permite eliminar los usuarios que estaban referenciados
+        for u in self.ul.get_all():
+            self.assertTrue(self.ul.delete(u.id))
+
+        # post-condiciones: igual que al principio
+        self._preconditions()
 
     def _preconditions(self):
         # pre-condiciones: no hay usuarios, ubicaciones, ni ítems registrados

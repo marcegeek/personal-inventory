@@ -1,7 +1,8 @@
 import itertools
 
 from personal_inventory.business.entities.location import Location
-from personal_inventory.business.logic import RequiredFieldError, ForeignKeyError, InvalidLength
+from personal_inventory.business.logic import RequiredFieldError, ForeignKeyError, InvalidLength, ValidationException, \
+    DeleteForeingKeyError
 from personal_inventory.business.logic.location_logic import LocationLogic, RepeatedLocationNameError
 from personal_inventory.business.logic.user_logic import UserLogic
 from test import Test, make_logic_test_users, make_logic_test_locations
@@ -227,6 +228,35 @@ class TestLocationLogic(Test):
             self.assertIsNone(found.locations)
             found = self.ul.get_by_id(u.id, populate_locations=True)
             self.assertEqual(found.locations, self.ll.get_all_by_user(found))
+
+    def test_delete_fk_rules(self):
+        self._preconditions()
+
+        # ejecuto la lógica
+        self._insert_all()
+        # eliminación de usuarios que pueden estar referenciados por ubicaciones
+        for u in self.users:
+            errors = []
+            if not self.ll.get_all_by_user(u):
+                # no referenciado, se puede eliminar
+                self.assertTrue(self.ul.validate_deletion_fk_rules(u.id, errors))
+                self.assertEqual(len(errors), 0)
+                self.assertTrue(self.ul.delete(u.id))
+            else:
+                # referenciado, no se puede eliminar
+                self.assertFalse(self.ul.validate_deletion_fk_rules(u.id, errors))
+                self.assertEqual(len(errors), 1)
+                self.assertIsInstance(errors[0], DeleteForeingKeyError)
+                with self.assertRaises(ValidationException):
+                    self.ul.delete(u.id)
+        for loc in self.locations:
+            self.ll.delete(loc.id)
+        # ahora sí permite eliminar los usuarios que estaban referenciados
+        for u in self.ul.get_all():
+            self.assertTrue(self.ul.delete(u.id))
+
+        # post-condiciones: igual que al principio
+        self._preconditions()
 
     def _preconditions(self):
         # pre-condiciones: no hay usuarios ni ubicaciones registradas
