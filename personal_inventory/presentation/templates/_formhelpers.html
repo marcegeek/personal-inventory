@@ -107,7 +107,7 @@
   <script>
     // Hubieron errores, levantar el modal.
     document.addEventListener("DOMContentLoaded", function(event) {
-      $('{{ "#{}".format(id) }}').modal('show');
+      $('{{ "#{}".format(form.modal_id) }}').modal('show');
     });
   </script>
   {% endif %}
