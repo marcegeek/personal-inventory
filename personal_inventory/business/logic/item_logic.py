@@ -135,6 +135,7 @@ class ItemLogic(EntityLogic):
         ul = UserLogic()
         if ul.get_by_id(item.owner_id) is None:
             errors.append(ForeignKeyError('owner_id'))
+            return False
         return True
 
     @staticmethod
@@ -150,6 +151,7 @@ class ItemLogic(EntityLogic):
         ll = LocationLogic()
         if ll.get_by_id(item.location_id) is None:
             errors.append(ForeignKeyError('location_id'))
+            return False
         return True
 
     @classmethod
