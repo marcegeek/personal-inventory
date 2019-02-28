@@ -17,81 +17,78 @@ class TestLocationLogic(Test):
         self.locations = make_logic_test_locations()
 
     def test_insert(self):
-        # pre-condiciones: no hay usuarios ni ubicaciones registradas
-        self.assertEqual(len(self.ul.get_all()), 0)
-        self.assertEqual(len(self.ll.get_all()), 0)
+        self._preconditions()
 
         # ejecuto la lógica
-        successes = []
-        for u in self.users:
-            self.ul.insert(u)
-        for loc in self.locations:
-            successes.append(self.ll.insert(loc))
+        success = self._insert_all()
 
         # post-condiciones: ubicaciones registradas
-        self.assertEqual(successes, [True] * len(self.locations))
+        self.assertTrue(success)
         for loc, loc_id in zip(self.locations, range(1, len(self.locations) + 1)):
             self.assertEqual(loc.id, loc_id)
         self.assertEqual(len(self.ll.get_all()), len(self.locations))
 
     def test_update(self):
-        # pre-condiciones: no hay usuarios ni ubicaciones registradas
-        self.assertEqual(len(self.ul.get_all()), 0)
-        self.assertEqual(len(self.ll.get_all()), 0)
+        self._preconditions()
 
         # ejecuto la lógica
-        successes = []
-        for u in self.users:
-            self.ul.insert(u)
-        for loc in self.locations:
-            self.ll.insert(loc)
+        self._insert_all()
+        success = True
         for loc in self.locations:
             loc.description += ' updated'
-            successes.append(self.ll.update(loc))
+            if not self.ll.update(loc):
+                success = False
 
         # post-condiciones: ubicaciones modificadas
-        self.assertEqual(successes, [True] * len(self.locations))
+        self.assertTrue(success)
         for loc in self.locations:
             self.assertEqual(self.ll.get_by_id(loc.id), loc)
 
     def test_delete(self):
-        # pre-condiciones: no hay usuarios ni ubicaciones registradas
-        self.assertEqual(len(self.ul.get_all()), 0)
-        self.assertEqual(len(self.ll.get_all()), 0)
+        self._preconditions()
 
         # ejecuto la lógica
-        successes = []
-        for u in self.users:
-            self.ul.insert(u)
+        self._insert_all()
+        success = True
         for loc in self.locations:
-            self.ll.insert(loc)
-        for loc in self.locations:
-            successes.append(self.ll.delete(loc.id))
+            if not self.ll.delete(loc.id):
+                success = False
         failure = self.ll.delete(self.locations[-1].id + 1)
 
         # post-condiciones: ubicaciones eliminadas
-        self.assertEqual(successes, [True] * len(self.locations))
+        self.assertTrue(success)
         self.assertFalse(failure)
         self.assertEqual(len(self.ll.get_all()), 0)
 
-    def test_gets(self):
-        # pre-condiciones: no hay usuarios ni ubicaciones registradas
-        self.assertEqual(len(self.ul.get_all()), 0)
-        self.assertEqual(len(self.ll.get_all()), 0)
+    def test_get_by_id(self):
+        self._preconditions()
 
         # ejecuto la lógica
-        for u in self.users:
-            self.ul.insert(u)
-        for loc in self.locations:
-            self.ll.insert(loc)
+        self._insert_all()
 
-        # post-condiciones: recupera las ubicaciones
+        # post-condiciones: recupera las ubicaciones por id
         for loc in self.locations:
             self.assertEqual(self.ll.get_by_id(loc.id), loc)
+
+    def test_get_all(self):
+        self._preconditions()
+
+        # ejecuto la lógica
+        self._insert_all()
+
+        # post-condiciones: recupera todas las ubicaciones
+        self.assertEqual(self.ll.get_all(), self.locations)
+
+    def test_get_all_by_user(self):
+        self._preconditions()
+
+        # ejecuto la lógica
+        self._insert_all()
+
+        # post-condiciones: recupera ubicaciones por usuario
         for u in self.users:
             user_locations = [l for l in self.locations if l.owner_id == u.id]
             self.assertEqual(self.ll.get_all_by_user(u), user_locations)
-        self.assertEqual(self.ll.get_all(), self.locations)
 
     def test_rule_required_fields(self):
         required_fields = {'owner_id', 'description'}
@@ -126,9 +123,7 @@ class TestLocationLogic(Test):
             self.assertEqual(set(present_fields), expected_fields)
 
     def test_rule_owner_user_exists(self):
-        # pre-condiciones: no hay usuarios ni ubicaciones registradas
-        self.assertEqual(len(self.ul.get_all()), 0)
-        self.assertEqual(len(self.ll.get_all()), 0)
+        self._preconditions()
 
         # ejecuto la lógica
         for u in self.users:
@@ -148,9 +143,7 @@ class TestLocationLogic(Test):
         self.assertEqual(errors[0].field, 'owner_id')
 
     def test_rule_unique_description_per_user(self):
-        # pre-condiciones: no hay usuarios ni ubicaciones registradas
-        self.assertEqual(len(self.ul.get_all()), 0)
-        self.assertEqual(len(self.ll.get_all()), 0)
+        self._preconditions()
 
         # ejecuto la lógica
         for u in self.users:
@@ -205,18 +198,13 @@ class TestLocationLogic(Test):
         self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'description')
 
-    def test_relationships(self):
-        # pre-condiciones: no hay usuarios ni ubicaciones registradas
-        self.assertEqual(len(self.ul.get_all()), 0)
-        self.assertEqual(len(self.ll.get_all()), 0)
+    def test_populate_owner(self):
+        self._preconditions()
 
         # ejecuto la lógica
-        for u in self.users:
-            self.ul.insert(u)
-        for loc in self.locations:
-            self.ll.insert(loc)
+        self._insert_all()
 
-        # post-condiciones: recupera ubicaciones con sus relaciones según corresponda
+        # post-condiciones: recupera ubicaciones con sus respectivos usuarios según corresponda
         for loc in self.locations:
             found = self.ll.get_by_id(loc.id)
             self.assertIsNone(found.owner)
@@ -224,6 +212,14 @@ class TestLocationLogic(Test):
             self.assertIsNone(found.owner)
             found = self.ll.get_by_id(loc.id, populate_owner=True)
             self.assertEqual(found.owner, self.ul.get_by_id(found.owner_id))
+
+    def test_populate_locations(self):
+        self._preconditions()
+
+        # ejecuto la lógica
+        self._insert_all()
+
+        # post-condiciones: recupera usuarios con sus ubicaciones según corresponda
         for u in self.users:
             found = self.ul.get_by_id(u.id)
             self.assertIsNone(found.locations)
@@ -231,3 +227,17 @@ class TestLocationLogic(Test):
             self.assertIsNone(found.locations)
             found = self.ul.get_by_id(u.id, populate_locations=True)
             self.assertEqual(found.locations, self.ll.get_all_by_user(found))
+
+    def _preconditions(self):
+        # pre-condiciones: no hay usuarios ni ubicaciones registradas
+        self.assertEqual(len(self.ul.get_all()), 0)
+        self.assertEqual(len(self.ll.get_all()), 0)
+
+    def _insert_all(self):
+        success = True
+        for u in self.users:
+            self.ul.insert(u)
+        for loc in self.locations:
+            if not self.ll.insert(loc):
+                success = False
+        return success

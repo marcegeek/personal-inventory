@@ -10,8 +10,7 @@ class TestUserData(Test):
         self.users = make_data_test_users()
 
     def test_insert(self):
-        # pre-condiciones: no hay usuarios registrados
-        self.assertEqual(len(self.userdao.get_all()), 0)
+        self._preconditions()
 
         for u in self.users:
             self.userdao.insert(u)
@@ -22,21 +21,20 @@ class TestUserData(Test):
         self.assertEqual(len(self.userdao.get_all()), len(self.users))
 
     def test_update(self):
-        # pre-condiciones: no hay usuarios registrados
-        self.assertEqual(len(self.userdao.get_all()), 0)
+        self._preconditions()
 
         for u in self.users:
             self.userdao.insert(u)
-
-        # post-condiciones: usuarios modificados
         for u in self.users:
             u.firstname = 'Juan'
             self.userdao.update(u)
+
+        # post-condiciones: usuarios modificados
+        for u in self.users:
             self.assertEqual(self.userdao.get_by_id(u.id), u)
 
     def test_delete(self):
-        # pre-condiciones: no hay usuarios registrados
-        self.assertEqual(len(self.userdao.get_all()), 0)
+        self._preconditions()
 
         for u in self.users:
             self.userdao.insert(u)
@@ -49,8 +47,7 @@ class TestUserData(Test):
         self.assertEqual(len(self.userdao.get_all()), 0)
 
     def test_get_by_id(self):
-        # pre-condiciones: no hay usuarios registrados
-        self.assertEqual(len(self.userdao.get_all()), 0)
+        self._preconditions()
 
         for u in self.users:
             self.userdao.insert(u)
@@ -60,8 +57,7 @@ class TestUserData(Test):
             self.assertEqual(self.userdao.get_by_id(u.id), u)
 
     def test_get_by_username(self):
-        # pre-condiciones: no hay usuarios registrados
-        self.assertEqual(len(self.userdao.get_all()), 0)
+        self._preconditions()
 
         for u in self.users:
             self.userdao.insert(u)
@@ -71,8 +67,7 @@ class TestUserData(Test):
             self.assertEqual(self.userdao.get_by_username(u.username), u)
 
     def test_get_by_email(self):
-        # pre-condiciones: no hay usuarios registrados
-        self.assertEqual(len(self.userdao.get_all()), 0)
+        self._preconditions()
 
         for u in self.users:
             self.userdao.insert(u)
@@ -82,8 +77,7 @@ class TestUserData(Test):
             self.assertEqual(self.userdao.get_by_email(u.email), u)
 
     def test_get_by_username_email(self):
-        # pre-condiciones: no hay usuarios registrados
-        self.assertEqual(len(self.userdao.get_all()), 0)
+        self._preconditions()
 
         for u in self.users:
             self.userdao.insert(u)
@@ -94,11 +88,18 @@ class TestUserData(Test):
             self.assertEqual(self.userdao.get_by_username_email(u.email), u)
 
     def test_get_all(self):
-        # pre-condiciones: no hay usuarios registrados
-        self.assertEqual(len(self.userdao.get_all()), 0)
+        self._preconditions()
 
         for u in self.users:
             self.userdao.insert(u)
 
         # post-condiciones: recupera todos los usuarios
         self.assertEqual(self.userdao.get_all(), self.users)
+
+    def _preconditions(self):
+        # pre-condiciones: no hay usuarios registrados
+        self.assertEqual(len(self.userdao.get_all()), 0)
+
+    def _insert_all(self):
+        for u in self.users:
+            self.userdao.insert(u)

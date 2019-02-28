@@ -15,70 +15,98 @@ class TestUserLogic(Test):
         self.users = make_logic_test_users()
 
     def test_insert(self):
-        # pre-condiciones: no hay usuarios registrados
-        self.assertEqual(len(self.ul.get_all()), 0)
+        self._preconditions()
 
         # ejecuto la lógica
-        successes = []
-        for u in self.users:
-            successes.append(self.ul.insert(u))
+        success = self._insert_all()
 
         # post-condiciones: usuarios registrados
-        self.assertEqual(successes, [True] * len(self.users))
+        self.assertTrue(success)
         for u, user_id in zip(self.users, range(1, len(self.users) + 1)):
             self.assertEqual(u.id, user_id)
         self.assertEqual(len(self.ul.get_all()), len(self.users))
 
     def test_update(self):
-        # pre-condiciones: no hay usuarios registrados
-        self.assertEqual(len(self.ul.get_all()), 0)
+        self._preconditions()
 
         # ejecuto la lógica
-        successes = []
-        for u in self.users:
-            self.ul.insert(u)
+        self._insert_all()
+        success = True
         for u in self.users:
             u.password = 'algomejor123456'
-            successes.append(self.ul.update(u))
+            if not self.ul.update(u):
+                success = False
 
         # post-condiciones: usuarios modificados
-        self.assertEqual(successes, [True] * len(self.users))
+        self.assertTrue(success)
         for u in self.users:
             self.assertEqual(self.ul.get_by_id(u.id), u)
 
     def test_delete(self):
-        # pre-condiciones: no hay usuarios registrados
-        self.assertEqual(len(self.ul.get_all()), 0)
+        self._preconditions()
 
         # ejecuto la lógica
-        successes = []
+        self._insert_all()
+        success = True
         for u in self.users:
-            self.ul.insert(u)
-        for u in self.users:
-            successes.append(self.ul.delete(u.id))
+            if not self.ul.delete(u.id):
+                success = False
         failure = self.ul.delete(self.users[-1].id + 1)
 
         # post-condiciones: usuarios eliminados
-        self.assertEqual(successes, [True] * len(self.users))
+        self.assertTrue(success)
         self.assertFalse(failure)
         self.assertEqual(len(self.ul.get_all()), 0)
 
-    def test_gets(self):
-        # pre-condiciones: no hay usuarios registrados
-        self.assertEqual(len(self.ul.get_all()), 0)
+    def test_get_by_id(self):
+        self._preconditions()
 
         # ejecuto la lógica
-        for u in self.users:
-            self.ul.insert(u)
+        self._insert_all()
 
-        # post-condiciones: recupera los usuarios
+        # post-condiciones: recupera usuarios por id
         for u in self.users:
             self.assertEqual(self.ul.get_by_id(u.id), u)
+
+    def test_get_all(self):
+        self._preconditions()
+
+        # ejecuto la lógica
+        self._insert_all()
+
+        # post-condiciones: recupera todos los usuarios
+        self.assertEqual(self.ul.get_all(), self.users)
+
+    def test_get_by_email(self):
+        self._preconditions()
+
+        # ejecuto la lógica
+        self._insert_all()
+
+        # post-condiciones: recupera usuarios por e-mail
+        for u in self.users:
             self.assertEqual(self.ul.get_by_email(u.email), u)
+
+    def test_get_by_username(self):
+        self._preconditions()
+
+        # ejecuto la lógica
+        self._insert_all()
+
+        # post-condiciones: recupera usuarios por nombre de usuario
+        for u in self.users:
             self.assertEqual(self.ul.get_by_username(u.username), u)
+
+    def test_get_by_username_email(self):
+        self._preconditions()
+
+        # ejecuto la lógica
+        self._insert_all()
+
+        # post-condiciones: recupera usuarios por nombre de usuario/e-mail
+        for u in self.users:
             self.assertEqual(self.ul.get_by_username_email(u.username), u)
             self.assertEqual(self.ul.get_by_username_email(u.email), u)
-        self.assertEqual(self.ul.get_all(), self.users)
 
     def test_rule_required_fields(self):
         required_fields = {'firstname', 'lastname', 'email', 'language', 'username', 'password'}
@@ -115,8 +143,7 @@ class TestUserLogic(Test):
             self.assertEqual(set(present_fields), expected_fields)
 
     def test_rule_unique_email(self):
-        # pre-condiciones: no hay usuarios registrados
-        self.assertEqual(len(self.ul.get_all()), 0)
+        self._preconditions()
 
         # ejecuto la lógica
         self.ul.insert(self.users[0])
@@ -135,8 +162,7 @@ class TestUserLogic(Test):
         self.assertEqual(errors[0].field, 'email')
 
     def test_rule_unique_username(self):
-        # pre-condiciones: no hay usuarios registrados
-        self.assertEqual(len(self.ul.get_all()), 0)
+        self._preconditions()
 
         # ejecuto la lógica
         self.ul.insert(self.users[0])
@@ -329,3 +355,14 @@ class TestUserLogic(Test):
         self.assertEqual(len(errors), 1)
         self.assertIsInstance(errors[0], InvalidLength)
         self.assertEqual(errors[0].field, 'password')
+
+    def _preconditions(self):
+        # pre-condiciones: no hay usuarios registrados
+        self.assertEqual(len(self.ul.get_all()), 0)
+
+    def _insert_all(self):
+        success = True
+        for u in self.users:
+            if not self.ul.insert(u):
+                success = False
+        return success
