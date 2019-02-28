@@ -30,6 +30,8 @@ class TestLocationLogic(Test):
 
         # post-condiciones: ubicaciones registradas
         self.assertEqual(successes, [True] * len(self.locations))
+        for loc, loc_id in zip(self.locations, range(1, len(self.locations) + 1)):
+            self.assertEqual(loc.id, loc_id)
         self.assertEqual(len(self.ll.get_all()), len(self.locations))
 
     def test_update(self):

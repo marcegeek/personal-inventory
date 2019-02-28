@@ -16,10 +16,10 @@ class TestUserData(Test):
         for u in self.users:
             self.userdao.insert(u)
 
-        user_id = 1
-        for u in self.users:
+        # post-condiciones: usuarios registrados
+        for u, user_id in zip(self.users, range(1, len(self.users) + 1)):
             self.assertEqual(u.id, user_id)
-            user_id += 1
+        self.assertEqual(len(self.userdao.get_all()), len(self.users))
 
     def test_update(self):
         # pre-condiciones: no hay usuarios registrados
@@ -28,6 +28,7 @@ class TestUserData(Test):
         for u in self.users:
             self.userdao.insert(u)
 
+        # post-condiciones: usuarios modificados
         for u in self.users:
             u.firstname = 'Juan'
             self.userdao.update(u)
@@ -39,9 +40,11 @@ class TestUserData(Test):
 
         for u in self.users:
             self.userdao.insert(u)
-
         for u in self.users:
             self.userdao.delete(u.id)
+
+        # post-condiciones: usuarios eliminados
+        for u in self.users:
             self.assertIsNone(self.userdao.get_by_id(u.id))
         self.assertEqual(len(self.userdao.get_all()), 0)
 
@@ -52,6 +55,7 @@ class TestUserData(Test):
         for u in self.users:
             self.userdao.insert(u)
 
+        # post-condiciones: recupera usuarios por id
         for u in self.users:
             self.assertEqual(self.userdao.get_by_id(u.id), u)
 
@@ -62,6 +66,7 @@ class TestUserData(Test):
         for u in self.users:
             self.userdao.insert(u)
 
+        # post-condiciones: recupera usuarios por nombre de usuario
         for u in self.users:
             self.assertEqual(self.userdao.get_by_username(u.username), u)
 
@@ -72,6 +77,7 @@ class TestUserData(Test):
         for u in self.users:
             self.userdao.insert(u)
 
+        # post-condiciones: recupera usuarios por e-mail
         for u in self.users:
             self.assertEqual(self.userdao.get_by_email(u.email), u)
 
@@ -82,6 +88,7 @@ class TestUserData(Test):
         for u in self.users:
             self.userdao.insert(u)
 
+        # post-condiciones: recupera usuarios por nombre de usuario/e-mail
         for u in self.users:
             self.assertEqual(self.userdao.get_by_username_email(u.username), u)
             self.assertEqual(self.userdao.get_by_username_email(u.email), u)
@@ -93,4 +100,5 @@ class TestUserData(Test):
         for u in self.users:
             self.userdao.insert(u)
 
+        # post-condiciones: recupera todos los usuarios
         self.assertEqual(self.userdao.get_all(), self.users)

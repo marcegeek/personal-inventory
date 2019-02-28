@@ -25,6 +25,8 @@ class TestUserLogic(Test):
 
         # post-condiciones: usuarios registrados
         self.assertEqual(successes, [True] * len(self.users))
+        for u, user_id in zip(self.users, range(1, len(self.users) + 1)):
+            self.assertEqual(u.id, user_id)
         self.assertEqual(len(self.ul.get_all()), len(self.users))
 
     def test_update(self):
@@ -76,7 +78,6 @@ class TestUserLogic(Test):
             self.assertEqual(self.ul.get_by_username(u.username), u)
             self.assertEqual(self.ul.get_by_username_email(u.username), u)
             self.assertEqual(self.ul.get_by_username_email(u.email), u)
-        # lista ordenada con el orden por defecto
         self.assertEqual(self.ul.get_all(), self.users)
 
     def test_rule_required_fields(self):

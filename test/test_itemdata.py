@@ -24,6 +24,7 @@ class TestItemData(Test):
         for item in self.items:
             self.itemdao.insert(item)
 
+        # post-condiciones: ítems registrados
         item_id = 1
         for item in self.items:
             self.assertEqual(item.id, item_id)
