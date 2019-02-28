@@ -7,16 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-02-14 00:43-0300\n"
-"PO-Revision-Date: 2019-02-14 00:44-0300\n"
+"POT-Creation-Date: 2019-02-28 06:28-0300\n"
+"PO-Revision-Date: 2019-02-28 06:29-0300\n"
 "Last-Translator: \n"
 "Language: es\n"
 "Language-Team: es <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.6.0\n"
+"X-Generator: Poedit 2.0.4\n"
 
 #: templates/401.html:4
 msgid "Error 401 - Unauthorized resource"
@@ -54,30 +55,28 @@ msgstr "Cancelar"
 #: templates/home.html:8
 msgid ""
 "Web application written in Python with\n"
-"      <strong>Flask</strong> and <strong>SQLAlchemy</strong> for managing"
-"\n"
+"      <strong>Flask</strong> and <strong>SQLAlchemy</strong> for managing\n"
 "      an inventory of personal objects."
 msgstr ""
 "Aplicación web escrita en Python con\n"
-"      <strong>Flask</strong> y <strong>SQLAlchemy</strong> para "
-"administrar\n"
+"      <strong>Flask</strong> y <strong>SQLAlchemy</strong> para administrar\n"
 "      un inventario de objetos personales."
 
 #: templates/home.html:14
 #, python-format
 msgid ""
-"Please <a href=\"%(login)s\">login</a> or <a "
-"href=\"%(register)s\">register</a> to use the application."
+"Please <a href=\"%(login)s\">login</a> or <a href=\"%(register)s\">register</"
+"a> to use the application."
 msgstr ""
-"Por favor <a href=\"%(login)s\">ingrese</a> o <a "
-"href=\"%(register)s\">regístrese</a> para usar la aplicación."
+"Por favor <a href=\"%(login)s\">ingrese</a> o <a href=\"%(register)s"
+"\">regístrese</a> para usar la aplicación."
 
 #: templates/items.html:9
 msgid "Managing items"
 msgstr "Administrando ítems"
 
-#: templates/items.html:12 templates/location.html:21
-#: templates/locations.html:42 views/forms/items.py:24
+#: templates/items.html:12 templates/location.html:21 templates/locations.html:42
+#: views/forms/items.py:26
 msgid "New item"
 msgstr "Nuevo ítem"
 
@@ -85,14 +84,13 @@ msgstr "Nuevo ítem"
 msgid "No items yet, try creating some item first."
 msgstr "Todavía no hay ítems, intente crear alguno."
 
-#: templates/items.html:29 templates/location.html:10
-#: templates/location.html:41 templates/locations.html:33
+#: templates/items.html:29 templates/location.html:10 templates/location.html:41
+#: templates/locations.html:33
 msgid "Edit"
 msgstr "Editar"
 
-#: templates/items.html:30 templates/location.html:13
-#: templates/location.html:42 templates/locations.html:36
-#: views/forms/__init__.py:81
+#: templates/items.html:30 templates/location.html:13 templates/location.html:42
+#: templates/locations.html:36 views/forms/__init__.py:91
 msgid "Delete"
 msgstr "Eliminar"
 
@@ -142,7 +140,7 @@ msgstr "Todavía no hay ítems en esta ubicación, intente crear alguno."
 msgid "Managing locations"
 msgstr "Administrando ubicaciones"
 
-#: templates/locations.html:12 views/forms/locations.py:18
+#: templates/locations.html:12 views/forms/locations.py:20
 msgid "New location"
 msgstr "Nueva ubicación"
 
@@ -154,37 +152,41 @@ msgstr "Todavía no hay ubicaciones, intente crear alguna."
 msgid "View"
 msgstr "Ver"
 
-#: views/error_handler.py:11 views/forms/users.py:13 views/forms/users.py:15
+#: views/error_handler.py:13 views/forms/users.py:15 views/forms/users.py:17
 msgid "Required field"
 msgstr "Campo requerido"
 
-#: views/error_handler.py:13
+#: views/error_handler.py:15
 msgid "There's still some object referencing this"
 msgstr "Todavía existen objetos haciendo referencia"
 
-#: views/error_handler.py:15
+#: views/error_handler.py:17
 msgid "Invalid field length"
 msgstr "Longitud de campo inválida"
 
-#: views/error_handler.py:17
+#: views/error_handler.py:19
 msgid "Invalid e-mail address"
 msgstr "Dirección de e-mail inválida"
 
-#: views/error_handler.py:19
+#: views/error_handler.py:21
 msgid "Username is repeated"
 msgstr "Nombre de usuario repetido"
 
-#: views/error_handler.py:21
+#: views/error_handler.py:23
 msgid "Username must be made of lowercase letters, digits and underscores"
 msgstr ""
 "El nombre de usuario debe estar formado por letras minúsculas, dígitos y "
 "guiones bajos"
 
-#: views/error_handler.py:23
+#: views/error_handler.py:25
 msgid "Location name repeated"
 msgstr "Nombre de ubicación repetido"
 
-#: views/error_handler.py:25
+#: views/error_handler.py:27
+msgid "Item name repeated"
+msgstr "Nombre de ítem repetido"
+
+#: views/error_handler.py:29
 msgid "Invalid value"
 msgstr "Valor inválido"
 
@@ -200,140 +202,139 @@ msgstr "Nombre de usuario/e-mail o contraseña incorrectos"
 msgid "Please login to use the application"
 msgstr "Por favor inicie sesión para usar la aplicación"
 
-#: views/forms/__init__.py:37 views/forms/users.py:87
+#: views/forms/__init__.py:43 views/forms/users.py:91
 msgid "Save"
 msgstr "Guardar"
 
-#: views/forms/__init__.py:39
+#: views/forms/__init__.py:45
 msgid "Fields marked with an asterisk (*) are required"
 msgstr "Los campos marcados con un asterisco (*) son requeridos"
 
-#: views/forms/__init__.py:86
+#: views/forms/__init__.py:98
 #, python-format
 msgid "Do you really want to delete \"%(element)s\"?"
 msgstr "¿Realmente quiere eliminar \"%(element)s\"?"
 
-#: views/forms/__init__.py:89
+#: views/forms/__init__.py:101
 msgid "This action cannot be undone."
 msgstr "Esta acción no se puede deshacer."
 
-#: views/forms/items.py:13 views/forms/locations.py:11
+#: views/forms/items.py:15 views/forms/locations.py:13
 msgid "Description"
 msgstr "Descripción"
 
-#: views/forms/items.py:13 views/forms/locations.py:12 views/forms/users.py:42
-#: views/forms/users.py:46 views/forms/users.py:59
+#: views/forms/items.py:15 views/forms/locations.py:14 views/forms/users.py:46
+#: views/forms/users.py:50 views/forms/users.py:63
 #, python-format
 msgid "Field length must be between %(min)d and %(max)d"
 msgstr "La longitud del campo debe estrar entre %(min)d y %(max)d"
 
-#: views/forms/items.py:17
+#: views/forms/items.py:19
 msgid "Location"
 msgstr "Ubicación"
 
-#: views/forms/items.py:18
+#: views/forms/items.py:20
 msgid "Quantity"
 msgstr "Cantidad"
 
-#: views/forms/items.py:18
+#: views/forms/items.py:20
 msgid "Optional field, must be a non-negative integer number"
 msgstr "Campo opcional, debe ser un número entero no negativo"
 
-#: views/forms/items.py:40
+#: views/forms/items.py:42
 msgid "Editing item"
 msgstr "Editando ítem"
 
-#: views/forms/items.py:62
+#: views/forms/items.py:65
 msgid "Delete item"
 msgstr "Eliminar ítem"
 
-#: views/forms/locations.py:26
+#: views/forms/locations.py:28
 msgid "Editing location"
 msgstr "Editando ubicación"
 
-#: views/forms/locations.py:44
+#: views/forms/locations.py:47
 msgid "Delete location"
 msgstr "Eliminar ubicación"
 
-#: views/forms/users.py:12
+#: views/forms/users.py:14
 msgid "Username or e-mail"
 msgstr "Nombre de usuario o e-mail"
 
-#: views/forms/users.py:14 views/forms/users.py:58
+#: views/forms/users.py:16 views/forms/users.py:62
 msgid "Password"
 msgstr "Contraseña"
 
-#: views/forms/users.py:19 views/forms/users.py:20
+#: views/forms/users.py:21 views/forms/users.py:22
 msgid "Login"
 msgstr "Iniciar sesión"
 
-#: views/forms/users.py:26
+#: views/forms/users.py:28
 msgid "Create account"
 msgstr "Crear cuenta"
 
-#: views/forms/users.py:41
+#: views/forms/users.py:45
 msgid "First name"
 msgstr "Nombre"
 
-#: views/forms/users.py:45
+#: views/forms/users.py:49
 msgid "Last name"
 msgstr "Apellido"
 
-#: views/forms/users.py:49
+#: views/forms/users.py:53
 msgid "E-mail"
 msgstr "E-mail"
-
-#: views/forms/users.py:50
-#, python-format
-msgid ""
-"Field must be a valid e-mail adress and its length must be between "
-"%(min)d and %(max)d"
-msgstr ""
-"El campo debe ser una dirección de e-mail válida y su longitud debe estar"
-" entre %(min)d y %(max)d"
-
-#: views/forms/users.py:53
-msgid "Username"
-msgstr "Nombre de usuario"
 
 #: views/forms/users.py:54
 #, python-format
 msgid ""
-"Field must be made of lowercase letters, digits and underscores and its "
-"length must be between %(min)d and %(max)d"
+"Field must be a valid e-mail adress and its length must be between %(min)d and "
+"%(max)d"
 msgstr ""
-"El campo debe estar formado por letras minúsculas, dígitos y guiones "
-"bajos; y su longitud debe estar entre %(min)dy %(max)d"
+"El campo debe ser una dirección de e-mail válida y su longitud debe estar "
+"entre %(min)d y %(max)d"
 
 #: views/forms/users.py:57
+msgid "Username"
+msgstr "Nombre de usuario"
+
+#: views/forms/users.py:58
+#, python-format
+msgid ""
+"Field must be made of lowercase letters, digits and underscores and its length "
+"must be between %(min)d and %(max)d"
+msgstr ""
+"El campo debe estar formado por letras minúsculas, dígitos y guiones bajos; y "
+"su longitud debe estar entre %(min)dy %(max)d"
+
+#: views/forms/users.py:61
 msgid "Language"
 msgstr "Idioma"
 
-#: views/forms/users.py:62
+#: views/forms/users.py:66
 msgid "Passwords must match"
 msgstr "Las contraseñas deben coincidir"
 
-#: views/forms/users.py:63
+#: views/forms/users.py:67
 msgid "Confirm password"
 msgstr "Confirmar contraseña"
 
-#: views/forms/users.py:67
+#: views/forms/users.py:71
 msgid "User registration"
 msgstr "Registro de usuario"
 
-#: views/forms/users.py:68
+#: views/forms/users.py:72
 msgid "Register"
 msgstr "Registro"
 
-#: views/forms/users.py:86
+#: views/forms/users.py:90
 msgid "User profile"
 msgstr "Perfil de usuario"
 
-#: views/forms/users.py:88
+#: views/forms/users.py:92
 msgid "New password"
 msgstr "Nueva contraseña"
 
-#: views/forms/users.py:89
+#: views/forms/users.py:93
 msgid "Leave it blank to keep the current password"
 msgstr "Deje en blanco para mantener la contraseña actual"
-
