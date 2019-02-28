@@ -49,16 +49,16 @@ Cada ubicación pertenece a un único usuario. De la misma se registra un id y u
 
 1. Los campos nombre, apellido, e-mail, idioma, nombre de usuario y contraseña son requeridos.
 2. Nombre y el apellido:
-  * Longitud de al menos 2 caracteres y no más 40.
+   * Longitud de al menos 2 caracteres y no más 40.
 3. E-mail:
-  * Longitud de al menos 3 caracteres y no más de 50.
-  * Debe tener un formato de e-mail válido.
-  * Debe ser único entre todos los usuarios.
+   * Longitud de al menos 3 caracteres y no más de 50.
+   * Debe tener un formato de e-mail válido.
+   * Debe ser único entre todos los usuarios.
 4. Nombre de usuario:
-  * Longitud de al menos 5 caracteres y no más de 50.
-  * Debe ser único entre todos los usuarios.
+   * Longitud de al menos 5 caracteres y no más de 50.
+   * Debe ser único entre todos los usuarios.
 5. Contraseña:
-  * Longitud de al menos 6 caracteres y no más de 30.
+   * Longitud de al menos 6 caracteres y no más de 30.
 
 #### Ubicaciones
 
@@ -77,5 +77,5 @@ Cada ubicación pertenece a un único usuario. De la misma se registra un id y u
 3. Id de ubicación:
    * Debe ser un id de una ubicación registrada del usuario propietario.
 4. Descripción:
-  * Longitud de al menos 3 caracteres y no más de 50.
-  * Debe ser única entre los ítems del usuario.
+   * Longitud de al menos 3 caracteres y no más de 50.
+   * Debe ser única entre los ítems del usuario.
