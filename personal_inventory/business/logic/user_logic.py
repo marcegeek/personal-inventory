@@ -120,9 +120,11 @@ class UserLogic(EntityLogic):
         """
         user = self.get_by_id(user_id, populate_locations=True, populate_items=True)
         if user is not None:
+            # noinspection PyUnresolvedReferences
             if user.locations:
                 errors.append(DeleteForeignKeyError('locations'))
                 return False
+            # noinspection PyUnresolvedReferences
             if user.items:
                 errors.append(DeleteForeignKeyError('items'))
                 return False

@@ -47,6 +47,7 @@ class LocationLogic(EntityLogic):
         """
         location = self.get_by_id(location_id, populate_items=True)
         if location is not None:
+            # noinspection PyUnresolvedReferences
             if location.items:
                 errors.append(DeleteForeignKeyError('items'))
                 return False
