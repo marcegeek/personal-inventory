@@ -2,6 +2,7 @@ import unittest
 
 import personal_inventory.data as dal
 import personal_inventory.defaultconfigs as config
+from personal_inventory.business.entities.location import Location
 from personal_inventory.business.entities.user import User
 from personal_inventory.data import UserModel, LocationModel, ItemModel
 
@@ -27,11 +28,6 @@ def make_data_test_users():
                       username='jduval', password='123456')]
 
 
-def make_logic_test_users():
-    # lista ordenada con el orden por defecto
-    return User.make_from_model(make_data_test_users())
-
-
 def make_data_test_locations():
     return [LocationModel(owner_id=1, description='root 1'),
             LocationModel(owner_id=1, description='root 2'),
@@ -48,3 +44,13 @@ def make_data_test_items():
             ItemModel(owner_id=2, location_id=3, description='item 6'),
             ItemModel(owner_id=2, location_id=4, description='item 7'),
             ItemModel(owner_id=2, location_id=4, description='item 8')]
+
+
+def make_logic_test_users():
+    # lista ordenada con el orden por defecto
+    return User.make_from_model(make_data_test_users())
+
+
+def make_logic_test_locations():
+    # lista ordenada con el orden por defecto
+    return Location.make_from_model(make_data_test_locations())
